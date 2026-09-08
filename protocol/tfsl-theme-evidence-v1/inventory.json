@@ -1,0 +1,61 @@
+{
+  "examples": [
+    {
+      "digest": "sha256:1f57926bc871715a439b343c17933fb0ff5de307cd17e4e9a5777d33d937842d",
+      "file": "examples/brief.tfsl-brief.json",
+      "id": "starlight-cyan-modernization",
+      "kind": "brief"
+    },
+    {
+      "digest": "sha256:36cbaa32c0062a147d1edb1c826dc2abfbb79e92a57786c18d634633bfc96090",
+      "file": "examples/candidate-a.tfsl-candidate.json",
+      "id": "cyan-accessible-high-contrast",
+      "kind": "candidate"
+    },
+    {
+      "digest": "sha256:5bb91fc8a1123171fc675fd7a2eff83ef8a7641b15fa336520ea84de5d22f948",
+      "file": "examples/candidate-b.tfsl-candidate.json",
+      "id": "cyan-vibrant-neon",
+      "kind": "candidate"
+    },
+    {
+      "digest": "sha256:170e6130f53bc6a24e80c730c8470e63da92bc9f53912d767ce69de26ff6cf7e",
+      "file": "examples/review.tfsl-review.json",
+      "id": "cyan-modernization-review",
+      "kind": "review"
+    }
+  ],
+  "protocolVersion": "1.0",
+  "schema": "tfsl.theme-evidence-inventory",
+  "schemaVersion": 1,
+  "schemas": [
+    {
+      "digestDomain": "tfsl.theme-brief-v1\n",
+      "extension": ".tfsl-brief.json",
+      "file": "brief.schema.json",
+      "schema": "tfsl.theme-brief",
+      "schemaVersion": 1
+    },
+    {
+      "digestDomain": "tfsl.theme-candidate-v1\n",
+      "extension": ".tfsl-candidate.json",
+      "file": "candidate.schema.json",
+      "schema": "tfsl.theme-candidate",
+      "schemaVersion": 1
+    },
+    {
+      "digestDomain": "tfsl.theme-review-v1\n",
+      "extension": ".tfsl-review.json",
+      "file": "review.schema.json",
+      "schema": "tfsl.theme-review",
+      "schemaVersion": 1
+    },
+    {
+      "digestDomain": "tfsl.theme-visual-evidence-v1\n",
+      "extension": ".json",
+      "file": "visual-evidence.schema.json",
+      "schema": "tfsl.theme-visual-evidence",
+      "schemaVersion": 1
+    }
+  ]
+}

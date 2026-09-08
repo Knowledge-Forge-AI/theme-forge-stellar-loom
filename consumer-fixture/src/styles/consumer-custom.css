@@ -1,0 +1,14 @@
+:root {
+  --sl-font-system: "Custom Consumer Font", sans-serif;
+  --sl-color-hairline: #e11d48;
+}
+
+:root[data-theme='light'] {
+  --sl-color-hairline: #e11d48;
+}
+
+.consumer-custom-marker {
+  padding: 0.5rem;
+  border: 1px solid var(--sl-color-hairline);
+  color: var(--sl-color-accent);
+}
