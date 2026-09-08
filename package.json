@@ -1,0 +1,66 @@
+{
+  "name": "@knowledge-forge-ai/theme-forge-stellar-loom",
+  "version": "0.1.0",
+  "description": "Starlight theme-builder backend, library, and CLI",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom.git"
+  },
+  "homepage": "https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom#readme",
+  "bugs": {
+    "url": "https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom/issues"
+  },
+  "type": "module",
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./batch": {
+      "types": "./dist/batch.d.ts",
+      "import": "./dist/batch.js"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.ts",
+      "import": "./dist/cli.js"
+    },
+    "./protocol/*": "./protocol/*"
+  },
+  "bin": {
+    "tfsl": "./bin/tfsl.js",
+    "tfsl-batch": "./bin/tfsl-batch.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "examples",
+    "protocol",
+    "LICENSE",
+    "NOTICE",
+    "COMMERCIAL-LICENSE.md",
+    "README.md"
+  ],
+
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:smoke": "node tools/smoke-packed-consumer.mjs",
+    "test:smoke-plugin": "node tools/smoke-generated-plugin.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@types/node": "22.20.1",
+    "typescript": "7.0.2",
+    "vitest": "4.1.11"
+  }
+}

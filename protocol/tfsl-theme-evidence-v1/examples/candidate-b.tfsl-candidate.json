@@ -1,0 +1,100 @@
+{
+  "briefDigest": "sha256:1f57926bc871715a439b343c17933fb0ff5de307cd17e4e9a5777d33d937842d",
+  "candidateDigest": "sha256:5bb91fc8a1123171fc675fd7a2eff83ef8a7641b15fa336520ea84de5d22f948",
+  "candidateId": "cyan-vibrant-neon",
+  "claimedProvenance": {
+    "author": "Agent-Designer-V2",
+    "timestamp": "2026-09-07T01:30:00Z",
+    "toolName": "tfsl",
+    "toolVersion": "0.1.0"
+  },
+  "packageMetadata": {
+    "author": "Starlight Theme Designer",
+    "description": "Vibrant neon variant of Starlight Stellar Cyan",
+    "license": "AGPL-3.0-or-later",
+    "name": "@knowledge-forge-ai/starlight-theme-cyan-neon",
+    "template": "page-title-frame",
+    "version": "0.1.0"
+  },
+  "rationale": "Provides an energetic neon cyber tone with compliant contrast ratios",
+  "schema": "tfsl.theme-candidate",
+  "schemaVersion": 1,
+  "theme": {
+    "adapter": "starlight-v0.42",
+    "colors": {
+      "dark": {
+        "accent": {
+          "base": "#00e5ff",
+          "high": "#a6f4ff",
+          "low": "#003344"
+        },
+        "grays": {
+          "gray1": "#e6f1ff",
+          "gray2": "#c4d7ed",
+          "gray3": "#8ea5c4",
+          "gray4": "#546b8a",
+          "gray5": "#2c4263",
+          "gray6": "#162438",
+          "gray7": "#0d1522"
+        },
+        "neutrals": {
+          "bg": "#090e17",
+          "bgAccent": "#00d2ff",
+          "bgInlineCode": "#131d2e",
+          "bgNav": "#0d1522",
+          "bgSidebar": "#090e17",
+          "hairline": "#1c2b42",
+          "hairlineLight": "#2c4263",
+          "hairlineShade": "#0a101b",
+          "text": "#e6f1ff",
+          "textAccent": "#00d2ff",
+          "textInvert": "#090e17"
+        }
+      },
+      "light": {
+        "accent": {
+          "base": "#0088aa",
+          "high": "#004d61",
+          "low": "#e0faff"
+        },
+        "grays": {
+          "gray1": "#0d1522",
+          "gray2": "#24354d",
+          "gray3": "#4b6280",
+          "gray4": "#7b94b2",
+          "gray5": "#b0c5dd",
+          "gray6": "#dce7f3",
+          "gray7": "#f0f5fa"
+        },
+        "neutrals": {
+          "bg": "#f5f9fc",
+          "bgAccent": "#0077aa",
+          "bgInlineCode": "#e8f1f8",
+          "bgNav": "#ffffff",
+          "bgSidebar": "#f5f9fc",
+          "hairline": "#d2dfed",
+          "hairlineLight": "#e6f0fa",
+          "hairlineShade": "#b8ccdf",
+          "text": "#0d1522",
+          "textAccent": "#0077aa",
+          "textInvert": "#ffffff"
+        }
+      }
+    },
+    "layout": {
+      "contentWidth": "48rem",
+      "sidebarWidth": "19rem"
+    },
+    "name": "stellar-cyan",
+    "schemaVersion": "tfsl.theme-v1",
+    "typography": {
+      "baseFontSize": "16px",
+      "bodyFont": "system-sans",
+      "codeFont": "system-mono",
+      "lineHeight": 1.65
+    },
+    "version": "0.1.0"
+  },
+  "themeDigest": "sha256:9fb2994e8b16b318a24f4dd3f22e33f7c7d1915df6f40d6eb626dc5dbfbf3c68",
+  "visualEvidence": []
+}

@@ -1,0 +1,76 @@
+{
+  "name": "stellar-cyan",
+  "version": "0.1.0",
+  "schemaVersion": "tfsl.theme-v1",
+  "adapter": "starlight-v0.42",
+  "colors": {
+    "dark": {
+      "accent": {
+        "base": "#00d2ff",
+        "low": "#082b40",
+        "high": "#b8f2ff"
+      },
+      "neutrals": {
+        "bg": "#090e17",
+        "bgNav": "#0d1522",
+        "bgSidebar": "#090e17",
+        "bgInlineCode": "#131d2e",
+        "bgAccent": "#00d2ff",
+        "text": "#e6f1ff",
+        "textAccent": "#00d2ff",
+        "textInvert": "#090e17",
+        "hairline": "#1c2b42",
+        "hairlineLight": "#2c4263",
+        "hairlineShade": "#0a101b"
+      },
+      "grays": {
+        "gray1": "#e6f1ff",
+        "gray2": "#c4d7ed",
+        "gray3": "#8ea5c4",
+        "gray4": "#546b8a",
+        "gray5": "#2c4263",
+        "gray6": "#162438",
+        "gray7": "#0d1522"
+      }
+    },
+    "light": {
+      "accent": {
+        "base": "#0077aa",
+        "low": "#e0f6ff",
+        "high": "#004d70"
+      },
+      "neutrals": {
+        "bg": "#f5f9fc",
+        "bgNav": "#ffffff",
+        "bgSidebar": "#f5f9fc",
+        "bgInlineCode": "#e8f1f8",
+        "bgAccent": "#0077aa",
+        "text": "#0d1522",
+        "textAccent": "#0077aa",
+        "textInvert": "#ffffff",
+        "hairline": "#d2dfed",
+        "hairlineLight": "#e6f0fa",
+        "hairlineShade": "#b8ccdf"
+      },
+      "grays": {
+        "gray1": "#0d1522",
+        "gray2": "#24354d",
+        "gray3": "#4b6280",
+        "gray4": "#7b94b2",
+        "gray5": "#b0c5dd",
+        "gray6": "#dce7f3",
+        "gray7": "#f0f5fa"
+      }
+    }
+  },
+  "typography": {
+    "bodyFont": "system-sans",
+    "codeFont": "system-mono",
+    "baseFontSize": "16px",
+    "lineHeight": 1.75
+  },
+  "layout": {
+    "contentWidth": "48rem",
+    "sidebarWidth": "19rem"
+  }
+}
