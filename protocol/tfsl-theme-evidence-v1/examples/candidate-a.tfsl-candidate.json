@@ -1,0 +1,116 @@
+{
+  "briefDigest": "sha256:1f57926bc871715a439b343c17933fb0ff5de307cd17e4e9a5777d33d937842d",
+  "candidateDigest": "sha256:36cbaa32c0062a147d1edb1c826dc2abfbb79e92a57786c18d634633bfc96090",
+  "candidateId": "cyan-accessible-high-contrast",
+  "claimedProvenance": {
+    "author": "Agent-Designer-V1",
+    "timestamp": "2026-09-07T01:00:00Z",
+    "toolName": "tfsl",
+    "toolVersion": "0.1.0"
+  },
+  "packageMetadata": {
+    "author": "Starlight Theme Designer",
+    "description": "Accessible high-contrast variant of Starlight Stellar Cyan",
+    "license": "AGPL-3.0-or-later",
+    "name": "@knowledge-forge-ai/starlight-theme-cyan-accessible",
+    "template": "page-title-frame",
+    "version": "0.1.0"
+  },
+  "rationale": "Improves WCAG 2.2 AA contrast on accent-low and accent-high pairs, widens body text line-height",
+  "schema": "tfsl.theme-candidate",
+  "schemaVersion": 1,
+  "theme": {
+    "adapter": "starlight-v0.42",
+    "colors": {
+      "dark": {
+        "accent": {
+          "base": "#00d2ff",
+          "high": "#99edff",
+          "low": "#002b36"
+        },
+        "grays": {
+          "gray1": "#e6f1ff",
+          "gray2": "#c4d7ed",
+          "gray3": "#8ea5c4",
+          "gray4": "#546b8a",
+          "gray5": "#2c4263",
+          "gray6": "#162438",
+          "gray7": "#0d1522"
+        },
+        "neutrals": {
+          "bg": "#090e17",
+          "bgAccent": "#00d2ff",
+          "bgInlineCode": "#131d2e",
+          "bgNav": "#0d1522",
+          "bgSidebar": "#090e17",
+          "hairline": "#1c2b42",
+          "hairlineLight": "#2c4263",
+          "hairlineShade": "#0a101b",
+          "text": "#e6f1ff",
+          "textAccent": "#00d2ff",
+          "textInvert": "#090e17"
+        }
+      },
+      "light": {
+        "accent": {
+          "base": "#007a99",
+          "high": "#004052",
+          "low": "#e6f9fc"
+        },
+        "grays": {
+          "gray1": "#0d1522",
+          "gray2": "#24354d",
+          "gray3": "#4b6280",
+          "gray4": "#7b94b2",
+          "gray5": "#b0c5dd",
+          "gray6": "#dce7f3",
+          "gray7": "#f0f5fa"
+        },
+        "neutrals": {
+          "bg": "#f5f9fc",
+          "bgAccent": "#0077aa",
+          "bgInlineCode": "#e8f1f8",
+          "bgNav": "#ffffff",
+          "bgSidebar": "#f5f9fc",
+          "hairline": "#d2dfed",
+          "hairlineLight": "#e6f0fa",
+          "hairlineShade": "#b8ccdf",
+          "text": "#0d1522",
+          "textAccent": "#0077aa",
+          "textInvert": "#ffffff"
+        }
+      }
+    },
+    "layout": {
+      "contentWidth": "48rem",
+      "sidebarWidth": "19rem"
+    },
+    "name": "stellar-cyan",
+    "schemaVersion": "tfsl.theme-v1",
+    "typography": {
+      "baseFontSize": "16px",
+      "bodyFont": "system-sans",
+      "codeFont": "system-mono",
+      "lineHeight": 1.75
+    },
+    "version": "0.1.0"
+  },
+  "themeDigest": "sha256:ece472f504c12c68ca7eb92e0e91647d692d0bf0c284146722dda38dba75a3a9",
+  "visualEvidence": [
+    {
+      "byteCount": 227,
+      "bytesBase64": "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAqklEQVR4nOXOIQEAAAwCMPrHeyGIMXExv+Ta13hA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNB7ABqBUCpHsT5AMAAAAASUVORK5CYII=",
+      "evidenceDigest": "sha256:21d833fefff26ddcb32eef7b828b154c8aa43cdb513615f2b3f15f60f03777b0",
+      "fixtureId": "starlight-kitchen-sink",
+      "height": 64,
+      "mode": "dark",
+      "pngDigest": "sha256:292c70b8cbd116d664e0a3b2e26c158ff5abacac65e01460337f055a179713af",
+      "presence": "included",
+      "schema": "tfsl.theme-visual-evidence",
+      "schemaVersion": 1,
+      "themeDigest": "sha256:63f7362edb34268d6406af95e7eccbc3ed85e6da628e14a99ddcc96895008ea9",
+      "viewport": "desktop",
+      "width": 64
+    }
+  ]
+}

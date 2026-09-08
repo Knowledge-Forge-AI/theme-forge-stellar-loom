@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://knowledge-forge.ai/tfsl/theme-evidence/v1/visual-evidence.schema.json",
+  "title": "TFSL theme visual evidence record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schemaVersion", "presence", "evidenceDigest"],
+  "properties": {
+    "schema": { "const": "tfsl.theme-visual-evidence" },
+    "schemaVersion": { "const": 1 },
+    "presence": { "enum": ["included", "absent", "unavailable"] },
+    "reason": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "pngDigest": { "$ref": "#/$defs/digest" },
+    "bytesBase64": { "type": "string" },
+    "byteCount": { "type": "integer", "minimum": 1, "maximum": 6291456 },
+    "width": { "type": "integer", "minimum": 16, "maximum": 1024 },
+    "height": { "type": "integer", "minimum": 16, "maximum": 1024 },
+    "mode": { "enum": ["dark", "light"] },
+    "viewport": { "enum": ["desktop", "mobile"] },
+    "themeDigest": { "$ref": "#/$defs/digest" },
+    "fixtureId": { "$ref": "#/$defs/id" },
+    "evidenceDigest": { "$ref": "#/$defs/digest" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-z][a-z0-9]*(?:[-.][a-z0-9]+)*$" }
+  }
+}

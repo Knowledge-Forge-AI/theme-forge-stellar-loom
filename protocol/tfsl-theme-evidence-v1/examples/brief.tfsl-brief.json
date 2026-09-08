@@ -1,0 +1,132 @@
+{
+  "acceptanceCriteria": [
+    "Maintain WCAG 2.2 AA contrast on accent text",
+    "Body line height at least 1.6"
+  ],
+  "adapter": "starlight-v0.42",
+  "allowedFields": [
+    "colors.dark.accent.base",
+    "colors.dark.accent.high",
+    "colors.dark.accent.low",
+    "colors.light.accent.base",
+    "colors.light.accent.high",
+    "colors.light.accent.low",
+    "typography.lineHeight"
+  ],
+  "allowedModes": [
+    "dark",
+    "light"
+  ],
+  "approvedTemplates": [
+    "page-title-frame"
+  ],
+  "baselineTheme": {
+    "adapter": "starlight-v0.42",
+    "colors": {
+      "dark": {
+        "accent": {
+          "base": "#00d2ff",
+          "high": "#b8f2ff",
+          "low": "#082b40"
+        },
+        "grays": {
+          "gray1": "#e6f1ff",
+          "gray2": "#c4d7ed",
+          "gray3": "#8ea5c4",
+          "gray4": "#546b8a",
+          "gray5": "#2c4263",
+          "gray6": "#162438",
+          "gray7": "#0d1522"
+        },
+        "neutrals": {
+          "bg": "#090e17",
+          "bgAccent": "#00d2ff",
+          "bgInlineCode": "#131d2e",
+          "bgNav": "#0d1522",
+          "bgSidebar": "#090e17",
+          "hairline": "#1c2b42",
+          "hairlineLight": "#2c4263",
+          "hairlineShade": "#0a101b",
+          "text": "#e6f1ff",
+          "textAccent": "#00d2ff",
+          "textInvert": "#090e17"
+        }
+      },
+      "light": {
+        "accent": {
+          "base": "#0077aa",
+          "high": "#004d70",
+          "low": "#e0f6ff"
+        },
+        "grays": {
+          "gray1": "#0d1522",
+          "gray2": "#24354d",
+          "gray3": "#4b6280",
+          "gray4": "#7b94b2",
+          "gray5": "#b0c5dd",
+          "gray6": "#dce7f3",
+          "gray7": "#f0f5fa"
+        },
+        "neutrals": {
+          "bg": "#f5f9fc",
+          "bgAccent": "#0077aa",
+          "bgInlineCode": "#e8f1f8",
+          "bgNav": "#ffffff",
+          "bgSidebar": "#f5f9fc",
+          "hairline": "#d2dfed",
+          "hairlineLight": "#e6f0fa",
+          "hairlineShade": "#b8ccdf",
+          "text": "#0d1522",
+          "textAccent": "#0077aa",
+          "textInvert": "#ffffff"
+        }
+      }
+    },
+    "layout": {
+      "contentWidth": "48rem",
+      "sidebarWidth": "19rem"
+    },
+    "name": "stellar-cyan",
+    "schemaVersion": "tfsl.theme-v1",
+    "typography": {
+      "baseFontSize": "16px",
+      "bodyFont": "system-sans",
+      "codeFont": "system-mono",
+      "lineHeight": 1.75
+    },
+    "version": "0.1.0"
+  },
+  "briefDigest": "sha256:1f57926bc871715a439b343c17933fb0ff5de307cd17e4e9a5777d33d937842d",
+  "briefId": "starlight-cyan-modernization",
+  "compilerVersion": "0.1.0",
+  "goal": "Modernize Starlight theme accent contrast and typography for dark and light modes",
+  "metadata": {
+    "author": "Theme Lab Operator",
+    "timestamp": "2026-09-07T00:00:00Z"
+  },
+  "prohibitedChanges": [
+    "Do not alter contentWidth or sidebarWidth geometry",
+    "Do not alter neutrals background tokens"
+  ],
+  "schema": "tfsl.theme-brief",
+  "schemaVersion": 1,
+  "themeDigest": "sha256:c134e96bcc1e68e10e17f6fbeb070f07015019ac1b656bd5a6e6039475509156",
+  "title": "Starlight Stellar Cyan modernization brief",
+  "visualEvidence": [
+    {
+      "byteCount": 227,
+      "bytesBase64": "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAqklEQVR4nOXOIQEAAAwCMPrHeyGIMXExv+Ta13hA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNBzQe0HhA4wGNB7ABqBUCpHsT5AMAAAAASUVORK5CYII=",
+      "evidenceDigest": "sha256:21d833fefff26ddcb32eef7b828b154c8aa43cdb513615f2b3f15f60f03777b0",
+      "fixtureId": "starlight-kitchen-sink",
+      "height": 64,
+      "mode": "dark",
+      "pngDigest": "sha256:292c70b8cbd116d664e0a3b2e26c158ff5abacac65e01460337f055a179713af",
+      "presence": "included",
+      "schema": "tfsl.theme-visual-evidence",
+      "schemaVersion": 1,
+      "themeDigest": "sha256:63f7362edb34268d6406af95e7eccbc3ed85e6da628e14a99ddcc96895008ea9",
+      "viewport": "desktop",
+      "width": 64
+    }
+  ]
+}

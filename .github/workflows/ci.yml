@@ -1,0 +1,311 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stellar-loom-ci-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  source-policy:
+    name: Public staging source policy and receipt
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Validate PR source policy
+        env:
+          TFSB_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          TFSB_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          TFSB_HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          TFSB_EVENT_REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ "$TFSB_BASE_REF" != "main" ]; then
+            echo "::error::Base ref must be main, got $TFSB_BASE_REF"
+            exit 1
+          fi
+          if [ "$TFSB_HEAD_REF" != "staging" ]; then
+            echo "::error::Head ref must be staging, got $TFSB_HEAD_REF"
+            exit 1
+          fi
+          if [ "$TFSB_HEAD_REPOSITORY" != "$TFSB_EVENT_REPOSITORY" ]; then
+            echo "::error::PR must originate from the same repository, got $TFSB_HEAD_REPOSITORY"
+            exit 1
+          fi
+      - name: Checkout exact staging head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Record staging head receipt
+        run: |
+          mkdir -p .test-reports/source-policy
+          node tools/ci/exact-head.mjs --output .test-reports/source-policy/receipt.json --expected-branch staging --expected-base main --checkout-role staging-head
+      - name: Bind source policy receipt
+        run: node tools/ci/artifact-manifest.mjs --root .test-reports/source-policy --output .test-reports/source-policy/artifact-manifest.json --job source-policy --require receipt.json
+      - name: Upload source policy receipt
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: source-policy-receipt
+          path: .test-reports/source-policy/
+          if-no-files-found: error
+          retention-days: 14
+
+  root-package:
+    name: Root package and core test suite
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    needs: source-policy
+    steps:
+      - name: Checkout PR merge candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22.23.2
+          cache: npm
+      - name: Verify merge parents
+        run: |
+          HEAD_COMMIT=$(git rev-parse HEAD)
+          PARENT_COUNT=$(git rev-list --parents -n 1 HEAD | awk '{print NF-1}')
+          echo "Checked out commit: $HEAD_COMMIT (parents: $PARENT_COUNT)"
+      - name: Record exact-head receipt
+        run: |
+          mkdir -p .test-reports/root-package
+          node tools/ci/exact-head.mjs --output .test-reports/root-package/receipt.json --expected-branch staging --expected-base main --checkout-role merge-candidate
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Verify dist cleanliness before build
+        run: test ! -d dist
+      - run: npm run build
+      - name: Run root tests with machine report
+        run: npm test -- --reporter=default --reporter=json --outputFile=.test-reports/root-package/test-report.json
+      - name: Run production dependency audit
+        run: npm audit --json > .test-reports/root-package/audit-result.json
+      - name: Run smoke tests
+        run: npm run test:smoke
+      - name: Pack root package
+        run: |
+          npm pack --pack-destination .test-reports/root-package --json > .test-reports/root-package/pack-manifest.json
+          mv .test-reports/root-package/*.tgz .test-reports/root-package/root-package.tgz
+      - name: Check git diff cleanliness
+        run: git diff --check
+      - name: Bind root artifact bytes
+        run: node tools/ci/artifact-manifest.mjs --root .test-reports/root-package --output .test-reports/root-package/artifact-manifest.json --job root-package --require receipt.json --require pack-manifest.json --require test-report.json --require audit-result.json --require root-package.tgz
+      - name: Upload root package artifacts
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: root-package-artifacts
+          path: .test-reports/root-package/
+          if-no-files-found: error
+          retention-days: 14
+
+  consumer-fixture:
+    name: Consumer fixture and generated plugin smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    needs: source-policy
+    steps:
+      - name: Checkout PR merge candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22.23.2
+          cache: npm
+      - name: Record exact-head receipt
+        run: |
+          mkdir -p .test-reports/consumer-fixture
+          node tools/ci/exact-head.mjs --output .test-reports/consumer-fixture/receipt.json --expected-branch staging --expected-base main --checkout-role merge-candidate
+      - run: npm ci
+      - name: Install Playwright browsers with OS dependencies
+        run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Run consumer fixture smoke suite
+        run: |
+          set +e
+          node tools/smoke-generated-plugin.mjs > .test-reports/consumer-fixture/smoke-report.log
+          status=$?
+          exit $status
+      - name: Bind consumer fixture artifact bytes
+        if: always()
+        run: node tools/ci/artifact-manifest.mjs --root .test-reports/consumer-fixture --output .test-reports/consumer-fixture/artifact-manifest.json --job consumer-fixture --require receipt.json --require smoke-report.log
+      - name: Upload consumer fixture artifacts
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        if: always()
+        with:
+          name: consumer-fixture-artifacts
+          path: .test-reports/consumer-fixture/
+          if-no-files-found: error
+          retention-days: 14
+
+  codeql:
+    name: Advanced CodeQL analysis (${{ matrix.language }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    needs: source-policy
+    env:
+      TFSB_LANGUAGE: ${{ matrix.language }}
+      TFSB_MATRIX_JSON: '{"language":"${{ matrix.language }}"}'
+      TFSB_CODEQL_REPORT_DIR: .test-reports/codeql-${{ matrix.language }}
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: javascript-typescript
+          - language: actions
+    steps:
+      - name: Checkout PR merge candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22.23.2
+          cache: npm
+      - name: Record exact-head receipt
+        run: |
+          mkdir -p "$TFSB_CODEQL_REPORT_DIR"
+          node tools/ci/exact-head.mjs --output "$TFSB_CODEQL_REPORT_DIR/receipt.json" --expected-branch staging --expected-base main --checkout-role merge-candidate
+      - name: Initialize CodeQL Action
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  supply-chain:
+    name: Supply chain, Syft SBOMs, Grype scan, and audits
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    needs:
+      - source-policy
+      - root-package
+      - consumer-fixture
+    steps:
+      - name: Checkout PR merge candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22.23.2
+          cache: npm
+      - name: Record exact-head receipt
+        run: |
+          mkdir -p .test-reports/supply-chain
+          node tools/ci/exact-head.mjs --output .test-reports/supply-chain/receipt.json --expected-branch staging --expected-base main --checkout-role merge-candidate
+      - name: Download product release artifacts
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          path: ${{ runner.temp }}/tfsb-loom-supply/
+      - name: Materialize Loom release surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          TFSB_INPUT_DIR="$RUNNER_TEMP/tfsb-loom-supply"
+          TFSB_RELEASE_DIR="$RUNNER_TEMP/tfsb-loom-release"
+          rm -rf "$TFSB_RELEASE_DIR"
+          mkdir -p "$TFSB_RELEASE_DIR/root-package" "$TFSB_RELEASE_DIR/root-install"
+          test -s "$TFSB_INPUT_DIR/root-package-artifacts/root-package.tgz"
+          cp "$TFSB_INPUT_DIR/root-package-artifacts/root-package.tgz" "$TFSB_RELEASE_DIR/root-package/root-package.tgz"
+          node tools/ci/artifact-manifest.mjs --archive "$TFSB_INPUT_DIR/root-package-artifacts/root-package.tgz" --manifest "$TFSB_INPUT_DIR/root-package-artifacts/artifact-manifest.json" --extract-to "$TFSB_RELEASE_DIR/root-install" --strip-components 1
+          cp package.json package-lock.json "$TFSB_RELEASE_DIR/root-install/"
+          npm ci --ignore-scripts --no-audit --no-fund --omit=dev --prefix "$TFSB_RELEASE_DIR/root-install"
+          mkdir -p "$RUNNER_TEMP/tfsb-loom-inventory/core"
+          cp package.json package-lock.json "$RUNNER_TEMP/tfsb-loom-inventory/core/"
+          rm "$TFSB_RELEASE_DIR/root-install/package-lock.json"
+      - name: Run Syft SBOM generation and Grype vulnerability scan
+        run: |
+          TFSB_RELEASE_DIR="$RUNNER_TEMP/tfsb-loom-release"
+          node tools/ci/run-syft-grype.mjs --target "$TFSB_RELEASE_DIR" --output-dir .test-reports/supply-chain --name root-package \
+            --component-input "build-input:core-lock=$RUNNER_TEMP/tfsb-loom-inventory/core" \
+            --component-catalogers core-lock=javascript-lock-cataloger,javascript-package-cataloger
+      - name: Run selected workflow and secret checks
+        run: node tools/ci/run-workflow-checks.mjs --root . --output-dir .test-reports/workflow-checks
+      - name: Retain workflow and secret check outputs
+        run: |
+          rm -rf .test-reports/supply-chain/workflow-checks
+          mv .test-reports/workflow-checks .test-reports/supply-chain/workflow-checks
+          find .test-reports/supply-chain -type f -size 0 -delete
+      - name: Bind supply-chain artifacts
+        run: |
+          node tools/ci/artifact-manifest.mjs --root .test-reports/supply-chain --output .test-reports/supply-chain/artifact-manifest.json --job supply-chain --require receipt.json --require root-package.syft.json --require root-package.spdx.json --require root-package.cdx.json --require root-package.grype.json --require root-package.grype.sarif --require root-package.receipt.json --require workflow-checks/actionlint.result.json --require workflow-checks/zizmor.result.json --require workflow-checks/betterleaks.result.json --require workflow-checks/workflow-checks.receipt.json --require workflow-checks/betterleaks.report.json
+      - name: Upload supply chain artifacts
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: supply-chain-artifacts
+          path: .test-reports/supply-chain/
+          if-no-files-found: error
+          retention-days: 14
+
+  evidence-aggregate:
+    name: Evidence aggregation and qualification gate
+    runs-on: ubuntu-24.04
+    if: always()
+    env:
+      TFSB_NEEDS_JSON: ${{ toJson(needs) }}
+    timeout-minutes: 15
+    needs:
+      - source-policy
+      - root-package
+      - consumer-fixture
+      - codeql
+      - supply-chain
+    steps:
+      - name: Checkout PR merge candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22.23.2
+          cache: npm
+      - name: Record exact-head receipt
+        run: |
+          mkdir -p .test-reports/evidence-aggregate
+          node tools/ci/exact-head.mjs --output .test-reports/evidence-aggregate/receipt.json --expected-branch staging --expected-base main --checkout-role merge-candidate
+      - name: Download all job artifacts
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          path: .downloaded-artifacts/
+      - name: Aggregate evidence and generate qualification manifest
+        run: |
+          node tools/ci/evidence-aggregator.mjs --download-dir .downloaded-artifacts --output-dir .test-reports/evidence-aggregate --product stellar-loom --expected-receipt .test-reports/evidence-aggregate/receipt.json --needs-json "$TFSB_NEEDS_JSON"
+      - name: Upload evidence aggregate artifacts
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        if: always()
+        with:
+          name: evidence-aggregate-artifacts
+          path: .test-reports/evidence-aggregate/
+          if-no-files-found: error
+          retention-days: 14
