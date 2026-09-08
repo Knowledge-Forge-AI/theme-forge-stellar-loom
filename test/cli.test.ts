@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { randomBytes } from "node:crypto";
 import { mkdtemp, readFile, rm, writeFile, readdir, symlink, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -6,7 +7,39 @@ import { runCli } from "../src/cli.js";
 
 const EXAMPLES_DIR = resolve(__dirname, "../examples");
 
+vi.mock("node:crypto", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("node:crypto")>();
+  return { ...actual, randomBytes: vi.fn(actual.randomBytes) };
+});
+
 describe("TFSL CLI", () => {
+  it.each(["css", "desc"])("preserves a preexisting %s temporary-name collision during compile overwrite", async (kind) => {
+    const scratch = await mkdtemp(join(tmpdir(), "tfsl-stage-collision-"));
+    const originalWrite = process.stdout.write;
+    let output = "";
+    process.stdout.write = ((chunk: any) => { output += chunk; return true; }) as any;
+    try {
+      const theme = join(EXAMPLES_DIR, "stellar-cyan.theme.json");
+      expect(await runCli(["node", "tfsl", "compile", theme, "--out", scratch, "--json"])).toBe(0);
+      const originalCss = await readFile(join(scratch, "theme.css"), "utf8");
+      const tag = "0123456789abcdef";
+      const collisionName = `.tfsl-tmp-${kind}-${tag}`;
+      const collision = join(scratch, collisionName);
+      await writeFile(collision, "operator-owned collision");
+      vi.mocked(randomBytes).mockImplementationOnce(() => Buffer.from(tag, "hex"));
+      output = "";
+      expect(await runCli(["node", "tfsl", "compile", theme, "--out", scratch, "--overwrite", "--json"])).toBe(3);
+      expect(JSON.parse(output).code).toBe("IO_STAGE_FAILURE");
+      expect(await readFile(collision, "utf8")).toBe("operator-owned collision");
+      expect(await readFile(join(scratch, "theme.css"), "utf8")).toBe(originalCss);
+      expect((await readdir(scratch)).filter((name) => name.startsWith(".tfsl-tmp-"))).toEqual([collisionName]);
+    } finally {
+      vi.mocked(randomBytes).mockReset();
+      process.stdout.write = originalWrite;
+      await rm(scratch, { recursive: true, force: true });
+    }
+  });
+
   it("prints help on --help or -h", async () => {
     let output = "";
     const origWrite = process.stdout.write;
