@@ -8,7 +8,9 @@ import {
   lstat,
   stat,
   realpath,
+  open,
 } from "node:fs/promises";
+import { constants } from "node:fs";
 import { resolve, join, dirname, basename } from "node:path";
 import { randomBytes } from "node:crypto";
 import { compileTheme } from "./compiler/index.js";
@@ -37,6 +39,21 @@ import {
   type ThemeExchangePacket,
   type ThemeVisualRecord,
 } from "./design-exchange/index.js";
+
+async function readInspectedOutput(path: string, expected: Awaited<ReturnType<typeof lstat>>): Promise<string> {
+  // O_NOFOLLOW is unavailable on Windows; the opened file identity is checked
+  // on every platform before reading from this same handle.
+  const file = await open(path, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0));
+  try {
+    const actual = await file.stat();
+    if (!actual.isFile() || actual.dev !== expected.dev || actual.ino !== expected.ino) {
+      throw new FilesystemSafetyError("Managed output changed after inspection.");
+    }
+    return await file.readFile("utf8");
+  } finally {
+    await file.close();
+  }
+}
 
 export const CLI_HELP = `Theme Forge Stellar Loom (TFSL) CLI
 
@@ -1028,7 +1045,7 @@ function emitFsError(command: string, code: string, message: string, json: boole
       if (cssStat && descStat) {
         let existingDesc: any;
         try {
-          const descContent = await readFile(targetDescPath, "utf8");
+          const descContent = await readInspectedOutput(targetDescPath, descStat);
           existingDesc = JSON.parse(descContent);
         } catch {
           const msg = `Existing descriptor '${targetDescPath}' is corrupt or unparseable. Refusing overwrite.`;
@@ -1074,7 +1091,7 @@ function emitFsError(command: string, code: string, message: string, json: boole
         // Verify that existing theme.css has not been manually modified
         let existingCss: string;
         try {
-          existingCss = await readFile(targetCssPath, "utf8");
+          existingCss = await readInspectedOutput(targetCssPath, cssStat);
         } catch (err: any) {
           const msg = `Failed to read existing CSS file '${targetCssPath}': ${err.message || String(err)}`;
           return emitFsError("compile", "OUTPUT_FS_ERROR", msg, json);
@@ -1115,17 +1132,27 @@ function emitFsError(command: string, code: string, message: string, json: boole
   const randTag = randomBytes(8).toString("hex");
   const tempCssPath = join(absOutDir, `.tfsl-tmp-css-${randTag}`);
   const tempDescPath = join(absOutDir, `.tfsl-tmp-desc-${randTag}`);
+  const ownedTemps = new Set<string>();
+  async function stageOutput(path: string, content: string): Promise<void> {
+    const file = await open(path, "wx");
+    ownedTemps.add(path);
+    try { await file.writeFile(content, "utf8"); }
+    finally { await file.close(); }
+  }
+  async function removeOwnedTemps(): Promise<void> {
+    for (const path of ownedTemps) {
+      try { await unlink(path); } catch {}
+    }
+  }
 
   try {
-    await writeFile(tempCssPath, compileResult.css, "utf8");
-    await writeFile(
+    await stageOutput(tempCssPath, compileResult.css);
+    await stageOutput(
       tempDescPath,
-      JSON.stringify(compileResult.descriptor, null, 2) + "\n",
-      "utf8"
+      JSON.stringify(compileResult.descriptor, null, 2) + "\n"
     );
   } catch (err: any) {
-    try { await unlink(tempCssPath); } catch {}
-    try { await unlink(tempDescPath); } catch {}
+    await removeOwnedTemps();
     const msg = `Failed to stage temporary compiler outputs: ${err.message}`;
     if (json) {
       process.stdout.write(
@@ -1150,11 +1177,12 @@ function emitFsError(command: string, code: string, message: string, json: boole
   let cssRenamed = false;
   try {
     await rename(tempCssPath, targetCssPath);
+    ownedTemps.delete(tempCssPath);
     cssRenamed = true;
     await rename(tempDescPath, targetDescPath);
+    ownedTemps.delete(tempDescPath);
   } catch (err: any) {
-    try { await unlink(tempCssPath); } catch {}
-    try { await unlink(tempDescPath); } catch {}
+    await removeOwnedTemps();
 
     const msg = cssRenamed
       ? `Partial write failure: theme.css was updated but theme.descriptor.json failed to rename: ${err.message}`
