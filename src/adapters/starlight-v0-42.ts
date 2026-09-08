@@ -97,6 +97,13 @@ export function compileStarlightCss(spec: ThemeSpecification, inputDigest: strin
     ...commonVars,
     "}",
     "",
+    // Browser automatic outline colors vary by platform and can disappear
+    // against a dark theme. Use the same authored token as readable links.
+    ".sl-markdown-content a:focus-visible {",
+    "  outline: 2px solid var(--sl-color-text-accent);",
+    "  outline-offset: 2px;",
+    "}",
+    "",
   ];
 
   return lines.join("\n");
