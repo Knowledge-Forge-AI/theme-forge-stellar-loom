@@ -1792,7 +1792,7 @@ export async function observeNovaConsumers(workDir, novaRoot, options = {}) {
             await link.focus();
             const focus = await link.evaluate(el => ({ visible: el.matches(":focus-visible"), width: getComputedStyle(el).outlineWidth, style: getComputedStyle(el).outlineStyle, color: getComputedStyle(el).outlineColor }));
             assert(focus.visible && parseFloat(focus.width) >= 1 && focus.style !== "none", `Keyboard focus is not visibly outlined: ${JSON.stringify(focus)}`);
-            assert(calculateContrastRatio(focus.color, measurements.bodyBg) >= 3, "Focus ring contrast");
+            assert(calculateContrastRatio(focus.color, measurements.bodyBg) >= 3, `${id} ${mode} ${width}: Focus ring contrast ${JSON.stringify({ focus, background: measurements.bodyBg })}`);
 
             await page.emulateMedia({ reducedMotion: "reduce" });
             const motion = await page.evaluate(() => ({
