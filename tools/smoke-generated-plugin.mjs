@@ -149,7 +149,7 @@ function startStaticServer(rootDir, port = 0) {
       res.end(content);
     } catch (err) {
       res.writeHead(500, { "Content-Type": "text/plain" });
-      res.end(String(err));
+      res.end("500 Internal Server Error");
     }
   });
 
