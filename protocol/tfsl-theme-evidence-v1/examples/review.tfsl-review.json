@@ -1,0 +1,60 @@
+{
+  "annotations": [
+    {
+      "annotationId": "ann-accent-dark",
+      "candidateDigest": "sha256:36cbaa32c0062a147d1edb1c826dc2abfbb79e92a57786c18d634633bfc96090",
+      "category": "contrast",
+      "comment": "Crisp primary cyan accent meets WCAG 2.2 AA on dark neutral background",
+      "severity": "note",
+      "target": {
+        "fieldPath": "colors.dark.accent.base",
+        "kind": "field",
+        "mode": "dark"
+      }
+    },
+    {
+      "annotationId": "ann-visual-preview",
+      "candidateDigest": "sha256:36cbaa32c0062a147d1edb1c826dc2abfbb79e92a57786c18d634633bfc96090",
+      "category": "layout",
+      "comment": "Header nav and brand badge align cleanly with high-contrast accent",
+      "severity": "note",
+      "target": {
+        "evidenceDigest": "sha256:21d833fefff26ddcb32eef7b828b154c8aa43cdb513615f2b3f15f60f03777b0",
+        "kind": "visual",
+        "pngDigest": "sha256:292c70b8cbd116d664e0a3b2e26c158ff5abacac65e01460337f055a179713af",
+        "region": [
+          100000,
+          100000,
+          500000,
+          500000
+        ]
+      }
+    }
+  ],
+  "briefDigest": "sha256:1f57926bc871715a439b343c17933fb0ff5de307cd17e4e9a5777d33d937842d",
+  "candidateDigests": [
+    "sha256:36cbaa32c0062a147d1edb1c826dc2abfbb79e92a57786c18d634633bfc96090",
+    "sha256:5bb91fc8a1123171fc675fd7a2eff83ef8a7641b15fa336520ea84de5d22f948"
+  ],
+  "dispositions": [
+    {
+      "candidateDigest": "sha256:36cbaa32c0062a147d1edb1c826dc2abfbb79e92a57786c18d634633bfc96090",
+      "comment": "Excellent contrast across both dark and light modes",
+      "disposition": "preferred"
+    },
+    {
+      "candidateDigest": "sha256:5bb91fc8a1123171fc675fd7a2eff83ef8a7641b15fa336520ea84de5d22f948",
+      "comment": "Vibrant look, reserved for alternative dark-only skin",
+      "disposition": "deferred"
+    }
+  ],
+  "overallDisposition": {
+    "candidateDigest": "sha256:36cbaa32c0062a147d1edb1c826dc2abfbb79e92a57786c18d634633bfc96090",
+    "kind": "preferred"
+  },
+  "reviewDigest": "sha256:170e6130f53bc6a24e80c730c8470e63da92bc9f53912d767ce69de26ff6cf7e",
+  "reviewId": "cyan-modernization-review",
+  "schema": "tfsl.theme-review",
+  "schemaVersion": 1,
+  "summary": "Candidate A is preferred due to superior contrast and typography readability."
+}

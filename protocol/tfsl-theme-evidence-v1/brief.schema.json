@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://knowledge-forge.ai/tfsl/theme-evidence/v1/brief.schema.json",
+  "title": "TFSL theme brief packet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "briefId",
+    "title",
+    "goal",
+    "baselineTheme",
+    "themeDigest",
+    "compilerVersion",
+    "adapter",
+    "allowedFields",
+    "allowedModes",
+    "approvedTemplates",
+    "acceptanceCriteria",
+    "prohibitedChanges",
+    "visualEvidence",
+    "briefDigest"
+  ],
+  "properties": {
+    "schema": { "const": "tfsl.theme-brief" },
+    "schemaVersion": { "const": 1 },
+    "briefId": { "$ref": "#/$defs/id" },
+    "title": { "$ref": "#/$defs/text128" },
+    "goal": { "$ref": "#/$defs/text4096" },
+    "baselineTheme": { "$ref": "#/$defs/theme" },
+    "themeDigest": { "$ref": "#/$defs/digest" },
+    "compilerVersion": { "$ref": "#/$defs/text64" },
+    "adapter": { "$ref": "#/$defs/text64" },
+    "allowedFields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "allowedModes": {
+      "type": "array",
+      "items": { "enum": ["dark", "light"] },
+      "uniqueItems": true
+    },
+    "approvedTemplates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/id" },
+      "uniqueItems": true
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/text512" }
+    },
+    "prohibitedChanges": {
+      "type": "array",
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/text512" }
+    },
+    "visualEvidence": {
+      "type": "array",
+      "maxItems": 8,
+      "items": { "$ref": "visual-evidence.schema.json" }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "author": { "$ref": "#/$defs/text256" },
+        "timestamp": { "$ref": "#/$defs/text64" }
+      }
+    },
+    "briefDigest": { "$ref": "#/$defs/digest" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-z][a-z0-9]*(?:[-.][a-z0-9]+)*$" },
+    "text64": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "text128": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "text256": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "text512": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "text4096": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "theme": {
+      "type": "object",
+      "required": ["name", "version", "schemaVersion", "adapter", "colors", "typography", "layout"]
+    }
+  }
+}

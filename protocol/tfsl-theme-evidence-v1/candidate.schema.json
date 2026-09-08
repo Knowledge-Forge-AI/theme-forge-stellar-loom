@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://knowledge-forge.ai/tfsl/theme-evidence/v1/candidate.schema.json",
+  "title": "TFSL theme candidate packet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "candidateId",
+    "briefDigest",
+    "theme",
+    "themeDigest",
+    "rationale",
+    "visualEvidence",
+    "candidateDigest"
+  ],
+  "properties": {
+    "schema": { "const": "tfsl.theme-candidate" },
+    "schemaVersion": { "const": 1 },
+    "candidateId": { "$ref": "#/$defs/id" },
+    "briefDigest": { "$ref": "#/$defs/digest" },
+    "theme": { "$ref": "#/$defs/theme" },
+    "themeDigest": { "$ref": "#/$defs/digest" },
+    "rationale": { "$ref": "#/$defs/text4096" },
+    "packageMetadata": { "type": "object" },
+    "claimedProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "author": { "$ref": "#/$defs/text256" },
+        "toolName": { "$ref": "#/$defs/text256" },
+        "toolVersion": { "$ref": "#/$defs/text128" },
+        "timestamp": { "$ref": "#/$defs/text64" }
+      }
+    },
+    "claimedDiagnostics": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "claimedCssDigest": { "$ref": "#/$defs/digest" },
+    "visualEvidence": {
+      "type": "array",
+      "maxItems": 8,
+      "items": { "$ref": "visual-evidence.schema.json" }
+    },
+    "candidateDigest": { "$ref": "#/$defs/digest" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-z][a-z0-9]*(?:[-.][a-z0-9]+)*$" },
+    "text64": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "text128": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "text256": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "text4096": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "theme": {
+      "type": "object",
+      "required": ["name", "version", "schemaVersion", "adapter", "colors", "typography", "layout"]
+    }
+  }
+}

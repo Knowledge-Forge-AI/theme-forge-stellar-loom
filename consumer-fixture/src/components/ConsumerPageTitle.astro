@@ -1,0 +1,19 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+---
+
+<div class="consumer-page-title-wrapper" data-test-override="consumer-owned">
+  <Default {...Astro.props} />
+  <p class="consumer-subtitle">Consumer Owned Component Override</p>
+</div>
+
+<style>
+  .consumer-page-title-wrapper {
+    border-bottom: 2px dashed #e11d48;
+    margin-bottom: 1rem;
+  }
+  .consumer-subtitle {
+    font-size: 0.85rem;
+    color: #e11d48;
+  }
+</style>
