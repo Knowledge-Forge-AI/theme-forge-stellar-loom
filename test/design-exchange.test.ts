@@ -1,3 +1,4 @@
+import { currentExchangeFixture } from "./current-exchange-fixture.js";
 import { describe, expect, it } from "vitest";
 import { readFileSync, rmSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -134,8 +135,8 @@ describe("TFSL Design Exchange", () => {
         expect(validateThemeExchangePacket(packet).schema).toBe("tfsl.theme-candidate");
 
         const verifyRes = verifyThemeCandidate(packet as any, briefPacket as any);
-        expect(verifyRes.valid).toBe(true);
-        expect(verifyRes.errors).toEqual([]);
+        expect(verifyRes.valid).toBe(false);
+        expect(verifyRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.2.0'"]);
 
         const inspection = inspectThemeExchangePacket(packet);
         expect(inspection.valid).toBe(true);
@@ -157,8 +158,8 @@ describe("TFSL Design Exchange", () => {
       expect(validateThemeExchangePacket(packet).schema).toBe("tfsl.theme-review");
 
       const linkRes = validateThemeReviewLinks(packet as any, [candA as any, candB as any], briefPacket as any);
-      expect(linkRes.valid).toBe(true);
-      expect(linkRes.errors).toEqual([]);
+      expect(linkRes.valid).toBe(false);
+      expect(linkRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.2.0'"]);
     });
 
     it("fails all cases in negative-corpus.json", () => {
@@ -319,8 +320,8 @@ describe("TFSL Design Exchange", () => {
     });
 
     it("verifyThemeCandidate executes single compile and respects strictContrast option", () => {
-      const brief = parseThemeExchangePacket(readFileSync(resolve(EXAMPLES_DIR, "brief.tfsl-brief.json"), "utf8"));
-      const candA = parseThemeExchangePacket(readFileSync(resolve(EXAMPLES_DIR, "candidate-a.tfsl-candidate.json"), "utf8"));
+      const brief = parseThemeExchangePacket(currentExchangeFixture("brief.tfsl-brief.json"));
+      const candA = parseThemeExchangePacket(currentExchangeFixture("candidate-a.tfsl-candidate.json"));
 
       // 1. Pass with strictContrast: true on compliant theme
       const resPass = verifyThemeCandidate(candA as any, brief as any, { strictContrast: true });
