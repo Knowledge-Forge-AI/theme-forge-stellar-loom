@@ -87,7 +87,7 @@ jobs:
       - run: npm run typecheck
       - name: Verify dist cleanliness before build
         run: test ! -d dist
-      - run: npm run build
+      - run: node tools/build-catalog-evidence.mjs
       - name: Run root tests with machine report
         run: npm test -- --reporter=default --reporter=json --outputFile=.test-reports/root-package/test-report.json
       - name: Run production dependency audit
@@ -134,7 +134,7 @@ jobs:
       - run: npm ci
       - name: Install Playwright browsers with OS dependencies
         run: npx playwright install --with-deps chromium
-      - run: npm run build
+      - run: node tools/build-catalog-evidence.mjs
       - name: Run consumer fixture smoke suite
         run: |
           set +e

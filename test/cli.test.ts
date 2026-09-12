@@ -74,7 +74,7 @@ describe("TFSL CLI", () => {
     try {
       const code = await runCli(["node", "tfsl", "--version"]);
       expect(code).toBe(0);
-      expect(output).toContain("@knowledge-forge-ai/theme-forge-stellar-loom 0.1.0");
+      expect(output).toContain("@knowledge-forge-ai/theme-forge-stellar-loom 0.2.0");
     } finally {
       process.stdout.write = origWrite;
     }

@@ -1,0 +1,75 @@
+{
+  "schema": "tfsl.package-provenance-v1",
+  "schemaVersion": 1,
+  "packageName": "starlight-theme-stellar-cyan",
+  "packageVersion": "0.1.0",
+  "generator": "@knowledge-forge-ai/theme-forge-stellar-loom",
+  "generatorVersion": "0.1.1",
+  "themeName": "stellar-cyan",
+  "themeVersion": "0.1.0",
+  "themeInputDigest": "c134e96bcc1e68e10e17f6fbeb070f07015019ac1b656bd5a6e6039475509156",
+  "cssOutputDigest": "e0aa688d2976a02eff54ef399eed9f4e90e725a322c47ccf470db2e1e4628011",
+  "files": [
+    {
+      "path": "COMMERCIAL-LICENSE.md",
+      "size": 932,
+      "sha256": "a81bcda7ec57a5c09f1cc6d05de420db7a0053b9496f1762065e083a60e5ede2",
+      "category": "legal-notice"
+    },
+    {
+      "path": "LICENSE",
+      "size": 34460,
+      "sha256": "62eef07fc3ad238dd889ff98cf9ed87b3ef0f421579b6945f87ec37c608afb62",
+      "category": "legal-notice"
+    },
+    {
+      "path": "NOTICE",
+      "size": 598,
+      "sha256": "e711709e69f5f8fc65c55ff3b3e47c390ed8f60890eb38cf999d95c2494b5d17",
+      "category": "legal-notice"
+    },
+    {
+      "path": "README.md",
+      "size": 1921,
+      "sha256": "7460547b2268c24f012c234fe44800ef7ab3dbf721902fda431b95b5cb3280fd",
+      "category": "first-party-expression"
+    },
+    {
+      "path": "index.d.ts",
+      "size": 528,
+      "sha256": "973fdd15ef408692a4f36c7699ab6e691a59f0c56738cf5ca0b7e084f103635c",
+      "category": "first-party-expression"
+    },
+    {
+      "path": "index.js",
+      "size": 875,
+      "sha256": "ded8b2170a21136eba221644e23f6ad5e44036cc3b7fd18c824dca8792705c11",
+      "category": "first-party-expression"
+    },
+    {
+      "path": "package.json",
+      "size": 705,
+      "sha256": "28cc19fbd63229ca6cb0f8d6c5bd13417bcb55fa73ed0cc45ccaafadef98be44",
+      "category": "generated-metadata"
+    },
+    {
+      "path": "styles/theme.css",
+      "size": 2515,
+      "sha256": "e0aa688d2976a02eff54ef399eed9f4e90e725a322c47ccf470db2e1e4628011",
+      "category": "generated-syntax"
+    },
+    {
+      "path": "theme.descriptor.json",
+      "size": 630,
+      "sha256": "2dbe20d9368f82115ddb6a7b1dce6c6aa86355c709409c0c1866703e45939065",
+      "category": "generated-metadata"
+    },
+    {
+      "path": "theme.json",
+      "size": 1794,
+      "sha256": "c134e96bcc1e68e10e17f6fbeb070f07015019ac1b656bd5a6e6039475509156",
+      "category": "user-authored-data"
+    }
+  ],
+  "licensingNotice": "Licensed under AGPL-3.0-or-later. Commercial dual licensing available directly from The Knowledge Forge Authors."
+}

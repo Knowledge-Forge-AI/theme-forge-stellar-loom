@@ -1,0 +1,1321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://knowledge-forge.ai/tfsl/theme-evidence/v2/candidate.schema.json",
+  "title": "TFSL theme candidate packet v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "candidateId",
+    "semanticCompiler",
+    "adapter",
+    "catalog",
+    "catalogDigest",
+    "producer",
+    "inputDigest",
+    "outputDigest",
+    "outputInventory",
+    "state",
+    "theme",
+    "rationale",
+    "candidateDigest"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tfsl.theme-candidate"
+    },
+    "schemaVersion": {
+      "const": 2
+    },
+    "candidateId": {
+      "$ref": "#/$defs/id"
+    },
+    "semanticCompiler": {
+      "const": "tfsl.theme-compiler-v2-core-1"
+    },
+    "adapter": {
+      "const": "starlight-v0.42"
+    },
+    "catalog": {
+      "const": "tfsl.starlight-core-catalog-v1"
+    },
+    "catalogDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "version",
+        "executableDigest",
+        "packageDigest"
+      ],
+      "properties": {
+        "package": {
+          "$ref": "#/$defs/text128"
+        },
+        "version": {
+          "$ref": "#/$defs/text64"
+        },
+        "executableDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "packageDigest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "inputDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "outputDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "outputInventory": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": false,
+      "prefixItems": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "digest"
+          ],
+          "properties": {
+            "id": {
+              "const": "styles/layers.css"
+            },
+            "digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "digest"
+          ],
+          "properties": {
+            "id": {
+              "const": "styles/tokens.css"
+            },
+            "digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "digest"
+          ],
+          "properties": {
+            "id": {
+              "const": "styles/base.css"
+            },
+            "digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "digest"
+          ],
+          "properties": {
+            "id": {
+              "const": "styles/accent.css"
+            },
+            "digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "digest"
+          ],
+          "properties": {
+            "id": {
+              "const": "styles/overrides.css"
+            },
+            "digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          }
+        }
+      ]
+    },
+    "state": {
+      "const": "candidate"
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "adapter",
+        "name",
+        "version",
+        "tokenSets",
+        "accentVariants",
+        "defaultAccent",
+        "typography",
+        "surfaces",
+        "layoutPreset",
+        "components",
+        "codePresentation",
+        "fonts"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "tfsl.theme-v2"
+        },
+        "adapter": {
+          "const": "starlight-v0.42"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,64}$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
+        },
+        "tokenSets": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 16,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+            "not": {
+              "enum": [
+                "constructor",
+                "prototype",
+                "__proto__"
+              ]
+            }
+          },
+          "additionalProperties": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 128,
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+              "not": {
+                "enum": [
+                  "constructor",
+                  "prototype",
+                  "__proto__"
+                ]
+              }
+            },
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-f]{6}$"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "pattern": "^#[0-9a-f]{6}$"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "alias"
+                  ],
+                  "properties": {
+                    "alias": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                      "not": {
+                        "enum": [
+                          "constructor",
+                          "prototype",
+                          "__proto__"
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "accentVariants": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 16,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+            "not": {
+              "enum": [
+                "constructor",
+                "prototype",
+                "__proto__"
+              ]
+            }
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "tokenSet",
+              "light",
+              "dark"
+            ],
+            "properties": {
+              "tokenSet": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                "not": {
+                  "enum": [
+                    "constructor",
+                    "prototype",
+                    "__proto__"
+                  ]
+                }
+              },
+              "light": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "page",
+                  "navigation",
+                  "header",
+                  "sidebar",
+                  "raised",
+                  "panel",
+                  "card",
+                  "inline-code",
+                  "code",
+                  "body",
+                  "secondary",
+                  "muted",
+                  "inverted",
+                  "link",
+                  "hairline",
+                  "border",
+                  "focus",
+                  "selection-background",
+                  "selection-text",
+                  "accent-base",
+                  "accent-low",
+                  "accent-high"
+                ],
+                "properties": {
+                  "page": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "navigation": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "header": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "sidebar": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "raised": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "panel": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "card": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "inline-code": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "body": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "secondary": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "muted": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "inverted": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "link": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "hairline": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "border": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "focus": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "selection-background": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "selection-text": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "accent-base": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "accent-low": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "accent-high": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  }
+                }
+              },
+              "dark": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "page",
+                  "navigation",
+                  "header",
+                  "sidebar",
+                  "raised",
+                  "panel",
+                  "card",
+                  "inline-code",
+                  "code",
+                  "body",
+                  "secondary",
+                  "muted",
+                  "inverted",
+                  "link",
+                  "hairline",
+                  "border",
+                  "focus",
+                  "selection-background",
+                  "selection-text",
+                  "accent-base",
+                  "accent-low",
+                  "accent-high"
+                ],
+                "properties": {
+                  "page": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "navigation": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "header": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "sidebar": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "raised": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "panel": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "card": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "inline-code": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "body": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "secondary": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "muted": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "inverted": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "link": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "hairline": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "border": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "focus": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "selection-background": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "selection-text": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "accent-base": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "accent-low": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  },
+                  "accent-high": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                    "not": {
+                      "enum": [
+                        "constructor",
+                        "prototype",
+                        "__proto__"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "defaultAccent": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+          "not": {
+            "enum": [
+              "constructor",
+              "prototype",
+              "__proto__"
+            ]
+          }
+        },
+        "typography": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "body",
+            "heading",
+            "ui",
+            "code"
+          ],
+          "properties": {
+            "body": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "font",
+                "size",
+                "lineHeight"
+              ],
+              "properties": {
+                "font": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                  "not": {
+                    "enum": [
+                      "constructor",
+                      "prototype",
+                      "__proto__"
+                    ]
+                  }
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 8,
+                  "maximum": 96
+                },
+                "lineHeight": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 2.5
+                }
+              }
+            },
+            "heading": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "font",
+                "size",
+                "lineHeight"
+              ],
+              "properties": {
+                "font": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                  "not": {
+                    "enum": [
+                      "constructor",
+                      "prototype",
+                      "__proto__"
+                    ]
+                  }
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 8,
+                  "maximum": 96
+                },
+                "lineHeight": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 2.5
+                }
+              }
+            },
+            "ui": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "font",
+                "size",
+                "lineHeight"
+              ],
+              "properties": {
+                "font": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                  "not": {
+                    "enum": [
+                      "constructor",
+                      "prototype",
+                      "__proto__"
+                    ]
+                  }
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 8,
+                  "maximum": 96
+                },
+                "lineHeight": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 2.5
+                }
+              }
+            },
+            "code": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "font",
+                "size",
+                "lineHeight"
+              ],
+              "properties": {
+                "font": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                  "not": {
+                    "enum": [
+                      "constructor",
+                      "prototype",
+                      "__proto__"
+                    ]
+                  }
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 8,
+                  "maximum": 96
+                },
+                "lineHeight": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 2.5
+                }
+              }
+            }
+          }
+        },
+        "surfaces": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "spacing",
+            "radii",
+            "border",
+            "focus",
+            "content",
+            "sidebar"
+          ],
+          "properties": {
+            "spacing": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 32
+            },
+            "radii": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 64
+            },
+            "border": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 8
+            },
+            "focus": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 8
+            },
+            "content": {
+              "type": "number",
+              "minimum": 320,
+              "maximum": 3840
+            },
+            "sidebar": {
+              "type": "number",
+              "minimum": 120,
+              "maximum": 960
+            },
+            "borderStyle": {
+              "enum": [
+                "solid",
+                "dashed",
+                "dotted"
+              ]
+            },
+            "focusOffset": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 16
+            }
+          }
+        },
+        "layoutPreset": {
+          "enum": [
+            "standard",
+            "compact",
+            "wide"
+          ]
+        },
+        "components": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pageTitle"
+          ],
+          "properties": {
+            "pageTitle": {
+              "enum": [
+                "consumer-default",
+                "page-title-frame"
+              ]
+            }
+          }
+        },
+        "codePresentation": {
+          "const": "consumer-default"
+        },
+        "fonts": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "family",
+              "style",
+              "weight",
+              "format",
+              "sha256",
+              "license",
+              "notice"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+                "not": {
+                  "enum": [
+                    "constructor",
+                    "prototype",
+                    "__proto__"
+                  ]
+                }
+              },
+              "family": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9 -]{0,63}$"
+              },
+              "style": {
+                "enum": [
+                  "normal",
+                  "italic",
+                  "oblique"
+                ]
+              },
+              "weight": {
+                "oneOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 900
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^[1-9][0-9]{2}( [1-9][0-9]{2})?$"
+                  }
+                ]
+              },
+              "format": {
+                "enum": [
+                  "woff",
+                  "woff2"
+                ]
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "license": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9.+-]{0,127}$"
+              },
+              "notice": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "selectedAccent": {
+      "$ref": "#/$defs/id"
+    },
+    "rationale": {
+      "$ref": "#/$defs/text4096"
+    },
+    "visualSha": {
+      "$ref": "#/$defs/digest"
+    },
+    "visualEvidence": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "schemaVersion",
+          "presence",
+          "evidenceDigest"
+        ],
+        "properties": {
+          "schema": {
+            "const": "tfsl.theme-visual-evidence"
+          },
+          "schemaVersion": {
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "presence": {
+            "enum": [
+              "included",
+              "absent",
+              "unavailable"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "pngDigest": {
+            "$ref": "#/$defs/digest"
+          },
+          "bytesBase64": {
+            "type": "string"
+          },
+          "byteCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "mode": {
+            "enum": [
+              "dark",
+              "light"
+            ]
+          },
+          "viewport": {
+            "enum": [
+              "desktop",
+              "mobile"
+            ]
+          },
+          "themeDigest": {
+            "$ref": "#/$defs/digest"
+          },
+          "fixtureId": {
+            "type": "string"
+          },
+          "evidenceDigest": {
+            "$ref": "#/$defs/digest"
+          }
+        }
+      }
+    },
+    "originV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packetDigest",
+        "byteDigest"
+      ],
+      "properties": {
+        "packetDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "byteDigest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "claimedProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "$ref": "#/$defs/text256"
+        },
+        "toolName": {
+          "$ref": "#/$defs/text256"
+        },
+        "toolVersion": {
+          "$ref": "#/$defs/text128"
+        },
+        "timestamp": {
+          "$ref": "#/$defs/text64"
+        }
+      }
+    },
+    "candidateDigest": {
+      "$ref": "#/$defs/digest"
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:[-.][a-z0-9]+)*$"
+    },
+    "text64": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "text128": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "text256": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "text4096": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "name": "loom-celestia-core",
+  "version": "1.0.0",
+  "schemaVersion": "tfsl.theme-v2",
+  "adapter": "starlight-v0.42",
+  "tokenSets": {
+    "celestia-tokens": {
+      "space-page-dark": "#090814",
+      "space-page-light": "#f7f6fd",
+      "space-nav-dark": "#0f0e21",
+      "space-nav-light": "#ffffff",
+      "space-sidebar-dark": "#0d0c1c",
+      "space-sidebar-light": "#f0eef9",
+      "space-raised-dark": "#15132d",
+      "space-raised-light": "#ffffff",
+      "space-panel-dark": "#1b193a",
+      "space-panel-light": "#f3f1fb",
+      "space-card-dark": "#121026",
+      "space-card-light": "#ffffff",
+      "space-inline-code-dark": "#1d1a3e",
+      "space-inline-code-light": "#e8e5f5",
+      "space-code-dark": "#07060f",
+      "space-code-light": "#f0eef9",
+      "stellar-body-dark": "#e4e2f5",
+      "stellar-body-light": "#141226",
+      "stellar-secondary-dark": "#cdc9ea",
+      "stellar-secondary-light": "#2a2745",
+      "stellar-muted-dark": "#7a769e",
+      "stellar-muted-light": "#656184",
+      "stellar-invert-dark": {
+        "alias": "space-page-dark"
+      },
+      "stellar-invert-light": {
+        "alias": "space-nav-light"
+      },
+      "stellar-link-dark": "#a5b4fc",
+      "stellar-link-light": "#4338ca",
+      "stellar-hairline-dark": "#221f45",
+      "stellar-hairline-light": "#ddd9ef",
+      "stellar-border-dark": "#2e2b5c",
+      "stellar-border-light": "#c6c0e4",
+      "stellar-focus-dark": "#818cf8",
+      "stellar-focus-light": "#4f46e5",
+      "stellar-select-bg-dark": "#312e81",
+      "stellar-select-bg-light": "#c7d2fe",
+      "stellar-select-text-dark": "#e4e2f5",
+      "stellar-select-text-light": "#141226",
+      "stellar-accent-base-dark": "#818cf8",
+      "stellar-accent-base-light": "#4f46e5",
+      "stellar-accent-low-dark": "#1e1b4b",
+      "stellar-accent-low-light": "#eef2ff",
+      "stellar-accent-high-dark": "#c7d2fe",
+      "stellar-accent-high-light": "#312e81"
+    }
+  },
+  "accentVariants": {
+    "default": {
+      "tokenSet": "celestia-tokens",
+      "dark": {
+        "page": "space-page-dark",
+        "navigation": "space-nav-dark",
+        "header": "space-nav-dark",
+        "sidebar": "space-sidebar-dark",
+        "raised": "space-raised-dark",
+        "panel": "space-panel-dark",
+        "card": "space-card-dark",
+        "inline-code": "space-inline-code-dark",
+        "code": "space-code-dark",
+        "body": "stellar-body-dark",
+        "secondary": "stellar-secondary-dark",
+        "muted": "stellar-muted-dark",
+        "inverted": "stellar-invert-dark",
+        "link": "stellar-link-dark",
+        "hairline": "stellar-hairline-dark",
+        "border": "stellar-border-dark",
+        "focus": "stellar-focus-dark",
+        "selection-background": "stellar-select-bg-dark",
+        "selection-text": "stellar-select-text-dark",
+        "accent-base": "stellar-accent-base-dark",
+        "accent-low": "stellar-accent-low-dark",
+        "accent-high": "stellar-accent-high-dark"
+      },
+      "light": {
+        "page": "space-page-light",
+        "navigation": "space-nav-light",
+        "header": "space-nav-light",
+        "sidebar": "space-sidebar-light",
+        "raised": "space-raised-light",
+        "panel": "space-panel-light",
+        "card": "space-card-light",
+        "inline-code": "space-inline-code-light",
+        "code": "space-code-light",
+        "body": "stellar-body-light",
+        "secondary": "stellar-secondary-light",
+        "muted": "stellar-muted-light",
+        "inverted": "stellar-invert-light",
+        "link": "stellar-link-light",
+        "hairline": "stellar-hairline-light",
+        "border": "stellar-border-light",
+        "focus": "stellar-focus-light",
+        "selection-background": "stellar-select-bg-light",
+        "selection-text": "stellar-select-text-light",
+        "accent-base": "stellar-accent-base-light",
+        "accent-low": "stellar-accent-low-light",
+        "accent-high": "stellar-accent-high-light"
+      }
+    }
+  },
+  "defaultAccent": "default",
+  "typography": {
+    "body": {
+      "font": "celestia-sans",
+      "size": 15,
+      "lineHeight": 1.6
+    },
+    "heading": {
+      "font": "celestia-sans",
+      "size": 26,
+      "lineHeight": 1.3
+    },
+    "ui": {
+      "font": "system-sans",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    "code": {
+      "font": "system-mono",
+      "size": 13,
+      "lineHeight": 1.5
+    }
+  },
+  "surfaces": {
+    "spacing": 4,
+    "radii": 8,
+    "border": 1,
+    "focus": 2,
+    "content": 960,
+    "sidebar": 240
+  },
+  "layoutPreset": "compact",
+  "components": {
+    "pageTitle": "consumer-default"
+  },
+  "codePresentation": "consumer-default",
+  "fonts": [
+    {
+      "id": "celestia-sans",
+      "family": "Celestia Sans",
+      "style": "normal",
+      "weight": 400,
+      "format": "woff2",
+      "sha256": "e2eb4ea76b4ed0d42ebb8a7576d75460acbab4ee95b23bdd858b73fa59de5ca0",
+      "license": "AGPL-3.0-or-later",
+      "notice": "original-nonrendering-v1"
+    }
+  ]
+}

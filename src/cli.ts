@@ -1,3 +1,5 @@
+import { isThemeV2 } from "./public-api.js";
+import { runThemeV2Cli, runExchangeV2Cli } from "./cli-v2.js";
 import {
   readFile,
   readdir,
@@ -17,7 +19,8 @@ import { compileTheme } from "./compiler/index.js";
 import { validateThemeSpecification, ValidationError } from "./schema/validator.js";
 import { canonicalizeSpecification, computeSha256 } from "./compiler/canonical.js";
 import { analyzeThemeContrast, ContrastError } from "./compiler/contrast.js";
-import { COMPILER_PACKAGE, COMPILER_VERSION } from "./compiler/descriptor.js";
+import { COMPILER_PACKAGE } from "./compiler/descriptor.js";
+import { COMPILER_VERSION } from "./v2/types.js";
 import { generateThemePackage, writeThemePackage, FilesystemSafetyError } from "./generator/index.js";
 import {
   createThemeBrief,
@@ -77,11 +80,17 @@ Exchange Subcommands:
   exchange review --brief <file> --candidate <file...> --out <file> [options]
   exchange validate <packet.json> [--brief <file>] [--json]
   exchange inspect <packet.json> [--json]
+  exchange v2-create <theme.json> --out <file> [--accent <id>]
+  exchange v2-verify <packet.json> [--json]
+  exchange v1-import <packet.json> --out <file>
 
 Options:
   --out <dir|file>     Output directory or file (required for compile, generate, exchange brief/candidate/review)
   --package <file>     Path to package metadata JSON file (required for generate)
   --template <id>      Approved override template ID (e.g. page-title-frame)
+  --accent <id>        Select a declared v2 accent variant
+  --font-root <dir>    Explicit v2 font resource directory
+  --font-ids <ids>     Comma-separated selected v2 font IDs
   --overwrite          Allow replacing existing output files (compile only; generate requires an empty or absent directory; forbidden for exchange)
   --strict-contrast    Fail compilation (exit 1) if any color pair fails WCAG 2.2 AA contrast
   --json               Output parseable JSON diagnostics with no progress prose
@@ -138,6 +147,9 @@ Exchange Options:
 `;
 
 interface ParsedCliArgs {
+  accent?: string | undefined;
+  fontRoot?: string | undefined;
+  fontIds?: string | undefined;
   command?: string | undefined;
   filePath?: string | undefined;
   packagePath?: string | undefined;
@@ -153,6 +165,7 @@ interface ParsedCliArgs {
 
 
 function parseArguments(args: string[]): { parsed?: ParsedCliArgs; error?: string } {
+  const v2Options: { accent?: string; fontRoot?: string; fontIds?: string } = {};
   const flags = new Set<string>();
   let command: string | undefined;
   let filePath: string | undefined;
@@ -168,6 +181,13 @@ function parseArguments(args: string[]): { parsed?: ParsedCliArgs; error?: strin
   let i = 0;
   while (i < args.length) {
     const arg = args[i];
+
+    if (arg === "--accent" || arg === "--font-root" || arg === "--font-ids") {
+      if (flags.has(arg) || !args[i + 1] || args[i + 1].startsWith("-")) return { error: `Invalid or duplicate option: ${arg}` };
+      flags.add(arg);
+      v2Options[arg === "--accent" ? "accent" : arg === "--font-root" ? "fontRoot" : "fontIds"] = args[i + 1];
+      i += 2; continue;
+    }
 
     if (arg === "--help" || arg === "-h") {
       help = true;
@@ -267,6 +287,7 @@ function parseArguments(args: string[]): { parsed?: ParsedCliArgs; error?: strin
 
   return {
     parsed: {
+      ...v2Options,
       command,
       filePath,
       packagePath,
@@ -384,6 +405,16 @@ export async function runCli(argv: string[]): Promise<number> {
       process.stderr.write(`Error: ${msg}\n`);
     }
     return 2;
+  }
+
+  try {
+    const candidate = JSON.parse(await readFile(resolve(filePath), "utf8"));
+    if (isThemeV2(candidate)) return runThemeV2Cli(candidate, parsed);
+    if (parsed.accent !== undefined || parsed.fontRoot !== undefined || parsed.fontIds !== undefined) throw new Error("V2 options require tfsl.theme-v2");
+  } catch (error: any) {
+    if (parsed.accent !== undefined || parsed.fontRoot !== undefined || parsed.fontIds !== undefined) {
+      process.stderr.write(error.message + "\n"); return 1;
+    }
   }
 
   if (command === "validate") {
@@ -1281,6 +1312,7 @@ export function getPacketPublicId(packet: ThemeExchangePacket): string {
 }
 
 export async function runExchangeCli(args: string[]): Promise<number> {
+  if (["v2-create", "v2-verify", "v1-import"].includes(args[0])) return runExchangeV2Cli(args);
   if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
     process.stdout.write(EXCHANGE_HELP);
     return 0;

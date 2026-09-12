@@ -2,10 +2,87 @@
 
 Starlight theme-builder backend, library, and CLI.
 
-Version 0.1.0 is a local release candidate. Its metadata is eligible for future
-public npm publication; registry availability and hosted provenance are not
-claimed. Install the supplied package with
-`npm install --ignore-scripts /path/to/knowledge-forge-ai-theme-forge-stellar-loom-0.1.0.tgz`.
+Version 0.1.0 is published on [npm](https://www.npmjs.com/package/@knowledge-forge-ai/theme-forge-stellar-loom)
+and [GitHub](https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom/releases/tag/v0.1.0).
+Install from the registry:
+
+```sh
+npm install @knowledge-forge-ai/theme-forge-stellar-loom
+```
+
+The 0.2.0 source candidate adds Theme v2, the finite component catalog, code
+presentation and local exchange verification. It has not been published.
+Install the exact candidate archive for local qualification; registry examples
+refer to the release once available. No hosted npm provenance is claimed.
+
+### Theme v2 and catalog
+
+`tfsl.theme-v2` is a separate closed domain. Historical `tfsl.theme-v1` validation,
+canonical bytes, generated packages and strict exchange compatibility remain supported.
+Use `loom-black-core`, `loom-flexoki-core`, and `loom-celestia-core` in `examples`
+as first-party capability fixtures, not reproductions of upstream designs.
+
+The ordinary library `compileTheme`, CLI `validate`/`compile`/`generate`, and batch
+`compile`/`validate` discriminate by `schemaVersion`. V2 compilation returns an
+ordered `styles` map and a v2 descriptor; `css` (batch `compiledCss`) is its ordered
+concatenation for display. It is not a structural browser preview. CLI compile
+writes the fixed five stylesheet files and descriptor to an absent or empty
+directory. V2 does not support `--overwrite`.
+
+```sh
+tfsl validate examples/loom-black-core.theme.json
+tfsl compile examples/loom-black-core.theme.json --out compiled
+tfsl generate examples/loom-black-core.theme.json --package metadata.json --out theme-package
+```
+
+Use `--accent <declared-id>` to select another complete light/dark variant.
+The stylesheet order is `styles/layers.css`, `styles/tokens.css`,
+`styles/base.css`, `styles/accent.css`, `styles/overrides.css`. The declaration
+places `starlight` before `tfsl`, then orders Loom's tokens, base, accent and
+overrides sublayers. Unlayered consumer custom CSS follows defaults and wins
+under ordinary CSS cascade rules. Documented override selectors include `:root`,
+`.sl-markdown-content a:focus-visible`, and `::selection`.
+
+The catalog supports finite Hero, PageTitle, Pagination and Sidebar choices,
+responsive navigation, and bounded syntax/frame/diff presentation. Consumer
+components and supported Expressive Code values retain precedence. Catalog
+specifications include a closed `catalog` object; use the catalog examples for
+these capabilities. Core specifications without that object retain their
+separate, smaller contract. Unknown structures fail closed.
+
+Header/PageFrame replacements, generated code tabs, virtual data modules and
+font-provider conversion remain deferred. Public Starlight search, theme,
+language and supporting controls retain their normal behavior.
+
+Font records use logical IDs, face metadata, a SHA-256 and license/notice
+identities. The spec has no paths or URLs. Explicitly materialize local resources
+with `materializeFontResources(root, declarations, selectedIds)` and pass the
+returned map as `fontResources` to `generateThemePackageV2`. The existing CLI
+uses `--font-root <selected-directory> --font-ids <comma-separated-ids>`.
+Only fixed `<id>.woff` or `<id>.woff2` leaves are read: at most eight resources,
+4 MiB each and 16 MiB total, rejecting symlinks, traversal and digest mismatches.
+Generated font filenames are fixed ordinals. Core byte-pipeline fixtures are
+explicitly non-rendering original bytes; actual font rendering and third-party
+font licensing require catalog qualification. System fonts make no promise of
+pixel-identical cross-OS rendering.
+
+The legacy v1 exchange verifier requires the exact producer version: compiler
+0.2.0 rejects briefs pinned to `compilerVersion: "0.1.0"` or the historical
+0.1.1 development compiler. Theme v1 compilation remains supported.
+
+V2 semantic compatibility is independent of package SemVer. Producer package
+version is provenance, not a compatibility gate. Exchange v2 recompiles locally
+and requires exact bound output/inventory equality; a producer patch version
+cannot conceal changed output. Explicit v1 import creates a fresh unadopted v2
+candidate linked to the historical packet; it never changes historical bytes.
+
+For offline installation of the candidate:
+`npm install --ignore-scripts ./knowledge-forge-ai-theme-forge-stellar-loom-0.2.0.tgz`.
+
+[Repository](https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom) ·
+[Issues](https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom/issues) ·
+[License](./LICENSE).
+
 The installed `tfsl` and `tfsl-batch` commands and public imports need no checkout.
 Generated plugin compatibility is demonstrated with Astro 7.3.1 and Starlight
 0.42.0. Ordinary generated packages remain private by default.
@@ -14,7 +91,7 @@ Theme Forge Stellar Loom compiles typed, versioned theme specifications into can
 
 ## Overview
 
-- **Versioned Theme Schema**: `tfsl.theme-v1`
+- **Versioned Theme Schemas**: `tfsl.theme-v1` and `tfsl.theme-v2`
 - **Adapter**: `starlight-v0.42`
 - **Zero-Dependency Core**: Compiles without runtime dependencies (`node:crypto`, `node:fs/promises`, `node:path` only).
 - **Deterministic**: Produces byte-identical CSS and SHA-256 digests across environments.
@@ -219,3 +296,26 @@ export default defineConfig({
 ## Licensing
 
 Licensed under the GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later) with separate commercial licensing available. See `LICENSE` and `COMMERCIAL-LICENSE.md`.
+
+### Core adapter qualification limits
+
+Core browser evidence covers screen media on sidebar-bearing documentation pages.
+Starlight 0.42.0 has unlayered sidebar-less content-width and print rules which can
+win over Loom layers. Sidebar-less content sizing and a coherent print palette are
+not qualified here; a later adapter/catalog decision must address them.
+
+The catalog pins output-determining source files through repository tests. Installed
+packages validate catalog/template data and recompile bound exchange output; they do
+not read TypeScript source or provide tamper detection. Font stacks and responsive
+content caps come directly from catalog data; sidebar width remains the explicit
+surface value. Token-to-selector mappings live in the pinned compiler expression.
+
+Historical v1 import is explicitly lossy: its new candidate rationale records the
+original layout and fresh core defaults. Candidate IDs are freshly derived and old
+unsigned provenance claims are not inherited. Fresh verification and adoption remain
+required. V2 CLI output is structured JSON, including when `--json` is omitted.
+
+For source qualification, run `npm ci --ignore-scripts`,
+`node tools/build-catalog-evidence.mjs`, `npm run typecheck`, and `npm test`.
+The catalog build command emits the executable identity required by exchange
+verification and packaged consumers.

@@ -1,0 +1,378 @@
+{
+  "baselineSource": {
+    "package": "@knowledge-forge-ai/theme-forge-stellar-loom",
+    "version": "0.1.1",
+    "contract": "ADR0026 / TFSB58 historical compiler gate",
+    "baselineCommit": "f22ff31b86c8a75933dfada22390daadb0d0a21a",
+    "governingDocuments": [
+      "docs/decisions/0026-stellar-loom-expanded-theme-envelope.md",
+      "docs/evaluations/tfsb58-post-release-truth-patch.md",
+      "docs/releases/tfsb57-public-releases.json"
+    ],
+    "retainedArtifactAvailability": {
+      "envVar": "TFSB_DOCUMENTATION_PATCH_INPUTS",
+      "isProvided": false,
+      "registryFetchRequired": false
+    }
+  },
+  "pageTitleFrame": {
+    "templateId": "page-title-frame",
+    "sha256": "ec6728e2cb2fc222140348152b7cc6d70bb403683aa493e119118d50229e5745",
+    "byteLength": 341,
+    "relativeTargetPath": "components/PageTitleFrame.astro"
+  },
+  "examples": {
+    "stellar-cyan": {
+      "inputDigest": "c134e96bcc1e68e10e17f6fbeb070f07015019ac1b656bd5a6e6039475509156",
+      "canonicalJsonSha256": "c134e96bcc1e68e10e17f6fbeb070f07015019ac1b656bd5a6e6039475509156",
+      "outputDigest": "e0aa688d2976a02eff54ef399eed9f4e90e725a322c47ccf470db2e1e4628011",
+      "cssSha256": "e0aa688d2976a02eff54ef399eed9f4e90e725a322c47ccf470db2e1e4628011",
+      "cssByteLength": 2515,
+      "descriptorSha256": "2dbe20d9368f82115ddb6a7b1dce6c6aa86355c709409c0c1866703e45939065",
+      "descriptor": {
+        "schema": "tfsl.theme-descriptor-v1",
+        "schemaVersion": 1,
+        "themeSchemaVersion": "tfsl.theme-v1",
+        "themeName": "stellar-cyan",
+        "themeVersion": "0.1.0",
+        "adapter": "starlight-v0.42",
+        "inputDigest": "c134e96bcc1e68e10e17f6fbeb070f07015019ac1b656bd5a6e6039475509156",
+        "outputDigest": "e0aa688d2976a02eff54ef399eed9f4e90e725a322c47ccf470db2e1e4628011",
+        "cssFile": "styles/theme.css",
+        "provenance": {
+          "categories": [
+            "user-authored-data",
+            "generated-syntax",
+            "first-party-expression"
+          ],
+          "compiler": "@knowledge-forge-ai/theme-forge-stellar-loom",
+          "compilerVersion": "0.1.1"
+        }
+      },
+      "diagnosticsCount": 6,
+      "diagnostics": [
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "body-text",
+          "mode": "dark",
+          "element": "body",
+          "foreground": "#e6f1ff",
+          "background": "#090e17",
+          "ratio": 16.921851316791567,
+          "displayRatio": "16.92:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 16.92:1 for body-text in dark mode (#e6f1ff on #090e17) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "inline-code-text",
+          "mode": "dark",
+          "element": "inline-code",
+          "foreground": "#e6f1ff",
+          "background": "#131d2e",
+          "ratio": 14.796777134467288,
+          "displayRatio": "14.80:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 14.80:1 for inline-code-text in dark mode (#e6f1ff on #131d2e) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "link-text",
+          "mode": "dark",
+          "element": "link",
+          "foreground": "#00d2ff",
+          "background": "#090e17",
+          "ratio": 10.731142730013726,
+          "displayRatio": "10.73:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 10.73:1 for link-text in dark mode (#00d2ff on #090e17) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "body-text",
+          "mode": "light",
+          "element": "body",
+          "foreground": "#0d1522",
+          "background": "#f5f9fc",
+          "ratio": 17.288719190296312,
+          "displayRatio": "17.29:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 17.29:1 for body-text in light mode (#0d1522 on #f5f9fc) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "inline-code-text",
+          "mode": "light",
+          "element": "inline-code",
+          "foreground": "#0d1522",
+          "background": "#e8f1f8",
+          "ratio": 16.0079265813629,
+          "displayRatio": "16.01:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 16.01:1 for inline-code-text in light mode (#0d1522 on #e8f1f8) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "link-text",
+          "mode": "light",
+          "element": "link",
+          "foreground": "#0077aa",
+          "background": "#f5f9fc",
+          "ratio": 4.701954846573731,
+          "displayRatio": "4.70:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 4.70:1 for link-text in light mode (#0077aa on #f5f9fc) meets WCAG 2.2 AA threshold (4.5:1)"
+        }
+      ],
+      "packageMetadata": {
+        "name": "starlight-theme-stellar-cyan",
+        "version": "0.1.0",
+        "description": "Stellar Cyan Starlight theme plugin",
+        "author": "The Knowledge Forge Authors"
+      },
+      "packageFileCount": 11,
+      "packageFiles": {
+        "COMMERCIAL-LICENSE.md": {
+          "sha256": "a81bcda7ec57a5c09f1cc6d05de420db7a0053b9496f1762065e083a60e5ede2",
+          "byteLength": 932
+        },
+        "index.d.ts": {
+          "sha256": "973fdd15ef408692a4f36c7699ab6e691a59f0c56738cf5ca0b7e084f103635c",
+          "byteLength": 528
+        },
+        "index.js": {
+          "sha256": "ded8b2170a21136eba221644e23f6ad5e44036cc3b7fd18c824dca8792705c11",
+          "byteLength": 875
+        },
+        "LICENSE": {
+          "sha256": "62eef07fc3ad238dd889ff98cf9ed87b3ef0f421579b6945f87ec37c608afb62",
+          "byteLength": 34460
+        },
+        "NOTICE": {
+          "sha256": "e711709e69f5f8fc65c55ff3b3e47c390ed8f60890eb38cf999d95c2494b5d17",
+          "byteLength": 598
+        },
+        "package.json": {
+          "sha256": "28cc19fbd63229ca6cb0f8d6c5bd13417bcb55fa73ed0cc45ccaafadef98be44",
+          "byteLength": 705
+        },
+        "provenance.json": {
+          "sha256": "c11d3fb5db421b7fad8ba0edefde6f587d58d86ac789b4d3d7a16204c96747ec",
+          "byteLength": 2477
+        },
+        "README.md": {
+          "sha256": "7460547b2268c24f012c234fe44800ef7ab3dbf721902fda431b95b5cb3280fd",
+          "byteLength": 1921
+        },
+        "styles/theme.css": {
+          "sha256": "e0aa688d2976a02eff54ef399eed9f4e90e725a322c47ccf470db2e1e4628011",
+          "byteLength": 2515
+        },
+        "theme.descriptor.json": {
+          "sha256": "2dbe20d9368f82115ddb6a7b1dce6c6aa86355c709409c0c1866703e45939065",
+          "byteLength": 630
+        },
+        "theme.json": {
+          "sha256": "c134e96bcc1e68e10e17f6fbeb070f07015019ac1b656bd5a6e6039475509156",
+          "byteLength": 1794
+        }
+      }
+    },
+    "amber-forge": {
+      "inputDigest": "c8d6da44c19e5b4050fc48b2929d496bb3dcb3f6e661bb06fbe0529ebe6d170d",
+      "canonicalJsonSha256": "c8d6da44c19e5b4050fc48b2929d496bb3dcb3f6e661bb06fbe0529ebe6d170d",
+      "outputDigest": "359c7715273bbbb3710c7802822b79ddf58c8ad4a9289b4e566f66c8e95cc2c0",
+      "cssSha256": "359c7715273bbbb3710c7802822b79ddf58c8ad4a9289b4e566f66c8e95cc2c0",
+      "cssByteLength": 2451,
+      "descriptorSha256": "5c0739007b8b0e4a956f1992f42dad4ed3449043927256c896d602016b29919f",
+      "descriptor": {
+        "schema": "tfsl.theme-descriptor-v1",
+        "schemaVersion": 1,
+        "themeSchemaVersion": "tfsl.theme-v1",
+        "themeName": "amber-forge",
+        "themeVersion": "0.1.0",
+        "adapter": "starlight-v0.42",
+        "inputDigest": "c8d6da44c19e5b4050fc48b2929d496bb3dcb3f6e661bb06fbe0529ebe6d170d",
+        "outputDigest": "359c7715273bbbb3710c7802822b79ddf58c8ad4a9289b4e566f66c8e95cc2c0",
+        "cssFile": "styles/theme.css",
+        "provenance": {
+          "categories": [
+            "user-authored-data",
+            "generated-syntax",
+            "first-party-expression"
+          ],
+          "compiler": "@knowledge-forge-ai/theme-forge-stellar-loom",
+          "compilerVersion": "0.1.1"
+        }
+      },
+      "diagnosticsCount": 6,
+      "diagnostics": [
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "body-text",
+          "mode": "dark",
+          "element": "body",
+          "foreground": "#fef3c7",
+          "background": "#181512",
+          "ratio": 16.330512145429573,
+          "displayRatio": "16.33:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 16.33:1 for body-text in dark mode (#fef3c7 on #181512) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "inline-code-text",
+          "mode": "dark",
+          "element": "inline-code",
+          "foreground": "#fef3c7",
+          "background": "#2a241e",
+          "ratio": 13.770333693933265,
+          "displayRatio": "13.77:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 13.77:1 for inline-code-text in dark mode (#fef3c7 on #2a241e) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "link-text",
+          "mode": "dark",
+          "element": "link",
+          "foreground": "#f59e0b",
+          "background": "#181512",
+          "ratio": 8.467045579998702,
+          "displayRatio": "8.47:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 8.47:1 for link-text in dark mode (#f59e0b on #181512) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "body-text",
+          "mode": "light",
+          "element": "body",
+          "foreground": "#261c14",
+          "background": "#fffbf5",
+          "ratio": 16.183947122150936,
+          "displayRatio": "16.18:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 16.18:1 for body-text in light mode (#261c14 on #fffbf5) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "inline-code-text",
+          "mode": "light",
+          "element": "inline-code",
+          "foreground": "#261c14",
+          "background": "#f5eee1",
+          "ratio": 14.459968564636045,
+          "displayRatio": "14.46:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 14.46:1 for inline-code-text in light mode (#261c14 on #f5eee1) meets WCAG 2.2 AA threshold (4.5:1)"
+        },
+        {
+          "severity": "info",
+          "code": "CONTRAST_ACCEPTABLE",
+          "role": "link-text",
+          "mode": "light",
+          "element": "link",
+          "foreground": "#b45309",
+          "background": "#fffbf5",
+          "ratio": 4.870836905552747,
+          "displayRatio": "4.87:1",
+          "criterion": "WCAG 2.2 AA",
+          "threshold": 4.5,
+          "disposition": "pass",
+          "message": "Contrast ratio 4.87:1 for link-text in light mode (#b45309 on #fffbf5) meets WCAG 2.2 AA threshold (4.5:1)"
+        }
+      ],
+      "packageMetadata": {
+        "name": "starlight-theme-amber-forge",
+        "version": "0.1.0",
+        "description": "Amber Forge Starlight theme plugin with page title frame",
+        "template": "page-title-frame"
+      },
+      "packageFileCount": 12,
+      "packageFiles": {
+        "COMMERCIAL-LICENSE.md": {
+          "sha256": "a81bcda7ec57a5c09f1cc6d05de420db7a0053b9496f1762065e083a60e5ede2",
+          "byteLength": 932
+        },
+        "components/PageTitleFrame.astro": {
+          "sha256": "ec6728e2cb2fc222140348152b7cc6d70bb403683aa493e119118d50229e5745",
+          "byteLength": 341
+        },
+        "index.d.ts": {
+          "sha256": "973fdd15ef408692a4f36c7699ab6e691a59f0c56738cf5ca0b7e084f103635c",
+          "byteLength": 528
+        },
+        "index.js": {
+          "sha256": "2abca99ad88663a9649c8b782b3842ece33a870cfa420b48006acf8c93c69abc",
+          "byteLength": 1206
+        },
+        "LICENSE": {
+          "sha256": "62eef07fc3ad238dd889ff98cf9ed87b3ef0f421579b6945f87ec37c608afb62",
+          "byteLength": 34460
+        },
+        "NOTICE": {
+          "sha256": "e711709e69f5f8fc65c55ff3b3e47c390ed8f60890eb38cf999d95c2494b5d17",
+          "byteLength": 598
+        },
+        "package.json": {
+          "sha256": "3dc714fce59a66efacd34fd335b8481e645f8ace3b2377ff04ad10ae9156d40f",
+          "byteLength": 740
+        },
+        "provenance.json": {
+          "sha256": "a3a38ac103b09869c4b427a7c83b879ef59731b92966e79349cf924809b5fc2d",
+          "byteLength": 2718
+        },
+        "README.md": {
+          "sha256": "57ace7085510ad4de73b84569a82350c3814eedebd923fd3a4e185ba27f0e4ff",
+          "byteLength": 2208
+        },
+        "styles/theme.css": {
+          "sha256": "359c7715273bbbb3710c7802822b79ddf58c8ad4a9289b4e566f66c8e95cc2c0",
+          "byteLength": 2451
+        },
+        "theme.descriptor.json": {
+          "sha256": "5c0739007b8b0e4a956f1992f42dad4ed3449043927256c896d602016b29919f",
+          "byteLength": 629
+        },
+        "theme.json": {
+          "sha256": "c8d6da44c19e5b4050fc48b2929d496bb3dcb3f6e661bb06fbe0529ebe6d170d",
+          "byteLength": 1793
+        }
+      }
+    }
+  }
+}

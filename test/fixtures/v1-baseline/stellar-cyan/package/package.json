@@ -1,0 +1,35 @@
+{
+  "name": "starlight-theme-stellar-cyan",
+  "version": "0.1.0",
+  "description": "Stellar Cyan Starlight theme plugin",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-or-later",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./styles/*": "./styles/*"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "styles",
+    "theme.descriptor.json",
+    "theme.json",
+    "provenance.json",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "COMMERCIAL-LICENSE.md"
+  ],
+  "peerDependencies": {
+    "@astrojs/starlight": "^0.42.0",
+    "astro": "^7.3.1"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "author": "The Knowledge Forge Authors"
+}

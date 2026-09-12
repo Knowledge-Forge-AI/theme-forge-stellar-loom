@@ -1,3 +1,4 @@
+import { currentExchangeFixture } from "./current-exchange-fixture.js";
 import { describe, expect, it } from "vitest";
 import { processBatchRequest } from "../src/batch.js";
 import { compileTheme } from "../src/compiler/index.js";
@@ -9,7 +10,7 @@ import { readFileSync } from "node:fs";
 
 describe("TFSL Batch Adapter", () => {
   it("accepts the host opaque wire and rejects duplicate packet keys before decoding", () => {
-    const fixture = (name: string) => readFileSync(resolve(import.meta.dirname, `../protocol/tfsl-theme-evidence-v1/examples/${name}`), "utf8");
+    const fixture = currentExchangeFixture;
     const brief = fixture("brief.tfsl-brief.json");
     const candidate = fixture("candidate-a.tfsl-candidate.json");
     const verified = processBatchRequest(JSON.parse(JSON.stringify({
@@ -233,8 +234,7 @@ describe("TFSL Batch Adapter", () => {
   });
 
   describe("Design Exchange Batch Actions & Error Hardening", () => {
-    const protoDir = resolve(__dirname, "../protocol/tfsl-theme-evidence-v1/examples");
-    const loadJson = (filename: string) => JSON.parse(readFileSync(resolve(protoDir, filename), "utf8"));
+    const loadJson = (filename: string) => JSON.parse(currentExchangeFixture(filename));
 
     it("returns structured error for malformed briefInput without dereference errors", () => {
       // Missing briefId
@@ -385,7 +385,7 @@ describe("TFSL Batch Adapter", () => {
     });
 
     it("returns canonicalJson in exchange-packet-parse", () => {
-      const briefRaw = readFileSync(resolve(protoDir, "brief.tfsl-brief.json"), "utf8");
+      const briefRaw = currentExchangeFixture("brief.tfsl-brief.json");
       const res = processBatchRequest({
         action: "exchange-packet-parse",
         packetJson: briefRaw,

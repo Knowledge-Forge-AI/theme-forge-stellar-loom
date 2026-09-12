@@ -1,0 +1,73 @@
+/* Theme Forge Stellar Loom generated theme */
+/* Schema: tfsl.theme-v1 | Adapter: starlight-v0.42 | Input-Digest: c8d6da44c19e5b4050fc48b2929d496bb3dcb3f6e661bb06fbe0529ebe6d170d */
+
+:root,
+::backdrop {
+  --sl-color-accent: #f59e0b;
+  --sl-color-accent-low: #3d2306;
+  --sl-color-accent-high: #fde68a;
+  --sl-color-white: #fef3c7;
+  --sl-color-black: #181512;
+  --sl-color-bg: #181512;
+  --sl-color-bg-nav: #221d18;
+  --sl-color-bg-sidebar: #181512;
+  --sl-color-bg-inline-code: #2a241e;
+  --sl-color-bg-accent: #f59e0b;
+  --sl-color-text: #fef3c7;
+  --sl-color-text-accent: #f59e0b;
+  --sl-color-text-invert: #181512;
+  --sl-color-hairline: #42362a;
+  --sl-color-hairline-light: #5c4b3a;
+  --sl-color-hairline-shade: #100d0a;
+  --sl-color-gray-1: #fef3c7;
+  --sl-color-gray-2: #e2d5b5;
+  --sl-color-gray-3: #b3a483;
+  --sl-color-gray-4: #7a6d53;
+  --sl-color-gray-5: #4d4332;
+  --sl-color-gray-6: #28231c;
+  --sl-color-gray-7: #1c1813;
+  --sl-font: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sl-content-width: 52rem;
+  --sl-sidebar-width: 20rem;
+  --sl-text-body: 17px;
+  --sl-line-height: 1.8;
+}
+
+:root[data-theme='light'],
+[data-theme='light'] ::backdrop {
+  --sl-color-accent: #b45309;
+  --sl-color-accent-low: #fef3c7;
+  --sl-color-accent-high: #78350f;
+  --sl-color-white: #261c14;
+  --sl-color-black: #fffbf5;
+  --sl-color-bg: #fffbf5;
+  --sl-color-bg-nav: #ffffff;
+  --sl-color-bg-sidebar: #fffbf5;
+  --sl-color-bg-inline-code: #f5eee1;
+  --sl-color-bg-accent: #b45309;
+  --sl-color-text: #261c14;
+  --sl-color-text-accent: #b45309;
+  --sl-color-text-invert: #ffffff;
+  --sl-color-hairline: #e8ded1;
+  --sl-color-hairline-light: #f5ede1;
+  --sl-color-hairline-shade: #d4c5b2;
+  --sl-color-gray-1: #261c14;
+  --sl-color-gray-2: #3d2f23;
+  --sl-color-gray-3: #6e5946;
+  --sl-color-gray-4: #9c836d;
+  --sl-color-gray-5: #ccbba8;
+  --sl-color-gray-6: #ebe3d8;
+  --sl-color-gray-7: #f7f2eb;
+  --sl-font: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sl-content-width: 52rem;
+  --sl-sidebar-width: 20rem;
+  --sl-text-body: 17px;
+  --sl-line-height: 1.8;
+}
+
+.sl-markdown-content a:focus-visible {
+  outline: 2px solid var(--sl-color-text-accent);
+  outline-offset: 2px;
+}

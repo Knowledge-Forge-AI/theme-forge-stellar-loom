@@ -1,0 +1,190 @@
+{
+  "adapter": "starlight-v0.42",
+  "candidateDigest": "sha256:e26f343f01f420859950f2b7c2f796c52ee6d7f517bb380941053f89434d7302",
+  "candidateId": "loom-black-candidate-a",
+  "catalog": "tfsl.starlight-core-catalog-v1",
+  "catalogDigest": "sha256:d45f945d3323244c5b6d2908799c968d5d1d223e945b8aed0a0ce96b76f32953",
+  "inputDigest": "sha256:9ce60cbf5d205c404928dd8f5c5d4949a6cb37e9676c0f04d270cb5ba13814dd",
+  "outputDigest": "sha256:2dcf3b1dff57d80658561c593fd4f077e272791df4471750e99cee9022e53505",
+  "outputInventory": [
+    {
+      "digest": "sha256:de5d41c727f757b231bbd7bc463e157f4f75bb04363c99faa8feeb0474a61290",
+      "id": "styles/layers.css"
+    },
+    {
+      "digest": "sha256:5b0f058a3707033d4a339b4941382165fc00b13333c3a7c23980de50733e2ef5",
+      "id": "styles/tokens.css"
+    },
+    {
+      "digest": "sha256:0f252f1ec2fd6e297da5d3a14267f826843cec4dc194b99f6016de0e15769dce",
+      "id": "styles/base.css"
+    },
+    {
+      "digest": "sha256:dad366838981255782a706ed1b2693777f46c687a1e922a309244ce7225b897d",
+      "id": "styles/accent.css"
+    },
+    {
+      "digest": "sha256:87a8e2ea1ac8ba344246405fa9588dccbbaf6824113bfce17f3a5ab695f195d2",
+      "id": "styles/overrides.css"
+    }
+  ],
+  "producer": {
+    "executableDigest": "sha256:82705fa32ff6074369dfd3c9c7904d3ff0dc5edcfd4d429b19983e480f399601",
+    "package": "@knowledge-forge-ai/theme-forge-stellar-loom",
+    "packageDigest": "sha256:b3e124fca031e0be8c28a28d672e76ec1132b2b0138b75c6826e54c55ab1ac64",
+    "version": "0.1.1"
+  },
+  "rationale": "Core black theme candidate v2",
+  "schema": "tfsl.theme-candidate",
+  "schemaVersion": 2,
+  "semanticCompiler": "tfsl.theme-compiler-v2-core-1",
+  "state": "candidate",
+  "theme": {
+    "accentVariants": {
+      "default": {
+        "dark": {
+          "accent-base": "accent-base-dark",
+          "accent-high": "accent-high-dark",
+          "accent-low": "accent-low-dark",
+          "body": "text-body-dark",
+          "border": "border-dark",
+          "card": "bg-card-dark",
+          "code": "bg-code-dark",
+          "focus": "focus-ring-dark",
+          "hairline": "hairline-dark",
+          "header": "bg-nav-dark",
+          "inline-code": "bg-inline-code-dark",
+          "inverted": "text-invert-dark",
+          "link": "text-link-dark",
+          "muted": "text-muted-dark",
+          "navigation": "bg-nav-dark",
+          "page": "bg-page-dark",
+          "panel": "bg-panel-dark",
+          "raised": "bg-raised-dark",
+          "secondary": "text-secondary-dark",
+          "selection-background": "select-bg-dark",
+          "selection-text": "select-text-dark",
+          "sidebar": "bg-sidebar-dark"
+        },
+        "light": {
+          "accent-base": "accent-base-light",
+          "accent-high": "accent-high-light",
+          "accent-low": "accent-low-light",
+          "body": "text-body-light",
+          "border": "border-light",
+          "card": "bg-card-light",
+          "code": "bg-code-light",
+          "focus": "focus-ring-light",
+          "hairline": "hairline-light",
+          "header": "bg-nav-light",
+          "inline-code": "bg-inline-code-light",
+          "inverted": "text-invert-light",
+          "link": "text-link-light",
+          "muted": "text-muted-light",
+          "navigation": "bg-nav-light",
+          "page": "bg-page-light",
+          "panel": "bg-panel-light",
+          "raised": "bg-raised-light",
+          "secondary": "text-secondary-light",
+          "selection-background": "select-bg-light",
+          "selection-text": "select-text-light",
+          "sidebar": "bg-sidebar-light"
+        },
+        "tokenSet": "black-tokens"
+      }
+    },
+    "adapter": "starlight-v0.42",
+    "codePresentation": "consumer-default",
+    "components": {
+      "pageTitle": "page-title-frame"
+    },
+    "defaultAccent": "default",
+    "fonts": [],
+    "layoutPreset": "standard",
+    "name": "loom-black-core",
+    "schemaVersion": "tfsl.theme-v2",
+    "surfaces": {
+      "border": 1,
+      "borderStyle": "solid",
+      "content": 1152,
+      "focus": 2,
+      "focusOffset": 2,
+      "radii": 8,
+      "sidebar": 288,
+      "spacing": 4
+    },
+    "tokenSets": {
+      "black-tokens": {
+        "accent-base-dark": "#f97316",
+        "accent-base-light": "#ea580c",
+        "accent-high-dark": "#fdba74",
+        "accent-high-light": "#9a3412",
+        "accent-low-dark": "#431407",
+        "accent-low-light": "#ffedd5",
+        "bg-card-dark": "#131620",
+        "bg-card-light": "#ffffff",
+        "bg-code-dark": "#090a0d",
+        "bg-code-light": "#f1f5f9",
+        "bg-inline-code-dark": "#1e2330",
+        "bg-inline-code-light": "#e2e8f0",
+        "bg-nav-dark": "#12141a",
+        "bg-nav-light": "#ffffff",
+        "bg-page-dark": "#0c0d10",
+        "bg-page-light": "#f8fafc",
+        "bg-panel-dark": "#1a1e29",
+        "bg-panel-light": "#f8fafc",
+        "bg-raised-dark": "#161922",
+        "bg-raised-light": "#ffffff",
+        "bg-sidebar-dark": "#0f1015",
+        "bg-sidebar-light": "#f1f5f9",
+        "border-dark": "#2e354a",
+        "border-light": "#cbd5e1",
+        "focus-ring-dark": "#3b82f6",
+        "focus-ring-light": "#2563eb",
+        "hairline-dark": "#232838",
+        "hairline-light": "#e2e8f0",
+        "select-bg-dark": "#3b82f6",
+        "select-bg-light": "#2563eb",
+        "select-text-dark": "#ffffff",
+        "select-text-light": "#ffffff",
+        "text-body-dark": "#f0f2f5",
+        "text-body-light": "#0f172a",
+        "text-invert-dark": {
+          "alias": "bg-page-dark"
+        },
+        "text-invert-light": {
+          "alias": "bg-nav-light"
+        },
+        "text-link-dark": "#60a5fa",
+        "text-link-light": "#2563eb",
+        "text-muted-dark": "#8a92a6",
+        "text-muted-light": "#64748b",
+        "text-secondary-dark": "#e1e4ea",
+        "text-secondary-light": "#334155"
+      }
+    },
+    "typography": {
+      "body": {
+        "font": "system-sans",
+        "lineHeight": 1.6,
+        "size": 16
+      },
+      "code": {
+        "font": "system-mono",
+        "lineHeight": 1.5,
+        "size": 14
+      },
+      "heading": {
+        "font": "system-sans",
+        "lineHeight": 1.25,
+        "size": 28
+      },
+      "ui": {
+        "font": "system-sans",
+        "lineHeight": 1.5,
+        "size": 14
+      }
+    },
+    "version": "1.0.0"
+  }
+}
