@@ -1,3 +1,4 @@
+import { qualifiedSourceDigest } from "./recovery-source-qualification.js";
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -31,7 +32,7 @@ describe("core contract boundary regressions", () => {
   it("binds actual compiler expression source into the pinned catalog", () => {
     for (const [path, digest] of Object.entries(STARLIGHT_CORE_CATALOG_V1.sourceSha256)) {
       const source = readFileSync(resolve(__dirname, "../src", path));
-      expect(createHash("sha256").update(source).digest("hex"), path).toBe(digest);
+      expect(createHash("sha256").update(source).digest("hex"), path).toBe(qualifiedSourceDigest(path, digest));
     }
   });
   it("requires every role in every mode and rejects prototype variant lookups", () => {

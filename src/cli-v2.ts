@@ -55,7 +55,7 @@ export async function runExchangeV2Cli(args: string[]): Promise<number> {
     const parent = await inspectV2Path(dirname(resolve(out)));
     await mkdir(parent, { recursive: true });
     await inspectV2Path(parent);
-    await writeFile(resolve(out), serializeThemeExchangeV2(packet), { flag: "wx" });
+    await writeFile(resolve(out), serializeThemeExchangeV2(packet), { flag: "wx", mode: 0o600 });
     process.stdout.write(JSON.stringify({ status: "success", candidateDigest: packet.candidateDigest, state: packet.state }) + "\n");
     return 0;
   } catch (error: any) {
