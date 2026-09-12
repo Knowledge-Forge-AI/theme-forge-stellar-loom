@@ -1,3 +1,4 @@
+import { qualifiedSourceDigest } from "./recovery-source-qualification.js";
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -118,11 +119,11 @@ describe("TFSB61B Code Domain & Expressive Code Compiler", () => {
       expect(computeCatalogDigest()).toBe(CATALOG_DIGEST);
     });
 
-    it("ensures all pinned core source files remain strictly bit-for-bit identical", () => {
+    it("binds core source to historical pins or exact qualified security amendments", () => {
       for (const [path, digest] of Object.entries(STARLIGHT_CORE_CATALOG_V1.sourceSha256)) {
         const source = readFileSync(resolve(__dirname, "../src", path));
         const hash = createHash("sha256").update(source).digest("hex");
-        expect(hash, `Core file '${path}' sha256 changed`).toBe(digest);
+        expect(hash, `Core file '${path}' sha256 changed`).toBe(qualifiedSourceDigest(path, digest));
       }
     });
 

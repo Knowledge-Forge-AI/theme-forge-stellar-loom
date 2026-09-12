@@ -335,10 +335,14 @@ export async function materializeFontResources(
 
     const leafPath = join(canonicalRoot, leafName);
 
-    // Initial inspection via lstat (reject symlinks and non-regular files before open)
-    let initialStat;
+    // Refuse unsupported flags instead of coercing an absent no-follow flag to zero.
+    if (typeof constants.O_NOFOLLOW !== "number" || typeof constants.O_NONBLOCK !== "number") {
+      throw new FontResourceError("Secure no-follow file access is unavailable", "UNSUPPORTED_SECURE_FILESYSTEM");
+    }
+    // Acquire the read-only descriptor before inspecting its identity.
+    let handle;
     try {
-      initialStat = await lstat(leafPath);
+      handle = await open(leafPath, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK, 0o600);
     } catch (err: any) {
       if (err.code === "ENOENT") {
         throw new FontResourceError(
@@ -346,49 +350,9 @@ export async function materializeFontResources(
           "MISSING_FONT_FILE"
         );
       }
-      throw new FontResourceError(
-        `Failed to inspect font file '${leafName}': ${err.message}`,
-        "INSPECTION_FAILED"
-      );
-    }
-
-    if (initialStat.isSymbolicLink()) {
-      throw new FontResourceError(
-        `Font file '${leafName}' is a symbolic link; symlink leaves are strictly forbidden`,
-        "SYMLINK_REJECTED"
-      );
-    }
-
-    if (!initialStat.isFile()) {
-      throw new FontResourceError(
-        `Font resource '${leafName}' is not a regular file`,
-        "NOT_A_REGULAR_FILE"
-      );
-    }
-
-    if (initialStat.size === 0) throw new FontResourceError("Empty font resource", "EMPTY_FONT_RESOURCE");
-    if (initialStat.size > MAX_PER_FONT_BYTES) {
-      throw new FontResourceError(
-        `Font file '${leafName}' size (${initialStat.size} bytes) exceeds per-font maximum limit of 4 MiB (${MAX_PER_FONT_BYTES} bytes)`,
-        "FONT_TOO_LARGE"
-      );
-    }
-
-    if (aggregateBytes + initialStat.size > MAX_AGGREGATE_BYTES) {
-      throw new FontResourceError(
-        `Aggregate font size (${aggregateBytes + initialStat.size} bytes) exceeds maximum limit of 16 MiB (${MAX_AGGREGATE_BYTES} bytes)`,
-        "AGGREGATE_TOO_LARGE"
-      );
-    }
-
-    // Open leaf file with O_NOFOLLOW to guard against symlink replacement races
-    let handle;
-    try {
-      handle = await open(leafPath, constants.O_RDONLY | constants.O_NOFOLLOW);
-    } catch (err: any) {
-      if (err.code === "ELOOP" || err.code === "SYMLINK") {
+      if (err.code === "ELOOP" || err.code === "SYMLINK" || err.code === "EMLINK") {
         throw new FontResourceError(
-          `Font file '${leafName}' is a symbolic link (detected via O_NOFOLLOW)`,
+          `Font file '${leafName}' is a symbolic link; symlink leaves are strictly forbidden`,
           "SYMLINK_REJECTED"
         );
       }
@@ -399,16 +363,16 @@ export async function materializeFontResources(
     }
 
     try {
-      // Stat snapshot before read
+      // Stat snapshot before read on the concrete open file descriptor
       const statBefore = await handle.stat();
       if (!statBefore.isFile()) {
         throw new FontResourceError(
-          `Font resource '${leafName}' is not a regular file (stat before read)`,
+          `Font resource '${leafName}' is not a regular file`,
           "NOT_A_REGULAR_FILE"
         );
       }
       if (statBefore.size === 0) throw new FontResourceError("Empty font resource", "EMPTY_FONT_RESOURCE");
-    if (statBefore.size > MAX_PER_FONT_BYTES) {
+      if (statBefore.size > MAX_PER_FONT_BYTES) {
         throw new FontResourceError(
           `Font file '${leafName}' size (${statBefore.size} bytes) exceeds per-font maximum limit of 4 MiB (${MAX_PER_FONT_BYTES} bytes)`,
           "FONT_TOO_LARGE"
@@ -418,14 +382,6 @@ export async function materializeFontResources(
         throw new FontResourceError(
           `Aggregate font size (${aggregateBytes + statBefore.size} bytes) exceeds maximum limit of 16 MiB (${MAX_AGGREGATE_BYTES} bytes)`,
           "AGGREGATE_TOO_LARGE"
-        );
-      }
-
-      // Check identity match against initial lstat
-      if (statBefore.dev !== initialStat.dev || statBefore.ino !== initialStat.ino) {
-        throw new FontResourceError(
-          `Font file '${leafName}' identity changed between initial inspection and open`,
-          "FILE_MODIFIED"
         );
       }
 

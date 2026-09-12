@@ -97,7 +97,7 @@
     },
     {
       "path": "src/cli-v2.ts",
-      "sha256": "b443b093c334e7e8106531846057d90f147d59cae052610a3d71b21444b8bf52"
+      "sha256": "ea5d2196659b5edeed4b9aea3503dfe9b3b6dac3a419bc95c52fe18c94174919"
     },
     {
       "path": "src/cli.ts",
@@ -161,7 +161,7 @@
     },
     {
       "path": "src/design-exchange-catalog/executable.ts",
-      "sha256": "3128345b10e0de685e467ee52ebd997c66d06dfdb2bd76fca1a92f1fc6c10058"
+      "sha256": "64fa7caf7bb47d7ef4206b565c10b2a735eda1e0f01910540c80223cb09deb4c"
     },
     {
       "path": "src/design-exchange-catalog/index.ts",
@@ -297,7 +297,7 @@
     },
     {
       "path": "src/font-resources.ts",
-      "sha256": "566312badf04fa48acb938de923ea61b0c7cf41385cf6bc1c37f6a861802d749"
+      "sha256": "09e1802028ae19298926ea089d7b384bb1ec4a7356bb78ca55993b94bd687ca3"
     },
     {
       "path": "src/generator/code-emitter.ts",
@@ -403,5 +403,23 @@
       "path": "tsconfig.json",
       "sha256": "144055e6c57939681f9d6db8a5787a72106107930450815b3b3e97569670eb16"
     }
-  ]
+  ],
+  "recoverySourceAmendment": {
+    "phase": "TFSB66B-R7",
+    "scope": "Descriptor reads and restrictive output permissions; semantic catalog expressions and historical protocol tuples unchanged",
+    "sources": {
+      "cli-v2.ts": {
+        "historicalSha256": "b443b093c334e7e8106531846057d90f147d59cae052610a3d71b21444b8bf52",
+        "qualifiedSha256": "ea5d2196659b5edeed4b9aea3503dfe9b3b6dac3a419bc95c52fe18c94174919"
+      },
+      "font-resources.ts": {
+        "historicalSha256": "566312badf04fa48acb938de923ea61b0c7cf41385cf6bc1c37f6a861802d749",
+        "qualifiedSha256": "09e1802028ae19298926ea089d7b384bb1ec4a7356bb78ca55993b94bd687ca3"
+      },
+      "design-exchange-catalog/executable.ts": {
+        "historicalSha256": "3128345b10e0de685e467ee52ebd997c66d06dfdb2bd76fca1a92f1fc6c10058",
+        "qualifiedSha256": "64fa7caf7bb47d7ef4206b565c10b2a735eda1e0f01910540c80223cb09deb4c"
+      }
+    }
+  }
 }

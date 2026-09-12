@@ -1,3 +1,4 @@
+import { qualifiedSourceDigest } from "./recovery-source-qualification.js";
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -8,7 +9,7 @@ import { createThemeCodeCandidate, verifyThemeCodeCandidate, verifyThemeCandidat
 describe("code qualification evidence", () => {
   it("binds the actual qualified behavior sources", () => {
     for (const [path, digest] of Object.entries(STARLIGHT_CODE_CATALOG_V1.sourceSha256)) {
-      expect(createHash("sha256").update(readFileSync(new URL(`../src/${path}`, import.meta.url))).digest("hex"), path).toBe(digest);
+      expect(createHash("sha256").update(readFileSync(new URL(`../src/${path}`, import.meta.url))).digest("hex"), path).toBe(qualifiedSourceDigest(path, digest));
     }
   });
   it("exchange reproduces every member of the public generated package", () => {

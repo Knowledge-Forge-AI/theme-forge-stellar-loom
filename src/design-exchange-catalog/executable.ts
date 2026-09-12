@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync, lstatSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, lstatSync, existsSync, openSync, fstatSync, closeSync, constants } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { REQUIRED_EXECUTABLE_MEMBERS } from "./executable-members.js";
@@ -14,18 +14,66 @@ export function canonical(value: unknown): string {
   return JSON.stringify(sort(value));
 }
 function fail(code: string): never { throw new Error(code); }
-function readMember(root: string, path: string): Buffer {
+export function readMember(root: string, path: string): Buffer {
   if (!/^[A-Za-z0-9_./-]+$/.test(path) || path.startsWith("/") || path.split("/").some(x => !x || x === "." || x === "..")) fail("INVALID_EXECUTABLE_MEMBER");
-  let current = resolve(root);
-  if (!lstatSync(current).isDirectory() || lstatSync(current).isSymbolicLink()) fail("INVALID_EXECUTABLE_ROOT");
-  for (const part of path.split("/")) {
-    current = join(current, part);
-    if (lstatSync(current).isSymbolicLink()) fail("SYMLINK_EXECUTABLE_MEMBER");
+  const rootPath = resolve(root);
+  let rootStat;
+  try {
+    rootStat = lstatSync(rootPath);
+  } catch {
+    fail("INVALID_EXECUTABLE_ROOT");
   }
-  if (!lstatSync(current).isFile()) fail("INVALID_EXECUTABLE_MEMBER");
-  const bytes = readFileSync(current);
-  if (!bytes.length) fail("EMPTY_EXECUTABLE_MEMBER");
-  return bytes;
+  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) fail("INVALID_EXECUTABLE_ROOT");
+  const directories = [{ path: rootPath, stat: rootStat }];
+  const parts = path.split("/");
+  let current = rootPath;
+  for (let i = 0; i < parts.length - 1; i++) {
+    current = join(current, parts[i]!);
+    let st;
+    try {
+      st = lstatSync(current);
+    } catch {
+      fail("INVALID_EXECUTABLE_MEMBER");
+    }
+    if (st.isSymbolicLink()) fail("SYMLINK_EXECUTABLE_MEMBER");
+    if (!st.isDirectory()) fail("INVALID_EXECUTABLE_MEMBER");
+    directories.push({ path: current, stat: st });
+  }
+  const leafPath = join(current, parts[parts.length - 1]!);
+  if (typeof constants.O_NOFOLLOW !== "number" || typeof constants.O_NONBLOCK !== "number") fail("UNSUPPORTED_SECURE_FILESYSTEM");
+  let fd: number;
+  try {
+    fd = openSync(leafPath, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK, 0o600);
+  } catch (err: any) {
+    if (err?.code === "ELOOP" || err?.code === "SYMLINK" || err?.code === "EMLINK") {
+      fail("SYMLINK_EXECUTABLE_MEMBER");
+    }
+    fail("INVALID_EXECUTABLE_MEMBER");
+  }
+  try {
+    const st = fstatSync(fd);
+    if (!st.isFile()) fail("INVALID_EXECUTABLE_MEMBER");
+    // O_NOFOLLOW protects the leaf. Recheck the ancestor identities separately;
+    // a leaf descriptor alone does not establish directory confinement.
+    const verifyPaths = () => {
+      for (const directory of directories) {
+        const now = lstatSync(directory.path);
+        if (!now.isDirectory() || now.isSymbolicLink() || now.dev !== directory.stat.dev || now.ino !== directory.stat.ino) fail("INVALID_EXECUTABLE_ROOT");
+      }
+      const leaf = lstatSync(leafPath);
+      if (!leaf.isFile() || leaf.isSymbolicLink() || leaf.dev !== st.dev || leaf.ino !== st.ino) fail("INVALID_EXECUTABLE_MEMBER");
+    };
+    verifyPaths();
+    if (st.size === 0) fail("EMPTY_EXECUTABLE_MEMBER");
+    const bytes = readFileSync(fd);
+    if (!bytes.length) fail("EMPTY_EXECUTABLE_MEMBER");
+    const after = fstatSync(fd);
+    if (after.size !== st.size || after.mtimeMs !== st.mtimeMs || after.ctimeMs !== st.ctimeMs || bytes.length !== st.size) fail("INVALID_EXECUTABLE_MEMBER");
+    verifyPaths();
+    return bytes;
+  } finally {
+    closeSync(fd);
+  }
 }
 function jsInventory(root: string, directory: string): string[] {
   const paths: string[] = [];
