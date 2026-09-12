@@ -1,0 +1,418 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://knowledge-forge.ai/tfsl/theme-evidence/v2/theme-code-candidate.schema.json",
+  "title": "TFSL theme code candidate packet v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "candidateId",
+    "semanticCompiler",
+    "adapter",
+    "catalog",
+    "catalogDigest",
+    "producer",
+    "inputDigest",
+    "themeDigest",
+    "syntaxDigest",
+    "runtime",
+    "metadata",
+    "outputDigest",
+    "outputInventory",
+    "state",
+    "theme",
+    "rationale",
+    "candidateDigest"
+  ],
+  "properties": {
+    "schema": {
+      "enum": ["tfsl.theme-candidate", "tfsl.theme-code-candidate"]
+    },
+    "schemaVersion": {
+      "const": 2
+    },
+    "candidateId": {
+      "$ref": "#/$defs/id"
+    },
+    "semanticCompiler": {
+      "const": "tfsl.theme-compiler-v2-code-1"
+    },
+    "adapter": {
+      "const": "starlight-v0.42"
+    },
+    "catalog": {
+      "const": "tfsl.starlight-code-catalog-v1"
+    },
+    "catalogDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "version",
+        "executableDigest",
+        "packageDigest"
+      ],
+      "properties": {
+        "package": {
+          "$ref": "#/$defs/text128"
+        },
+        "version": {
+          "$ref": "#/$defs/text64"
+        },
+        "executableDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "packageDigest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "inputDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "themeDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "syntaxDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "runtime": {
+      "oneOf": [
+        {
+          "const": "EC0.44.2 Shiki4.4.3"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["expressiveCode", "shiki"],
+          "properties": {
+            "expressiveCode": {
+              "const": "0.44.2"
+            },
+            "shiki": {
+              "const": "4.4.3"
+            },
+            "label": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/text128"
+        },
+        "version": {
+          "$ref": "#/$defs/text64"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "license": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "template": {
+          "type": "string",
+          "enum": ["page-title-frame"]
+        }
+      }
+    },
+    "outputDigest": {
+      "$ref": "#/$defs/digest"
+    },
+    "outputInventory": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "digest"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "digest": {
+            "$ref": "#/$defs/digest"
+          }
+        }
+      }
+    },
+    "state": {
+      "const": "candidate"
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "schemaVersion",
+        "adapter",
+        "tokenSets",
+        "accentVariants",
+        "defaultAccent",
+        "typography",
+        "surfaces",
+        "layoutPreset",
+        "components",
+        "codePresentation",
+        "fonts"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/text64"
+        },
+        "schemaVersion": {
+          "const": "tfsl.theme-v2"
+        },
+        "adapter": {
+          "const": "starlight-v0.42"
+        },
+        "tokenSets": {
+          "type": "object"
+        },
+        "accentVariants": {
+          "type": "object"
+        },
+        "defaultAccent": {
+          "$ref": "#/$defs/id"
+        },
+        "typography": {
+          "type": "object"
+        },
+        "surfaces": {
+          "type": "object"
+        },
+        "layoutPreset": {
+          "type": "string",
+          "enum": ["standard", "compact", "wide"]
+        },
+        "components": {
+          "type": "object"
+        },
+        "codePresentation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "syntaxTheme",
+            "frame",
+            "marks",
+            "copy",
+            "tabs"
+          ],
+          "properties": {
+            "mode": {
+              "const": "expressive-code"
+            },
+            "syntaxTheme": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["light", "dark"],
+              "properties": {
+                "light": {
+                  "$ref": "#/$defs/syntaxMode"
+                },
+                "dark": {
+                  "$ref": "#/$defs/syntaxMode"
+                }
+              }
+            },
+            "frame": {
+              "type": "string",
+              "enum": ["plain", "editor", "terminal"]
+            },
+            "marks": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["marked", "inserted", "deleted"],
+              "properties": {
+                "marked": {
+                  "$ref": "#/$defs/markColor"
+                },
+                "inserted": {
+                  "$ref": "#/$defs/markColor"
+                },
+                "deleted": {
+                  "$ref": "#/$defs/markColor"
+                }
+              }
+            },
+            "copy": {
+              "type": "string",
+              "enum": ["standard", "minimal"]
+            },
+            "tabs": {
+              "const": "deferred"
+            }
+          }
+        },
+        "fonts": {
+          "type": "array"
+        }
+      }
+    },
+    "selectedAccent": {
+      "$ref": "#/$defs/id"
+    },
+    "rationale": {
+      "$ref": "#/$defs/rationale"
+    },
+    "visualSha": {
+      "$ref": "#/$defs/digest"
+    },
+    "visualEvidence": {
+      "type": "array",
+      "maxItems": 8
+    },
+    "originV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packetDigest", "byteDigest"],
+      "properties": {
+        "packetDigest": {
+          "$ref": "#/$defs/digest"
+        },
+        "byteDigest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "claimedProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "toolName": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "toolVersion": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "timestamp": {
+          "type": "string",
+          "maxLength": 64
+        }
+      }
+    },
+    "candidateDigest": {
+      "$ref": "#/$defs/digest"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[-.][a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "text64": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "text128": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "hexColor": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    },
+    "markColor": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/hexColor"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["light", "dark"],
+          "properties": {
+            "light": {
+              "$ref": "#/$defs/hexColor"
+            },
+            "dark": {
+              "$ref": "#/$defs/hexColor"
+            }
+          }
+        }
+      ]
+    },
+    "syntaxRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scopes", "foreground"],
+      "properties": {
+        "scopes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "foreground": {
+          "$ref": "#/$defs/hexColor"
+        },
+        "background": {
+          "$ref": "#/$defs/hexColor"
+        },
+        "fontStyle": {
+          "type": "string",
+          "enum": ["normal", "italic", "bold", "underline"]
+        }
+      }
+    },
+    "syntaxMode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rules"],
+      "properties": {
+        "rules": {
+          "type": "array",
+          "maxItems": 512,
+          "items": {
+            "$ref": "#/$defs/syntaxRule"
+          }
+        }
+      }
+    }
+  }
+}

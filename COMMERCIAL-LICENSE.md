@@ -1,6 +1,6 @@
 # Commercial Licensing
 
-Theme Forge Stellar Burst releases are available under the GNU Affero General Public License v3.0 or later as the community license.
+Theme Forge Stellar Loom releases are available under the GNU Affero General Public License v3.0 or later as the community license.
 
 Commercial licenses are available for users who need proprietary terms that the AGPL-3.0-or-later community license does not provide.
 

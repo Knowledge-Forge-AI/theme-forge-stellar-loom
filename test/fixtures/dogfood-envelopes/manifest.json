@@ -1,0 +1,116 @@
+{
+  "schema": "tfsl.dogfood-envelopes-manifest-v1",
+  "contract": "TFSB62B / Stellar Loom integrated dogfood envelope qualification",
+  "envelopes": [
+    {
+      "id": "loom-black",
+      "manifestFile": "loom-black.json",
+      "themeName": "loom-black-catalog",
+      "composition": {
+        "core": "examples/loom-black-core.theme.json",
+        "code": "examples/loom-black-code.theme.json",
+        "catalog": "examples/loom-black-catalog.json"
+      },
+      "defaultAccent": "default",
+      "accents": [
+        "default"
+      ],
+      "layout": "standard",
+      "pagination": "card",
+      "sidebar": "nested",
+      "pageTitleCopy": "url",
+      "codeTabs": "deferred",
+      "fonts": []
+    },
+    {
+      "id": "loom-flexoki",
+      "manifestFile": "loom-flexoki.json",
+      "themeName": "loom-flexoki-catalog",
+      "composition": {
+        "core": "examples/loom-flexoki-core.theme.json",
+        "code": "examples/loom-flexoki-code.theme.json",
+        "catalog": "examples/loom-flexoki-catalog.json"
+      },
+      "defaultAccent": "cyan",
+      "accents": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "cyan",
+        "blue",
+        "purple",
+        "magenta"
+      ],
+      "layout": "standard",
+      "pagination": "plain",
+      "sidebar": "select",
+      "pageTitleCopy": "none",
+      "codeTabs": "deferred",
+      "fonts": []
+    },
+    {
+      "id": "loom-celestia",
+      "manifestFile": "loom-celestia.json",
+      "themeName": "loom-celestia-catalog",
+      "composition": {
+        "core": "examples/loom-celestia-core.theme.json",
+        "code": "examples/loom-celestia-code.theme.json",
+        "catalog": "examples/loom-celestia-catalog.json"
+      },
+      "defaultAccent": "default",
+      "accents": [
+        "default"
+      ],
+      "layout": "compact",
+      "pagination": "compact",
+      "sidebar": "tabs",
+      "pageTitleCopy": "title",
+      "codeTabs": "deferred",
+      "fonts": [
+        {
+          "id": "source-code-pro",
+          "family": "Source Code Pro",
+          "format": "woff2",
+          "weight": 400,
+          "style": "normal",
+          "sha256": "8badfe75c98da1e8315a52619f177def4618350f7b3e496baf5b8894da2c2ac0",
+          "notice": "source-code-pro-ofl"
+        }
+      ]
+    }
+  ],
+  "tier2DeferredDispositions": [
+    {
+      "row": "loom-layout-slots",
+      "disposition": "DEFER_TO_0_2_X",
+      "reason": "Standard and compact width layouts are supported; Black relocated header controls, custom PageFrame, and custom TwoColumnContent slot replacements remain public Starlight defaults.",
+      "target": "0.2.x"
+    },
+    {
+      "row": "loom-code-tabs",
+      "disposition": "DEFER_TO_0_2_X",
+      "reason": "Code tabs retain the mandatory deferred sentinel; no false working code tab selector is emitted.",
+      "target": "0.2.x"
+    },
+    {
+      "row": "loom-virtual-data",
+      "disposition": "DEFER_TO_0_2_X",
+      "reason": "Theme catalog provides data through static package JSON (catalog-data.json); virtual data module injection is deferred.",
+      "target": "0.2.x"
+    },
+    {
+      "row": "loom-provider-provenance",
+      "disposition": "DEFER_TO_0_2_X",
+      "reason": "Fonts are declared with local static files and verified SHA-256; external runtime provider fetching and package-provenance registries are deferred.",
+      "target": "0.2.x"
+    },
+    {
+      "row": "rejected-internal-execution",
+      "disposition": "REJECTED_INTERNAL_OR_UNSAFE",
+      "reason": "Arbitrary runtime code injection, executable scripts, and unsafe object prototypes are rejected at validation.",
+      "target": "outside generated authority"
+    }
+  ],
+  "provenance": "Composed solely from original first-party examples; upstream source is evidence only."
+}

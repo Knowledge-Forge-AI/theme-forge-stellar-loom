@@ -1,7 +1,8 @@
 import type { ThemeDescriptor, ThemeSpecification } from "../types.js";
 
 export const COMPILER_PACKAGE = "@knowledge-forge-ai/theme-forge-stellar-loom";
-export const COMPILER_VERSION = "0.1.0";
+export { COMPILER_VERSION } from "../v2/types.js";
+import { COMPILER_VERSION } from "../v2/types.js";
 
 
 export function generateThemeDescriptor(params: {

@@ -1,0 +1,211 @@
+{
+  "spec": {
+    "name": "loom-celestia-core",
+    "version": "1.0.0",
+    "schemaVersion": "tfsl.theme-v2",
+    "adapter": "starlight-v0.42",
+    "tokenSets": {
+      "celestia-tokens": {
+        "space-page-dark": "#090814",
+        "space-page-light": "#f7f6fd",
+        "space-nav-dark": "#0f0e21",
+        "space-nav-light": "#ffffff",
+        "space-sidebar-dark": "#0d0c1c",
+        "space-sidebar-light": "#f0eef9",
+        "space-raised-dark": "#15132d",
+        "space-raised-light": "#ffffff",
+        "space-panel-dark": "#1b193a",
+        "space-panel-light": "#f3f1fb",
+        "space-card-dark": "#121026",
+        "space-card-light": "#ffffff",
+        "space-inline-code-dark": "#1d1a3e",
+        "space-inline-code-light": "#e8e5f5",
+        "space-code-dark": "#07060f",
+        "space-code-light": "#f0eef9",
+        "stellar-body-dark": "#e4e2f5",
+        "stellar-body-light": "#141226",
+        "stellar-secondary-dark": "#cdc9ea",
+        "stellar-secondary-light": "#2a2745",
+        "stellar-muted-dark": "#7a769e",
+        "stellar-muted-light": "#656184",
+        "stellar-invert-dark": {
+          "alias": "space-page-dark"
+        },
+        "stellar-invert-light": {
+          "alias": "space-nav-light"
+        },
+        "stellar-link-dark": "#a5b4fc",
+        "stellar-link-light": "#4338ca",
+        "stellar-hairline-dark": "#221f45",
+        "stellar-hairline-light": "#ddd9ef",
+        "stellar-border-dark": "#2e2b5c",
+        "stellar-border-light": "#c6c0e4",
+        "stellar-focus-dark": "#818cf8",
+        "stellar-focus-light": "#4f46e5",
+        "stellar-select-bg-dark": "#312e81",
+        "stellar-select-bg-light": "#c7d2fe",
+        "stellar-select-text-dark": "#e4e2f5",
+        "stellar-select-text-light": "#141226",
+        "stellar-accent-base-dark": "#818cf8",
+        "stellar-accent-base-light": "#4f46e5",
+        "stellar-accent-low-dark": "#1e1b4b",
+        "stellar-accent-low-light": "#eef2ff",
+        "stellar-accent-high-dark": "#c7d2fe",
+        "stellar-accent-high-light": "#312e81"
+      }
+    },
+    "accentVariants": {
+      "default": {
+        "tokenSet": "celestia-tokens",
+        "dark": {
+          "page": "space-page-dark",
+          "navigation": "space-nav-dark",
+          "header": "space-nav-dark",
+          "sidebar": "space-sidebar-dark",
+          "raised": "space-raised-dark",
+          "panel": "space-panel-dark",
+          "card": "space-card-dark",
+          "inline-code": "space-inline-code-dark",
+          "code": "space-code-dark",
+          "body": "stellar-body-dark",
+          "secondary": "stellar-secondary-dark",
+          "muted": "stellar-muted-dark",
+          "inverted": "stellar-invert-dark",
+          "link": "stellar-link-dark",
+          "hairline": "stellar-hairline-dark",
+          "border": "stellar-border-dark",
+          "focus": "stellar-focus-dark",
+          "selection-background": "stellar-select-bg-dark",
+          "selection-text": "stellar-select-text-dark",
+          "accent-base": "stellar-accent-base-dark",
+          "accent-low": "stellar-accent-low-dark",
+          "accent-high": "stellar-accent-high-dark"
+        },
+        "light": {
+          "page": "space-page-light",
+          "navigation": "space-nav-light",
+          "header": "space-nav-light",
+          "sidebar": "space-sidebar-light",
+          "raised": "space-raised-light",
+          "panel": "space-panel-light",
+          "card": "space-card-light",
+          "inline-code": "space-inline-code-light",
+          "code": "space-code-light",
+          "body": "stellar-body-light",
+          "secondary": "stellar-secondary-light",
+          "muted": "stellar-muted-light",
+          "inverted": "stellar-invert-light",
+          "link": "stellar-link-light",
+          "hairline": "stellar-hairline-light",
+          "border": "stellar-border-light",
+          "focus": "stellar-focus-light",
+          "selection-background": "stellar-select-bg-light",
+          "selection-text": "stellar-select-text-light",
+          "accent-base": "stellar-accent-base-light",
+          "accent-low": "stellar-accent-low-light",
+          "accent-high": "stellar-accent-high-light"
+        }
+      }
+    },
+    "defaultAccent": "default",
+    "typography": {
+      "body": {
+        "font": "celestia-sans",
+        "size": 15,
+        "lineHeight": 1.6
+      },
+      "heading": {
+        "font": "celestia-sans",
+        "size": 26,
+        "lineHeight": 1.3
+      },
+      "ui": {
+        "font": "system-sans",
+        "size": 14,
+        "lineHeight": 1.5
+      },
+      "code": {
+        "font": "system-mono",
+        "size": 13,
+        "lineHeight": 1.5
+      }
+    },
+    "surfaces": {
+      "spacing": 4,
+      "radii": 8,
+      "border": 1,
+      "focus": 2,
+      "content": 960,
+      "sidebar": 240
+    },
+    "layoutPreset": "compact",
+    "components": {
+      "pageTitle": "consumer-default"
+    },
+    "codePresentation": "consumer-default",
+    "fonts": [
+      {
+        "id": "celestia-sans",
+        "family": "Celestia Sans",
+        "style": "normal",
+        "weight": 400,
+        "format": "woff2",
+        "sha256": "e2eb4ea76b4ed0d42ebb8a7576d75460acbab4ee95b23bdd858b73fa59de5ca0",
+        "license": "AGPL-3.0-or-later",
+        "notice": "original-nonrendering-v1"
+      }
+    ]
+  },
+  "styles": [
+    [
+      "styles/layers.css",
+      "/* Theme Forge Stellar Loom v2 - Layer order declaration */\n@layer starlight, tfsl;\n@layer tfsl.tokens, tfsl.base, tfsl.accent, tfsl.overrides;\n"
+    ],
+    [
+      "styles/tokens.css",
+      "@layer tfsl.tokens {\n  @font-face {\n    font-family: 'Celestia Sans';\n    font-style: normal;\n    font-weight: 400;\n    font-display: swap;\n    src: url('../fonts/font-00.woff2') format('woff2');\n  }\n\n  :root,\n  ::backdrop {\n    --sl-font: 'Celestia Sans', -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n    --sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;\n    --tfsl-font-body: 'Celestia Sans', -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n    --tfsl-font-heading: 'Celestia Sans', -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n    --tfsl-font-ui: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n    --tfsl-font-code: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;\n    --sl-text-body: 15px;\n    --sl-line-height: 1.6;\n    --sl-line-height-headings: 1.3;\n    --sl-text-h1: 26px;\n    --sl-text-h2: 22px;\n    --sl-text-h3: 19px;\n    --sl-text-h4: 17px;\n    --sl-text-h5: 15px;\n    --sl-text-h6: 13px;\n    --sl-content-width: 960px;\n    --sl-sidebar-width: 240px;\n    --tfsl-spacing: 4px;\n    --tfsl-space-small: 2px;\n    --tfsl-space-large: 8px;\n    --tfsl-space-section: 16px;\n    --tfsl-radius-small: 4px;\n    --tfsl-border-style: solid;\n    --tfsl-focus-offset: 2px;\n    --tfsl-radius: 8px;\n    --tfsl-border-width: 1px;\n    --tfsl-focus-width: 2px;\n\n    /* Theme color roles */\n    --tfsl-color-page: #090814;\n    --tfsl-color-navigation: #0f0e21;\n    --tfsl-color-header: #0f0e21;\n    --tfsl-color-sidebar: #0d0c1c;\n    --tfsl-color-raised: #15132d;\n    --tfsl-color-panel: #1b193a;\n    --tfsl-color-card: #121026;\n    --tfsl-color-inline-code: #1d1a3e;\n    --tfsl-color-code: #07060f;\n    --tfsl-color-body: #e4e2f5;\n    --tfsl-color-secondary: #cdc9ea;\n    --tfsl-color-muted: #7a769e;\n    --tfsl-color-inverted: #090814;\n    --tfsl-color-link: #a5b4fc;\n    --tfsl-color-hairline: #221f45;\n    --tfsl-color-border: #2e2b5c;\n    --tfsl-color-focus: #818cf8;\n    --tfsl-color-selection-background: #312e81;\n    --tfsl-color-selection-text: #e4e2f5;\n\n    /* Starlight standard token mappings */\n    --sl-color-bg: var(--tfsl-color-page);\n    --sl-color-bg-nav: var(--tfsl-color-header);\n    --sl-color-bg-sidebar: var(--tfsl-color-sidebar);\n    --sl-color-bg-inline-code: var(--tfsl-color-inline-code);\n    --sl-color-text: var(--tfsl-color-body);\n    --sl-color-text-accent: var(--tfsl-color-link);\n    --sl-color-text-invert: var(--tfsl-color-inverted);\n    --sl-color-hairline: var(--tfsl-color-hairline);\n    --sl-color-hairline-light: var(--tfsl-color-border);\n    --sl-color-hairline-shade: var(--tfsl-color-border);\n    --sl-color-white: var(--tfsl-color-secondary);\n    --sl-color-black: var(--tfsl-color-page);\n  }\n\n  :root[data-theme='light'],\n  [data-theme='light'] ::backdrop {\n    /* Theme color roles */\n    --tfsl-color-page: #f7f6fd;\n    --tfsl-color-navigation: #ffffff;\n    --tfsl-color-header: #ffffff;\n    --tfsl-color-sidebar: #f0eef9;\n    --tfsl-color-raised: #ffffff;\n    --tfsl-color-panel: #f3f1fb;\n    --tfsl-color-card: #ffffff;\n    --tfsl-color-inline-code: #e8e5f5;\n    --tfsl-color-code: #f0eef9;\n    --tfsl-color-body: #141226;\n    --tfsl-color-secondary: #2a2745;\n    --tfsl-color-muted: #656184;\n    --tfsl-color-inverted: #ffffff;\n    --tfsl-color-link: #4338ca;\n    --tfsl-color-hairline: #ddd9ef;\n    --tfsl-color-border: #c6c0e4;\n    --tfsl-color-focus: #4f46e5;\n    --tfsl-color-selection-background: #c7d2fe;\n    --tfsl-color-selection-text: #141226;\n\n    /* Starlight standard token mappings */\n    --sl-color-bg: var(--tfsl-color-page);\n    --sl-color-bg-nav: var(--tfsl-color-header);\n    --sl-color-bg-sidebar: var(--tfsl-color-sidebar);\n    --sl-color-bg-inline-code: var(--tfsl-color-inline-code);\n    --sl-color-text: var(--tfsl-color-body);\n    --sl-color-text-accent: var(--tfsl-color-link);\n    --sl-color-text-invert: var(--tfsl-color-inverted);\n    --sl-color-hairline: var(--tfsl-color-hairline);\n    --sl-color-hairline-light: var(--tfsl-color-border);\n    --sl-color-hairline-shade: var(--tfsl-color-border);\n    --sl-color-white: var(--tfsl-color-secondary);\n    --sl-color-black: var(--tfsl-color-page);\n  }\n}\n"
+    ],
+    [
+      "styles/base.css",
+      "@layer tfsl.base {\n  body { font-family: var(--tfsl-font-body); font-size: 15px; line-height: 1.6; }\n  header, nav, aside, button, select, input { font-family: var(--tfsl-font-ui); font-size: 14px; line-height: 1.5; }\n  code, pre { font-family: var(--tfsl-font-code); font-size: 13px; line-height: 1.5; }\n  nav { background-color: var(--tfsl-color-navigation); }\n  .sl-markdown-content pre { background-color: var(--tfsl-color-code); }\n  .sl-markdown-content blockquote { background-color: var(--tfsl-color-panel); border-color: var(--tfsl-color-border); }\n  .sl-markdown-content details { background-color: var(--tfsl-color-raised); border-radius: var(--tfsl-radius-small); padding: var(--tfsl-space-small); }\n  .sl-markdown-content small { color: var(--tfsl-color-muted); }\n  @media (min-width: 50rem) { :root { --sl-content-width: min(960px, 960px); } }\n  h1, .sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {\n    font-family: var(--tfsl-font-heading, var(--sl-font));\n    line-height: var(--sl-line-height-headings, 1.2);\n    color: var(--tfsl-color-secondary, var(--sl-color-white));\n  }\n\n  .sl-markdown-content h1 {\n    font-size: var(--sl-text-h1);\n  }\n\n  .sl-markdown-content h2 {\n    font-size: var(--sl-text-h2);\n  }\n\n  .sl-markdown-content h3 {\n    font-size: var(--sl-text-h3);\n  }\n\n  .sl-markdown-content h4 {\n    font-size: var(--sl-text-h4);\n  }\n\n  .sl-markdown-content h5 {\n    font-size: var(--sl-text-h5);\n  }\n\n  .sl-markdown-content h6 {\n    font-size: var(--sl-text-h6);\n  }\n\n  /* Responsive heading scaling across breakpoints */\n  @media (min-width: 50rem) {\n    .sl-markdown-content h1 {\n      font-size: calc(var(--sl-text-h1) * 1.15);\n    }\n    .sl-markdown-content h2 {\n      font-size: calc(var(--sl-text-h2) * 1.1);\n    }\n  }\n\n  @media (min-width: 72rem) {\n    .sl-markdown-content h1 {\n      font-size: calc(var(--sl-text-h1) * 1.25);\n    }\n    .sl-markdown-content h2 {\n      font-size: calc(var(--sl-text-h2) * 1.15);\n    }\n  }\n\n  /* Card and surface styling */\n  .card,\n  .sl-markdown-content .card {\n    background-color: var(--tfsl-color-card);\n    border: var(--tfsl-border-width, 1px) var(--tfsl-border-style) var(--tfsl-color-border);\n    border-radius: var(--tfsl-radius, 8px);\n  }\n\n  /* Selection styling */\n  ::selection {\n    background-color: var(--tfsl-color-selection-background);\n    color: var(--tfsl-color-selection-text);\n  }\n}\n"
+    ],
+    [
+      "styles/accent.css",
+      "@layer tfsl.accent {\n  :root,\n  ::backdrop {\n    --tfsl-color-accent-base: #818cf8;\n    --tfsl-color-accent-low: #1e1b4b;\n    --tfsl-color-accent-high: #c7d2fe;\n    --sl-color-accent: var(--tfsl-color-accent-base);\n    --sl-color-accent-low: var(--tfsl-color-accent-low);\n    --sl-color-accent-high: var(--tfsl-color-accent-high);\n  }\n\n  :root[data-theme='light'],\n  [data-theme='light'] ::backdrop {\n    --tfsl-color-accent-base: #4f46e5;\n    --tfsl-color-accent-low: #eef2ff;\n    --tfsl-color-accent-high: #312e81;\n    --sl-color-accent: var(--tfsl-color-accent-base);\n    --sl-color-accent-low: var(--tfsl-color-accent-low);\n    --sl-color-accent-high: var(--tfsl-color-accent-high);\n  }\n}\n"
+    ],
+    [
+      "styles/overrides.css",
+      "@layer tfsl.overrides {\n  :focus-visible {\n    outline: var(--tfsl-focus-width, 2px) solid var(--tfsl-color-focus);\n    outline-offset: var(--tfsl-focus-offset);\n  }\n\n  .sl-markdown-content a:focus-visible {\n    outline: var(--tfsl-focus-width, 2px) solid var(--tfsl-color-focus);\n    outline-offset: var(--tfsl-focus-offset);\n  }\n}\n"
+    ]
+  ],
+  "descriptor": {
+    "schema": "tfsl.theme-descriptor-v2",
+    "schemaVersion": 2,
+    "themeSchemaVersion": "tfsl.theme-v2",
+    "themeName": "loom-celestia-core",
+    "themeVersion": "1.0.0",
+    "adapter": "starlight-v0.42",
+    "selectedAccent": "default",
+    "accent": "default",
+    "inputDigest": "6354fe083d978b83283c0bf650be0a2a8c9cfee907292481b2be01a6229b249d",
+    "outputDigest": "8711845cfb994fb2df78bfa030127ae4153cfc917c1222d99ed0a1bd7a88c468",
+    "inventoryDigest": "3a4c252d1e4f24cb7dc52ffa8a36ce27dc9027c3720b562e37345ab8576c9b55",
+    "catalogIdentity": "tfsl.starlight-core-catalog-v1",
+    "catalogDigest": "d45f945d3323244c5b6d2908799c968d5d1d223e945b8aed0a0ce96b76f32953",
+    "catalog": {
+      "identity": "tfsl.starlight-core-catalog-v1",
+      "digest": "d45f945d3323244c5b6d2908799c968d5d1d223e945b8aed0a0ce96b76f32953"
+    },
+    "compilerSemantic": "tfsl.theme-compiler-v2-core-1",
+    "provenance": {
+      "categories": [
+        "user-authored-data",
+        "generated-syntax",
+        "first-party-expression"
+      ],
+      "semantic": "tfsl.theme-compiler-v2-core-1",
+      "compiler": "@knowledge-forge-ai/theme-forge-stellar-loom",
+      "compilerVersion": "0.1.1"
+    }
+  }
+}

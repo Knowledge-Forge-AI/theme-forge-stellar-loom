@@ -1,0 +1,20 @@
+{
+  "schema": "tfsl.theme-descriptor-v1",
+  "schemaVersion": 1,
+  "themeSchemaVersion": "tfsl.theme-v1",
+  "themeName": "amber-forge",
+  "themeVersion": "0.1.0",
+  "adapter": "starlight-v0.42",
+  "inputDigest": "c8d6da44c19e5b4050fc48b2929d496bb3dcb3f6e661bb06fbe0529ebe6d170d",
+  "outputDigest": "359c7715273bbbb3710c7802822b79ddf58c8ad4a9289b4e566f66c8e95cc2c0",
+  "cssFile": "styles/theme.css",
+  "provenance": {
+    "categories": [
+      "user-authored-data",
+      "generated-syntax",
+      "first-party-expression"
+    ],
+    "compiler": "@knowledge-forge-ai/theme-forge-stellar-loom",
+    "compilerVersion": "0.1.1"
+  }
+}
