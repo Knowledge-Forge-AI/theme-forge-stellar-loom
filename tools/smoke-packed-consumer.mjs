@@ -81,6 +81,13 @@ async function run() {
       stdio: "ignore",
     });
 
+    const installedRoot = join(consumerDir, "node_modules/@knowledge-forge-ai/theme-forge-stellar-loom");
+    const installedReadme = await readFile(join(installedRoot, "README.md"), "utf8");
+    if (installedReadme !== await readFile(join(TFSL_DIR, "README.md"), "utf8")) throw new Error("Packed README differs from qualified source README");
+    if (!installedReadme.includes("npm install @knowledge-forge-ai/theme-forge-stellar-loom") || /local release candidate|future public npm publication/.test(installedReadme)) throw new Error("Packed README has stale release truth");
+    const installedMetadata = JSON.parse(await readFile(join(installedRoot, "package.json"), "utf8"));
+    if (installedMetadata.version !== "0.2.0" || Object.keys(installedMetadata.dependencies ?? {}).length) throw new Error("Unexpected package version or runtime dependencies");
+
     const tfslBin = join(consumerDir, "node_modules/.bin/tfsl");
 
     // Test 1: CLI Version and Help
@@ -89,8 +96,8 @@ async function run() {
       cwd: consumerDir,
       encoding: "utf8",
     }).trim();
-    if (!versionOutput.includes("0.1.0")) {
-      throw new Error(`Unexpected CLI version: '${versionOutput}', expected to contain '0.1.0'`);
+    if (!versionOutput.includes("0.2.0")) {
+      throw new Error(`Unexpected CLI version: '${versionOutput}', expected to contain '0.2.0'`);
     }
     console.log(`   CLI version verified: ${versionOutput}`);
 
@@ -148,7 +155,7 @@ async function run() {
     if (calculatedSha !== descriptorContent.outputDigest) {
       throw new Error(`Descriptor SHA-256 mismatch: calculated ${calculatedSha} vs recorded ${descriptorContent.outputDigest}`);
     }
-    if (descriptorContent.provenance.compilerVersion !== "0.1.0") {
+    if (descriptorContent.provenance.compilerVersion !== "0.2.0") {
       throw new Error(`Descriptor compilerVersion mismatch: ${descriptorContent.provenance.compilerVersion}`);
     }
     console.log(`   CLI compile output and diagnostics verified (CSS SHA-256: ${calculatedSha.slice(0, 16)}...)`);
@@ -189,10 +196,10 @@ async function run() {
       throw new Error("Generated package must be private: true");
     }
     const genProvenance = JSON.parse(await readFile(join(genOutDir, "provenance.json"), "utf8"));
-    if (genProvenance.generatorVersion !== "0.1.0") {
+    if (genProvenance.generatorVersion !== "0.2.0") {
       throw new Error(`Generated package provenance generatorVersion mismatch: ${genProvenance.generatorVersion}`);
     }
-    console.log(`   CLI generate output verified (${parsedGen.filesWritten.length} files, private: true, generatorVersion: 0.1.0)`);
+    console.log(`   CLI generate output verified (${parsedGen.filesWritten.length} files, private: true, generatorVersion: 0.2.0)`);
 
     // Test 5: Safety - Refuse overwrite if file was modified
     console.log("8. Testing CLI safety against dirty overwrite...");
@@ -242,7 +249,7 @@ async function run() {
       if (typeof processBatchRequest !== "function") throw new Error("processBatchRequest is not a function");
       if (!STELLAR_CYAN_EXAMPLE || STELLAR_CYAN_EXAMPLE.name !== "stellar-cyan") throw new Error("STELLAR_CYAN_EXAMPLE invalid");
       if (!AMBER_FORGE_EXAMPLE || AMBER_FORGE_EXAMPLE.name !== "amber-forge") throw new Error("AMBER_FORGE_EXAMPLE invalid");
-      if (COMPILER_VERSION !== "0.1.0") throw new Error("Unexpected COMPILER_VERSION: " + COMPILER_VERSION);
+      if (COMPILER_VERSION !== "0.2.0") throw new Error("Unexpected COMPILER_VERSION: " + COMPILER_VERSION);
 
       const spec = JSON.parse(readFileSync(${JSON.stringify(EXAMPLE_CYAN)}, "utf8"));
       const validated = validateTheme(spec);

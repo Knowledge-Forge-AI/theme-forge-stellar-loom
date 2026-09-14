@@ -1,0 +1,14 @@
+title = "Stellar Loom source scanning"
+
+[extend]
+useDefault = true
+
+# Public compiler-source SHA-256, not an authentication credential.
+# Match only this value in its owning source file; retain all default rules.
+[[allowlists]]
+description = "Code catalog public-api.ts source identity"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^src/code/catalog\.ts$''']
+regexTarget = "secret"
+regexes = ['''^2da0491906047c06055856f3f4d7c6cbc256585b3ab54f90672ffa5981e248d5$''']

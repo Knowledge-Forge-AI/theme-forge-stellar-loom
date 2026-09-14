@@ -1,6 +1,6 @@
 {
   "name": "@knowledge-forge-ai/theme-forge-stellar-loom",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Starlight theme-builder backend, library, and CLI",
   "private": false,
   "publishConfig": {
@@ -22,16 +22,16 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/index-catalog.d.ts",
+      "import": "./dist/index-catalog.js"
     },
     "./batch": {
-      "types": "./dist/batch.d.ts",
-      "import": "./dist/batch.js"
+      "types": "./dist/batch-catalog.d.ts",
+      "import": "./dist/batch-catalog.js"
     },
     "./cli": {
-      "types": "./dist/cli.d.ts",
-      "import": "./dist/cli.js"
+      "types": "./dist/cli-catalog.d.ts",
+      "import": "./dist/cli-catalog.js"
     },
     "./protocol/*": "./protocol/*"
   },
@@ -49,7 +49,6 @@
     "COMMERCIAL-LICENSE.md",
     "README.md"
   ],
-
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json",
