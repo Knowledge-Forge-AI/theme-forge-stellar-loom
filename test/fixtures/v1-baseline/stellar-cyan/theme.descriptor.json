@@ -1,0 +1,20 @@
+{
+  "schema": "tfsl.theme-descriptor-v1",
+  "schemaVersion": 1,
+  "themeSchemaVersion": "tfsl.theme-v1",
+  "themeName": "stellar-cyan",
+  "themeVersion": "0.1.0",
+  "adapter": "starlight-v0.42",
+  "inputDigest": "c134e96bcc1e68e10e17f6fbeb070f07015019ac1b656bd5a6e6039475509156",
+  "outputDigest": "e0aa688d2976a02eff54ef399eed9f4e90e725a322c47ccf470db2e1e4628011",
+  "cssFile": "styles/theme.css",
+  "provenance": {
+    "categories": [
+      "user-authored-data",
+      "generated-syntax",
+      "first-party-expression"
+    ],
+    "compiler": "@knowledge-forge-ai/theme-forge-stellar-loom",
+    "compilerVersion": "0.1.1"
+  }
+}

@@ -1,0 +1,655 @@
+{
+  "captureContract": "accepted-code-installed-js-before-catalog",
+  "spec": {
+    "name": "loom-black-code",
+    "version": "1.0.0",
+    "schemaVersion": "tfsl.theme-v2",
+    "adapter": "starlight-v0.42",
+    "tokenSets": {
+      "black-tokens": {
+        "bg-page-dark": "#0c0d10",
+        "bg-page-light": "#f8fafc",
+        "bg-nav-dark": "#12141a",
+        "bg-nav-light": "#ffffff",
+        "bg-sidebar-dark": "#0f1015",
+        "bg-sidebar-light": "#f1f5f9",
+        "bg-raised-dark": "#161922",
+        "bg-raised-light": "#ffffff",
+        "bg-panel-dark": "#1a1e29",
+        "bg-panel-light": "#f8fafc",
+        "bg-card-dark": "#131620",
+        "bg-card-light": "#ffffff",
+        "bg-inline-code-dark": "#1e2330",
+        "bg-inline-code-light": "#e2e8f0",
+        "bg-code-dark": "#090a0d",
+        "bg-code-light": "#f1f5f9",
+        "text-body-dark": "#f0f2f5",
+        "text-body-light": "#0f172a",
+        "text-secondary-dark": "#e1e4ea",
+        "text-secondary-light": "#334155",
+        "text-muted-dark": "#8a92a6",
+        "text-muted-light": "#64748b",
+        "text-invert-dark": {
+          "alias": "bg-page-dark"
+        },
+        "text-invert-light": {
+          "alias": "bg-nav-light"
+        },
+        "text-link-dark": "#60a5fa",
+        "text-link-light": "#2563eb",
+        "hairline-dark": "#232838",
+        "hairline-light": "#e2e8f0",
+        "border-dark": "#2e354a",
+        "border-light": "#cbd5e1",
+        "focus-ring-dark": "#3b82f6",
+        "focus-ring-light": "#2563eb",
+        "select-bg-dark": "#3b82f6",
+        "select-bg-light": "#2563eb",
+        "select-text-dark": "#ffffff",
+        "select-text-light": "#ffffff",
+        "accent-base-dark": "#f97316",
+        "accent-base-light": "#ea580c",
+        "accent-low-dark": "#431407",
+        "accent-low-light": "#ffedd5",
+        "accent-high-dark": "#fdba74",
+        "accent-high-light": "#9a3412"
+      }
+    },
+    "accentVariants": {
+      "default": {
+        "tokenSet": "black-tokens",
+        "dark": {
+          "page": "bg-page-dark",
+          "navigation": "bg-nav-dark",
+          "header": "bg-nav-dark",
+          "sidebar": "bg-sidebar-dark",
+          "raised": "bg-raised-dark",
+          "panel": "bg-panel-dark",
+          "card": "bg-card-dark",
+          "inline-code": "bg-inline-code-dark",
+          "code": "bg-code-dark",
+          "body": "text-body-dark",
+          "secondary": "text-secondary-dark",
+          "muted": "text-muted-dark",
+          "inverted": "text-invert-dark",
+          "link": "text-link-dark",
+          "hairline": "hairline-dark",
+          "border": "border-dark",
+          "focus": "focus-ring-dark",
+          "selection-background": "select-bg-dark",
+          "selection-text": "select-text-dark",
+          "accent-base": "accent-base-dark",
+          "accent-low": "accent-low-dark",
+          "accent-high": "accent-high-dark"
+        },
+        "light": {
+          "page": "bg-page-light",
+          "navigation": "bg-nav-light",
+          "header": "bg-nav-light",
+          "sidebar": "bg-sidebar-light",
+          "raised": "bg-raised-light",
+          "panel": "bg-panel-light",
+          "card": "bg-card-light",
+          "inline-code": "bg-inline-code-light",
+          "code": "bg-code-light",
+          "body": "text-body-light",
+          "secondary": "text-secondary-light",
+          "muted": "text-muted-light",
+          "inverted": "text-invert-light",
+          "link": "text-link-light",
+          "hairline": "hairline-light",
+          "border": "border-light",
+          "focus": "focus-ring-light",
+          "selection-background": "select-bg-light",
+          "selection-text": "select-text-light",
+          "accent-base": "accent-base-light",
+          "accent-low": "accent-low-light",
+          "accent-high": "accent-high-light"
+        }
+      }
+    },
+    "defaultAccent": "default",
+    "typography": {
+      "body": {
+        "font": "system-sans",
+        "size": 16,
+        "lineHeight": 1.6
+      },
+      "heading": {
+        "font": "system-sans",
+        "size": 28,
+        "lineHeight": 1.25
+      },
+      "ui": {
+        "font": "system-sans",
+        "size": 14,
+        "lineHeight": 1.5
+      },
+      "code": {
+        "font": "system-mono",
+        "size": 14,
+        "lineHeight": 1.5
+      }
+    },
+    "surfaces": {
+      "spacing": 4,
+      "radii": 8,
+      "border": 1,
+      "focus": 2,
+      "content": 1152,
+      "sidebar": 288
+    },
+    "layoutPreset": "standard",
+    "components": {
+      "pageTitle": "page-title-frame"
+    },
+    "codePresentation": {
+      "mode": "expressive-code",
+      "syntaxTheme": {
+        "light": {
+          "rules": [
+            {
+              "scopes": [
+                "keyword"
+              ],
+              "foreground": "#782765"
+            },
+            {
+              "scopes": [
+                "string"
+              ],
+              "foreground": "#27546a"
+            },
+            {
+              "scopes": [
+                "comment"
+              ],
+              "foreground": "#50645c"
+            },
+            {
+              "scopes": [
+                "entity.name.function"
+              ],
+              "foreground": "#924019"
+            },
+            {
+              "scopes": [
+                "variable"
+              ],
+              "foreground": "#473d76"
+            },
+            {
+              "scopes": [
+                "constant"
+              ],
+              "foreground": "#5b5426"
+            }
+          ]
+        },
+        "dark": {
+          "rules": [
+            {
+              "scopes": [
+                "keyword"
+              ],
+              "foreground": "#eda2cf"
+            },
+            {
+              "scopes": [
+                "string"
+              ],
+              "foreground": "#8bd0e8"
+            },
+            {
+              "scopes": [
+                "comment"
+              ],
+              "foreground": "#a4b9ac"
+            },
+            {
+              "scopes": [
+                "entity.name.function"
+              ],
+              "foreground": "#efb18a"
+            },
+            {
+              "scopes": [
+                "variable"
+              ],
+              "foreground": "#bdb1eb"
+            },
+            {
+              "scopes": [
+                "constant"
+              ],
+              "foreground": "#d5d28b"
+            }
+          ]
+        }
+      },
+      "frame": "terminal",
+      "marks": {
+        "marked": "#f97316",
+        "inserted": "#22c55e",
+        "deleted": "#ef4444"
+      },
+      "copy": "standard",
+      "tabs": "deferred"
+    },
+    "fonts": []
+  },
+  "metadata": {
+    "name": "loom-black-code-baseline",
+    "version": "0.1.0"
+  },
+  "accent": "default",
+  "files": [
+    [
+      "COMMERCIAL-LICENSE.md",
+      "# Commercial Licensing\n\nTheme Forge Stellar Burst releases are available under the GNU Affero General Public License v3.0 or later as the community license.\n\nCommercial licenses are available for users who need proprietary terms that the AGPL-3.0-or-later community license does not provide.\n\nCommercial-license use cases may include:\n\n- closed-source embedding;\n- private SaaS deployments with proprietary modifications;\n- OEM redistribution;\n- proprietary integration into commercial products;\n- support commitments;\n- warranty or indemnity terms; and\n- custom procurement, compliance, or contract terms.\n\nThe commercial license is not merely permission for commercial use. The AGPL allows commercial use subject to its terms. Commercial licensing is for proprietary terms, closed-source distribution, private network-service modifications, and other negotiated obligations.\n\nFor commercial licensing, contact: lair001@gmail.com.\n"
+    ],
+    [
+      "LICENSE",
+      "                    GNU AFFERO GENERAL PUBLIC LICENSE\n                       Version 3, 19 November 2007\n\n Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>\n Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.\n\n                            Preamble\n\n  The GNU Affero General Public License is a free, copyleft license for software and other kinds of works, specifically designed to ensure cooperation with the community in the case of network server software.\n\n  The licenses for most software and other practical works are designed to take away your freedom to share and change the works. By contrast, our General Public Licenses are intended to guarantee your freedom to share and change all versions of a program--to make sure it remains free software for all its users.\n\n  When we speak of free software, we are referring to freedom, not price. Our General Public Licenses are designed to make sure that you have the freedom to distribute copies of free software (and charge for them if you wish), that you receive source code or can get it if you want it, that you can change the software or use pieces of it in new free programs, and that you know you can do these things.\n\n  Developers that use our General Public Licenses protect your rights with two steps: (1) assert copyright on the software, and (2) offer you this License which gives you legal permission to copy, distribute and/or modify the software.\n\n  A secondary benefit of defending all users' freedom is that improvements made in alternate versions of the program, if they receive widespread use, become available for other developers to incorporate. Many developers of free software are heartened and encouraged by the resulting cooperation.  However, in the case of software used on network servers, this result may fail to come about. The GNU General Public License permits making a modified version and letting the public access it on a server without ever releasing its source code to the public.\n\n  The GNU Affero General Public License is designed specifically to ensure that, in such cases, the modified source code becomes available to the community. It requires the operator of a network server to provide the source code of the modified version running there to the users of that server. Therefore, public use of a modified version, on a publicly accessible server, gives the public access to the source code of the modified version.\n\n  An older license, called the Affero General Public License and published by Affero, was designed to accomplish similar goals. This is a different license, not a version of the Affero GPL, but Affero has released a new version of the Affero GPL which permits relicensing under this license.\n\n  The precise terms and conditions for copying, distribution and modification follow.\n\n                       TERMS AND CONDITIONS\n\n  0. Definitions.\n\n  \"This License\" refers to version 3 of the GNU Affero General Public License.\n\n  \"Copyright\" also means copyright-like laws that apply to other kinds of works, such as semiconductor masks.\n\n  \"The Program\" refers to any copyrightable work licensed under this License. Each licensee is addressed as \"you\".  \"Licensees\" and \"recipients\" may be individuals or organizations.\n\n  To \"modify\" a work means to copy from or adapt all or part of the work in a fashion requiring copyright permission, other than the making of an exact copy. The resulting work is called a \"modified version\" of the earlier work or a work \"based on\" the earlier work.\n\n  A \"covered work\" means either the unmodified Program or a work based on the Program.\n\n  To \"propagate\" a work means to do anything with it that, without permission, would make you directly or secondarily liable for infringement under applicable copyright law, except executing it on a computer or modifying a private copy.  Propagation includes copying, distribution (with or without modification), making available to the public, and in some countries other activities as well.\n\n  To \"convey\" a work means any kind of propagation that enables other parties to make or receive copies.  Mere interaction with a user through a computer network, with no transfer of a copy, is not conveying.\n\n  An interactive user interface displays \"Appropriate Legal Notices\" to the extent that it includes a convenient and prominently visible feature that (1) displays an appropriate copyright notice, and (2) tells the user that there is no warranty for the work (except to the extent that warranties are provided), that licensees may convey the work under this License, and how to view a copy of this License.  If the interface presents a list of user commands or options, such as a menu, a prominent item in the list meets this criterion.\n\n  1. Source Code.\n\n  The \"source code\" for a work means the preferred form of the work for making modifications to it.  \"Object code\" means any non-source form of a work.\n\n  A \"Standard Interface\" means an interface that either is an official standard defined by a recognized standards body, or, in the case of interfaces specified for a particular programming language, one that is widely used among developers working in that language.\n\n  The \"System Libraries\" of an executable work include anything, other than the work as a whole, that (a) is included in the normal form of packaging a Major Component, but which is not part of that Major Component, and (b) serves only to enable use of the work with that Major Component, or to implement a Standard Interface for which an implementation is available to the public in source code form.  A \"Major Component\", in this context, means a major essential component (kernel, window system, and so on) of the specific operating system (if any) on which the executable work runs, or a compiler used to produce the work, or an object code interpreter used to run it.\n\n  The \"Corresponding Source\" for a work in object code form means all the source code needed to generate, install, and (for an executable work) run the object code and to modify the work, including scripts to control those activities.  However, it does not include the work's System Libraries, or general-purpose tools or generally available free programs which are used unmodified in performing those activities but which are not part of the work.  For example, Corresponding Source includes interface definition files associated with source files for the work, and the source code for shared libraries and dynamically linked subprograms that the work is specifically designed to require, such as by intimate data communication or control flow between those subprograms and other parts of the work.\n\n  The Corresponding Source need not include anything that users can regenerate automatically from other parts of the Corresponding Source.\n\n  The Corresponding Source for a work in source code form is that same work.\n\n  2. Basic Permissions.\n\n  All rights granted under this License are granted for the term of copyright on the Program, and are irrevocable provided the stated conditions are met.  This License explicitly affirms your unlimited permission to run the unmodified Program.  The output from running a covered work is covered by this License only if the output, given its content, constitutes a covered work.  This License acknowledges your rights of fair use or other equivalent, as provided by copyright law.\n\n  You may make, run and propagate covered works that you do not convey, without conditions so long as your license otherwise remains in force.  You may convey covered works to others for the sole purpose of having them make modifications exclusively for you, or provide you with facilities for running those works, provided that you comply with the terms of this License in conveying all material for which you do not control copyright.  Those thus making or running the covered works for you must do so exclusively on your behalf, under your direction and control, on terms that prohibit them from making any copies of your copyrighted material outside their relationship with you.\n\n  Conveying under any other circumstances is permitted solely under the conditions stated below.  Sublicensing is not allowed; section 10 makes it unnecessary.\n\n  3. Protecting Users' Legal Rights From Anti-Circumvention Law.\n\n  No covered work shall be deemed part of an effective technological measure under any applicable law fulfilling obligations under article 11 of the WIPO copyright treaty adopted on 20 December 1996, or similar laws prohibiting or restricting circumvention of such measures.\n\n  When you convey a covered work, you waive any legal power to forbid circumvention of technological measures to the extent such circumvention is effected by exercising rights under this License with respect to the covered work, and you disclaim any intention to limit operation or modification of the work as a means of enforcing, against the work's users, your or third parties' legal rights to forbid circumvention of technological measures.\n\n  4. Conveying Verbatim Copies.\n\n  You may convey verbatim copies of the Program's source code as you receive it, in any medium, provided that you conspicuously and appropriately publish on each copy an appropriate copyright notice; keep intact all notices stating that this License and any non-permissive terms added in accord with section 7 apply to the code; keep intact all notices of the absence of any warranty; and give all recipients a copy of this License along with the Program.\n\n  You may charge any price or no price for each copy that you convey, and you may offer support or warranty protection for a fee.\n\n  5. Conveying Modified Source Versions.\n\n  You may convey a work based on the Program, or the modifications to produce it from the Program, in the form of source code under the terms of section 4, provided that you also meet all of these conditions:\n\n    a) The work must carry prominent notices stating that you modified it, and giving a relevant date.\n\n    b) The work must carry prominent notices stating that it is released under this License and any conditions added under section 7. This requirement modifies the requirement in section 4 to \"keep intact all notices\".\n\n    c) You must license the entire work, as a whole, under this License to anyone who comes into possession of a copy. This License will therefore apply, along with any applicable section 7 additional terms, to the whole of the work, and all its parts, regardless of how they are packaged.  This License gives no permission to license the work in any other way, but it does not invalidate such permission if you have separately received it.\n\n    d) If the work has interactive user interfaces, each must display Appropriate Legal Notices; however, if the Program has interactive interfaces that do not display Appropriate Legal Notices, your work need not make them do so.\n\n  A compilation of a covered work with other separate and independent works, which are not by their nature extensions of the covered work, and which are not combined with it such as to form a larger program, in or on a volume of a storage or distribution medium, is called an \"aggregate\" if the compilation and its resulting copyright are not used to limit the access or legal rights of the compilation's users beyond what the individual works permit.  Inclusion of a covered work in an aggregate does not cause this License to apply to the other parts of the aggregate.\n\n  6. Conveying Non-Source Forms.\n\n  You may convey a covered work in object code form under the terms\nof sections 4 and 5, provided that you also convey the\nmachine-readable Corresponding Source under the terms of this License,\nin one of these ways:\n\n    a) Convey the object code in, or embodied in, a physical product\n    (including a physical distribution medium), accompanied by the\n    Corresponding Source fixed on a durable physical medium\n    customarily used for software interchange.\n\n    b) Convey the object code in, or embodied in, a physical product\n    (including a physical distribution medium), accompanied by a\n    written offer, valid for at least three years and valid for as\n    long as you offer spare parts or customer support for that product\n    model, to give anyone who possesses the object code either (1) a\n    copy of the Corresponding Source for all the software in the\n    product that is covered by this License, on a durable physical\n    medium customarily used for software interchange, for a price no\n    more than your reasonable cost of physically performing this\n    conveying of source, or (2) access to copy the\n    Corresponding Source from a network server at no charge.\n\n    c) Convey individual copies of the object code with a copy of the\n    written offer to provide the Corresponding Source.  This\n    alternative is allowed only occasionally and noncommercially, and\n    only if you received the object code with such an offer, in accord\n    with subsection 6b.\n\n    d) Convey the object code by offering access from a designated\n    place (gratis or for a charge), and offer equivalent access to the\n    Corresponding Source in the same way through the same place at no\n    further charge.  You need not require recipients to copy the\n    Corresponding Source along with the object code.  If the place to\n    copy the object code is a network server, the Corresponding Source\n    may be on a different server (operated by you or a third party)\n    that supports equivalent copying facilities, provided you maintain\n    clear directions next to the object code saying where to find the\n    Corresponding Source.  Regardless of what server hosts the\n    Corresponding Source, you remain obligated to ensure that it is\n    available for as long as needed to satisfy these requirements.\n\n    e) Convey the object code using peer-to-peer transmission, provided\n    you inform other peers where the object code and Corresponding\n    Source of the work are being offered to the general public at no\n    charge under subsection 6d.\n\n  A separable portion of the object code, whose source code is excluded\nfrom the Corresponding Source as a System Library, need not be\nincluded in conveying the object code work.\n\n  A \"User Product\" is either (1) a \"consumer product\", which means any\ntangible personal property which is normally used for personal, family,\nor household purposes, or (2) anything designed or sold for incorporation\ninto a dwelling.  In determining whether a product is a consumer product,\ndoubtful cases shall be resolved in favor of coverage.  For a particular\nproduct received by a particular user, \"normally used\" refers to a\ntypical or common use of that class of product, regardless of the status\nof the particular user or of the way in which the particular user\nactually uses, or expects or is expected to use, the product.  A product\nis a consumer product regardless of whether the product has substantial\ncommercial, industrial or non-consumer uses, unless such uses represent\nthe only significant mode of use of the product.\n\n  \"Installation Information\" for a User Product means any methods,\nprocedures, authorization keys, or other information required to install\nand execute modified versions of a covered work in that User Product from\na modified version of its Corresponding Source.  The information must\nsuffice to ensure that the continued functioning of the modified object\ncode is in no case prevented or interfered with solely because\nmodification has been made.\n\n  If you convey an object code work under this section in, or with, or\nspecifically for use in, a User Product, and the conveying occurs as\npart of a transaction in which the right of possession and use of the\nUser Product is transferred to the recipient in perpetuity or for a\nfixed term (regardless of how the transaction is characterized), the\nCorresponding Source conveyed under this section must be accompanied\nby the Installation Information.  But this requirement does not apply\nif neither you nor any third party retains the ability to install\nmodified object code on the User Product (for example, the work has\nbeen installed in ROM).\n\n  The requirement to provide Installation Information does not include a\nrequirement to continue to provide support service, warranty, or updates\nfor a work that has been modified or installed by the recipient, or for\nthe User Product in which it has been modified or installed.  Access to a\nnetwork may be denied when the modification itself materially and\nadversely affects the operation of the network or violates the rules and\nprotocols for communication across the network.\n\n  Corresponding Source conveyed, and Installation Information provided,\nin accord with this section must be in a format that is publicly\ndocumented (and with an implementation available to the public in\nsource code form), and must require no special password or key for\nunpacking, reading or copying.\n\n  7. Additional Terms.\n\n  \"Additional permissions\" are terms that supplement the terms of this\nLicense by making exceptions from one or more of its conditions.\nAdditional permissions that are applicable to the entire Program shall\nbe treated as though they were included in this License, to the extent\nthat they are valid under applicable law.  If additional permissions\napply only to part of the Program, that part may be used separately\nunder those permissions, but the entire Program remains governed by\nthis License without regard to the additional permissions.\n\n  When you convey a copy of a covered work, you may at your option\nremove any additional permissions from that copy, or from any part of\nit.  (Additional permissions may be written to require their own\nremoval in certain cases when you modify the work.)  You may place\nadditional permissions on material, added by you to a covered work,\nfor which you have or can give appropriate copyright permission.\n\n  Notwithstanding any other provision of this License, for material you\nadd to a covered work, you may (if authorized by the copyright holders of\nthat material) supplement the terms of this License with terms:\n\n    a) Disclaiming warranty or limiting liability differently from the\n    terms of sections 15 and 16 of this License; or\n\n    b) Requiring preservation of specified reasonable legal notices or\n    author attributions in that material or in the Appropriate Legal\n    Notices displayed by works containing it; or\n\n    c) Prohibiting misrepresentation of the origin of that material, or\n    requiring that modified versions of such material be marked in\n    reasonable ways as different from the original version; or\n\n    d) Limiting the use for publicity purposes of names of licensors or\n    authors of the material; or\n\n    e) Declining to grant rights under trademark law for use of some\n    trade names, trademarks, or service marks; or\n\n    f) Requiring indemnification of licensors and authors of that\n    material by anyone who conveys the material (or modified versions of\n    it) with contractual assumptions of liability to the recipient, for\n    any liability that these contractual assumptions directly impose on\n    those licensors and authors.\n\n  All other non-permissive additional terms are considered \"further\nrestrictions\" within the meaning of section 10.  If the Program as you\nreceived it, or any part of it, contains a notice stating that it is\ngoverned by this License along with a term that is a further\nrestriction, you may remove that term.  If a license document contains\na further restriction but permits relicensing or conveying under this\nLicense, you may add to a covered work material governed by the terms\nof that license document, provided that the further restriction does\nnot survive such relicensing or conveying.\n\n  If you add terms to a covered work in accord with this section, you\nmust place, in the relevant source files, a statement of the\nadditional terms that apply to those files, or a notice indicating\nwhere to find the applicable terms.\n\n  Additional terms, permissive or non-permissive, may be stated in the\nform of a separately written license, or stated as exceptions;\nthe above requirements apply either way.\n\n  8. Termination.\n\n  You may not propagate or modify a covered work except as expressly\nprovided under this License.  Any attempt otherwise to propagate or\nmodify it is void, and will automatically terminate your rights under\nthis License (including any patent licenses granted under the third\nparagraph of section 11).\n\n  However, if you cease all violation of this License, then your\nlicense from a particular copyright holder is reinstated (a)\nprovisionally, unless and until the copyright holder explicitly and\nfinally terminates your license, and (b) permanently, if the copyright\nholder fails to notify you of the violation by some reasonable means\nprior to 60 days after the cessation.\n\n  Moreover, your license from a particular copyright holder is\nreinstated permanently if the copyright holder notifies you of the\nviolation by some reasonable means, this is the first time you have\nreceived notice of violation of this License (for any work) from that\ncopyright holder, and you cure the violation prior to 30 days after\nyour receipt of the notice.\n\n  Termination of your rights under this section does not terminate the\nlicenses of parties who have received copies or rights from you under\nthis License.  If your rights have been terminated and not permanently\nreinstated, you do not qualify to receive new licenses for the same\nmaterial under section 10.\n\n  9. Acceptance Not Required for Having Copies.\n\n  You are not required to accept this License in order to receive or\nrun a copy of the Program.  Ancillary propagation of a covered work\noccurring solely as a consequence of using peer-to-peer transmission\nto receive a copy likewise does not require acceptance.  However,\nnothing other than this License grants you permission to propagate or\nmodify any covered work.  These actions infringe copyright if you do\nnot accept this License.  Therefore, by modifying or propagating a\ncovered work, you indicate your acceptance of this License to do so.\n\n  10. Automatic Licensing of Downstream Recipients.\n\n  Each time you convey a covered work, the recipient automatically\nreceives a license from the original licensors, to run, modify and\npropagate that work, subject to this License.  You are not responsible\nfor enforcing compliance by third parties with this License.\n\n  An \"entity transaction\" is a transaction transferring control of an\norganization, or substantially all assets of one, or subdividing an\norganization, or merging organizations.  If propagation of a covered\nwork results from an entity transaction, each party to that\ntransaction who receives a copy of the work also receives whatever\nlicenses to the work the party's predecessor in interest had or could\ngive under the previous paragraph, plus a right to possession of the\nCorresponding Source of the work from the predecessor in interest, if\nthe predecessor has it or can get it with reasonable efforts.\n\n  You may not impose any further restrictions on the exercise of the\nrights granted or affirmed under this License.  For example, you may\nnot impose a license fee, royalty, or other charge for exercise of\nrights granted under this License, and you may not initiate litigation\n(including a cross-claim or counterclaim in a lawsuit) alleging that\nany patent claim is infringed by making, using, selling, offering for\nsale, or importing the Program or any portion of it.\n\n  11. Patents.\n\n  A \"contributor\" is a copyright holder who authorizes use under this\nLicense of the Program or a work on which the Program is based.  The\nwork thus licensed is called the contributor's \"contributor version\".\n\n  A contributor's \"essential patent claims\" are all patent claims\nowned or controlled by the contributor, whether already acquired or\nhereafter acquired, that would be infringed by some manner, permitted\nby this License, of making, using, or selling its contributor version,\nbut do not include claims that would be infringed only as a\nconsequence of further modification of the contributor version.  For\npurposes of this definition, \"control\" includes the right to grant\npatent sublicenses in a manner consistent with the requirements of\nthis License.\n\n  Each contributor grants you a non-exclusive, worldwide, royalty-free\npatent license under the contributor's essential patent claims, to\nmake, use, sell, offer for sale, import and otherwise run, modify and\npropagate the contents of its contributor version.\n\n  In the following three paragraphs, a \"patent license\" is any express\nagreement or commitment, however denominated, not to enforce a patent\n(such as an express permission to practice a patent or covenant not to\nsue for patent infringement).  To \"grant\" such a patent license to a\nparty means to make such an agreement or commitment not to enforce a\npatent against the party.\n\n  If you convey a covered work, knowingly relying on a patent license,\nand the Corresponding Source of the work is not available for anyone\nto copy, free of charge and under the terms of this License, through a\npublicly available network server or other readily accessible means,\nthen you must either (1) cause the Corresponding Source to be so\navailable, or (2) arrange to deprive yourself of the benefit of the\npatent license for this particular work, or (3) arrange, in a manner\nconsistent with the requirements of this License, to extend the patent\nlicense to downstream recipients.  \"Knowingly relying\" means you have\nactual knowledge that, but for the patent license, your conveying the\ncovered work in a country, or your recipient's use of the covered work\nin a country, would infringe one or more identifiable patents in that\ncountry that you have reason to believe are valid.\n\n  If, pursuant to or in connection with a single transaction or\narrangement, you convey, or propagate by procuring conveyance of, a\ncovered work, and grant a patent license to some of the parties\nreceiving the covered work authorizing them to use, propagate, modify\nor convey a specific copy of the covered work, then the patent license\nyou grant is automatically extended to all recipients of the covered\nwork and works based on it.\n\n  A patent license is \"discriminatory\" if it does not include within\nthe scope of its coverage, prohibits the exercise of, or is\nconditioned on the non-exercise of one or more of the rights that are\nspecifically granted under this License.  You may not convey a covered\nwork if you are a party to an arrangement with a third party that is\nin the business of distributing software, under which you make payment\nto the third party based on the extent of your activity of conveying\nthe work, and under which the third party grants, to any of the\nparties who would receive the covered work from you, a discriminatory\npatent license (a) in connection with copies of the covered work\nconveyed by you (or copies made from those copies), or (b) primarily\nfor and in connection with specific products or compilations that\ncontain the covered work, unless you entered into that arrangement,\nor that patent license was granted, prior to 28 March 2007.\n\n  Nothing in this License shall be construed as excluding or limiting\nany implied license or other defenses to infringement that may\notherwise be available to you under applicable patent law.\n\n  12. No Surrender of Others' Freedom.\n\n  If conditions are imposed on you (whether by court order, agreement or\notherwise) that contradict the conditions of this License, they do not\nexcuse you from the conditions of this License.  If you cannot convey a\ncovered work so as to satisfy simultaneously your obligations under this\nLicense and any other pertinent obligations, then as a consequence you may\nnot convey it at all.  For example, if you agree to terms that obligate you\nto collect a royalty for further conveying from those to whom you convey\nthe Program, the only way you could satisfy both those terms and this\nLicense would be to refrain entirely from conveying the Program.\n\n  13. Remote Network Interaction; Use with the GNU General Public License.\n\n  Notwithstanding any other provision of this License, if you modify the\nProgram, your modified version must prominently offer all users\ninteracting with it remotely through a computer network (if your version\nsupports such interaction) an opportunity to receive the Corresponding\nSource of your version by providing access to the Corresponding Source\nfrom a network server at no charge, through some standard or customary\nmeans of facilitating copying of software.  This Corresponding Source\nshall include the Corresponding Source for any work covered by version 3\nof the GNU General Public License that is incorporated pursuant to the\nfollowing paragraph.\n\n  Notwithstanding any other provision of this License, you have\npermission to link or combine any covered work with a work licensed\nunder version 3 of the GNU General Public License into a single\ncombined work, and to convey the resulting work.  The terms of this\nLicense will continue to apply to the part which is the covered work,\nbut the work with which it is combined will remain governed by version\n3 of the GNU General Public License.\n\n  14. Revised Versions of this License.\n\n  The Free Software Foundation may publish revised and/or new versions of\nthe GNU Affero General Public License from time to time.  Such new versions\nwill be similar in spirit to the present version, but may differ in detail to\naddress new problems or concerns.\n\n  Each version is given a distinguishing version number.  If the\nProgram specifies that a certain numbered version of the GNU Affero General\nPublic License \"or any later version\" applies to it, you have the\noption of following the terms and conditions either of that numbered\nversion or of any later version published by the Free Software\nFoundation.  If the Program does not specify a version number of the\nGNU Affero General Public License, you may choose any version ever published\nby the Free Software Foundation.\n\n  If the Program specifies that a proxy can decide which future\nversions of the GNU Affero General Public License can be used, that proxy's\npublic statement of acceptance of a version permanently authorizes you\nto choose that version for the Program.\n\n  Later license versions may give you additional or different\npermissions.  However, no additional obligations are imposed on any\nauthor or copyright holder as a result of your choosing to follow a\nlater version.\n\n  15. Disclaimer of Warranty.\n\n  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY\nAPPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT\nHOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY\nOF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,\nTHE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR\nPURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM\nIS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF\nALL NECESSARY SERVICING, REPAIR OR CORRECTION.\n\n  16. Limitation of Liability.\n\n  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\nWILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS\nTHE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY\nGENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE\nUSE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF\nDATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD\nPARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),\nEVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF\nSUCH DAMAGES.\n\n  17. Interpretation of Sections 15 and 16.\n\n  If the disclaimer of warranty and limitation of liability provided\nabove cannot be given local legal effect according to their terms,\nreviewing courts shall apply local law that most closely approximates\nan absolute waiver of all civil liability in connection with the\nProgram, unless a warranty or assumption of liability accompanies a\ncopy of the Program in return for a fee.\n\n                     END OF TERMS AND CONDITIONS\n\n            How to Apply These Terms to Your New Programs\n\n  If you develop a new program, and you want it to be of the greatest\npossible use to the public, the best way to achieve this is to make it\nfree software which everyone can redistribute and change under these terms.\n\n  To do so, attach the following notices to the program.  It is safest\nto attach them to the start of each source file to most effectively\nstate the exclusion of warranty; and each file should have at least\nthe \"copyright\" line and a pointer to where the full notice is found.\n\n    <one line to give the program's name and a brief idea of what it does.>\n    Copyright (C) <year>  <name of author>\n\n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU Affero General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU Affero General Public License for more details.\n\n    You should have received a copy of the GNU Affero General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n\nAlso add information on how to contact you by electronic and paper mail.\n\n  If your software can interact with users remotely through a computer\nnetwork, you should also make sure that it provides a way for users to\nget its source.  For example, if your program is a web application, its\ninterface could display a \"Source\" link that leads users to an archive\nof the code.  There are many ways you could offer source, and different\nsolutions will be better for different programs; see section 13 for the\nspecific requirements.\n\n  You should also get your employer (if you work as a programmer) or school,\nif any, to sign a \"copyright disclaimer\" for the program, if necessary.\nFor more information on this, and how to apply and follow the GNU AGPL, see\n<https://www.gnu.org/licenses/>.\n"
+    ],
+    [
+      "NOTICE",
+      "# Theme Forge Stellar Loom Notice\n\nTheme Forge Stellar Loom is stewarded by Samuel Leighton Lair.\n\nCopyright (c) 2026 Samuel Leighton Lair and Theme Forge Stellar Loom contributors.\n\nUnless a file states otherwise, this project is licensed under the GNU Affero General Public License v3.0 or later. See LICENSE.\n\nCommercial licenses are available for proprietary terms. Commercial licensing contact: lair001@gmail.com.\n\nThird-party material remains subject to its own license and notice terms. The project provenance policy records material source relationships and applicable notice requirements.\n"
+    ],
+    [
+      "README.md",
+      "# loom-black-code-baseline\n\nPrivate generated theme-v2 code candidate. Install the locally packed tarball with scripts disabled.\n\nThe fixed stylesheet family loads before consumer customCss. The adapter declares Starlight before Loom layers. Unlayered consumer rules such as `:root { --sl-color-hairline: #e11d48; }`, `.sl-markdown-content a:focus-visible`, and `::selection` override the corresponding theme defaults under ordinary CSS cascade rules. Consumer PageTitle overrides win. Expressive Code defaults are merged under consumer precedence.\n\nSystem fonts do not promise pixel-identical rendering across operating systems. Package-local resources are digest-bound; no runtime network font requests are generated.\n"
+    ],
+    [
+      "components/PageTitleFrame.astro",
+      "---\nimport Default from \"@astrojs/starlight/components/PageTitle.astro\";\n---\n\n<div class=\"tfsl-page-title-frame\" data-tfsl-template=\"page-title-frame\">\n  <Default {...Astro.props} />\n</div>\n\n<style>\n  .tfsl-page-title-frame {\n    border-left: 4px solid var(--sl-color-accent);\n    padding-left: 1rem;\n    margin-bottom: 1.5rem;\n  }\n</style>\n"
+    ],
+    [
+      "index.d.ts",
+      "export default function themePlugin(): { name: string; hooks: { 'config:setup'(context: { config?: { customCss?: string[]; components?: Record<string, string>; expressiveCode?: unknown }; updateConfig(config: unknown): void }): void } };\n"
+    ],
+    [
+      "index.js",
+      "function deepCloneSafe(val) {\n  if (Array.isArray(val)) return val.map(deepCloneSafe);\n  if (val === null || typeof val !== \"object\") return val;\n  const result = {};\n  for (const key of Object.keys(val)) {\n    if ([\"__proto__\", \"prototype\", \"constructor\"].includes(key)) continue;\n    Object.defineProperty(result, key, { value: deepCloneSafe(val[key]), enumerable: true, writable: true, configurable: true });\n  }\n  return result;\n}\nfunction mergeCodeConfig(defaults, consumer) {\n  if (consumer === false) return false;\n  if (consumer === undefined || consumer === true) return deepCloneSafe(defaults);\n  if (consumer === null || typeof consumer !== \"object\" || Array.isArray(consumer)) return consumer;\n  const proto = Object.getPrototypeOf(consumer);\n  if (proto !== Object.prototype && proto !== null) return consumer;\n  if (defaults === null || typeof defaults !== \"object\" || Array.isArray(defaults)) return consumer;\n  const result = deepCloneSafe(defaults);\n  for (const key of Reflect.ownKeys(consumer)) {\n    if (typeof key === \"string\" && [\"__proto__\", \"prototype\", \"constructor\"].includes(key)) continue;\n    const descriptor = Object.getOwnPropertyDescriptor(consumer, key);\n    if (!descriptor) continue;\n    if (!(\"value\" in descriptor)) { Object.defineProperty(result, key, descriptor); continue; }\n    const value = descriptor.value;\n    if (value === undefined) continue;\n    const themeValue = Object.hasOwn(defaults, key) ? defaults[key] : undefined;\n    const branch = themeValue !== null && typeof themeValue === \"object\" && !Array.isArray(themeValue);\n    const merged = branch && value !== true ? mergeCodeConfig(themeValue, value) : value;\n    Object.defineProperty(result, key, { ...descriptor, value: merged });\n  }\n  return result;\n}\n\nexport default function themePlugin() {\n  return { name: \"loom-black-code-baseline\", hooks: {\n    \"config:setup\"({ config, updateConfig }) {\n      const defaults = [\"loom-black-code-baseline/styles/layers.css\",\"loom-black-code-baseline/styles/tokens.css\",\"loom-black-code-baseline/styles/base.css\",\"loom-black-code-baseline/styles/accent.css\",\"loom-black-code-baseline/styles/overrides.css\",\"loom-black-code-baseline/styles/code.css\"];\n      const customCss = [...defaults, ...(Array.isArray(config?.customCss) ? config.customCss : []).filter(path => !defaults.includes(path))];\n      const components = { PageTitle: \"loom-black-code-baseline/components/PageTitleFrame.astro\", ...(config?.components ?? {}) };\n      const ecDefaults = {\"themes\":[{\"name\":\"loom-black-code-dark\",\"type\":\"dark\",\"bg\":\"#090a0d\",\"fg\":\"#f0f2f5\",\"tokenColors\":[{\"scope\":[\"keyword\"],\"settings\":{\"foreground\":\"#eda2cf\"}},{\"scope\":[\"string\"],\"settings\":{\"foreground\":\"#8bd0e8\"}},{\"scope\":[\"comment\"],\"settings\":{\"foreground\":\"#a4b9ac\"}},{\"scope\":[\"entity.name.function\"],\"settings\":{\"foreground\":\"#efb18a\"}},{\"scope\":[\"variable\"],\"settings\":{\"foreground\":\"#bdb1eb\"}},{\"scope\":[\"constant\"],\"settings\":{\"foreground\":\"#d5d28b\"}}]},{\"name\":\"loom-black-code-light\",\"type\":\"light\",\"bg\":\"#f1f5f9\",\"fg\":\"#0f172a\",\"tokenColors\":[{\"scope\":[\"keyword\"],\"settings\":{\"foreground\":\"#782765\"}},{\"scope\":[\"string\"],\"settings\":{\"foreground\":\"#27546a\"}},{\"scope\":[\"comment\"],\"settings\":{\"foreground\":\"#50645c\"}},{\"scope\":[\"entity.name.function\"],\"settings\":{\"foreground\":\"#924019\"}},{\"scope\":[\"variable\"],\"settings\":{\"foreground\":\"#473d76\"}},{\"scope\":[\"constant\"],\"settings\":{\"foreground\":\"#5b5426\"}}]}],\"useStarlightUiThemeColors\":false,\"defaultProps\":{\"frame\":\"terminal\"},\"styleOverrides\":{\"codeFontFamily\":\"var(--tfsl-font-code)\",\"codeFontSize\":\"14px\",\"codeLineHeight\":\"1.5\",\"borderRadius\":\"8px\",\"borderWidth\":\"1px\",\"borderColor\":[\"#2e354a\",\"#cbd5e1\"],\"focusBorder\":[\"#3b82f6\",\"#2563eb\"],\"codeBackground\":[\"#090a0d\",\"#f1f5f9\"],\"codeForeground\":[\"#f0f2f5\",\"#0f172a\"],\"frames\":{\"editorBackground\":[\"#090a0d\",\"#f1f5f9\"],\"editorActiveTabBackground\":[\"#090a0d\",\"#f1f5f9\"],\"editorActiveTabForeground\":[\"#f0f2f5\",\"#0f172a\"],\"editorActiveTabBorderColor\":[\"#2e354a\",\"#cbd5e1\"],\"editorTabBarBackground\":[\"#161922\",\"#ffffff\"],\"editorTabBarBorderColor\":[\"#2e354a\",\"#cbd5e1\"],\"editorTabBarBorderBottomColor\":[\"#2e354a\",\"#cbd5e1\"],\"editorTabBorderRadius\":\"8px\",\"terminalBackground\":[\"#090a0d\",\"#f1f5f9\"],\"terminalTitlebarBackground\":[\"#161922\",\"#ffffff\"],\"terminalTitlebarForeground\":[\"#e1e4ea\",\"#334155\"],\"terminalTitlebarBorderBottomColor\":[\"#2e354a\",\"#cbd5e1\"],\"inlineButtonForeground\":[\"#e1e4ea\",\"#334155\"],\"inlineButtonBorder\":[\"#2e354a\",\"#cbd5e1\"],\"inlineButtonBorderOpacity\":\"0.4\",\"inlineButtonBackgroundIdleOpacity\":\"0\",\"tooltipSuccessBackground\":[\"#f97316\",\"#ea580c\"],\"tooltipSuccessForeground\":[\"#0c0d10\",\"#ffffff\"]},\"textMarkers\":{\"markBackground\":[\"#f97316\",\"#f97316\"],\"markBorderColor\":[\"#f97316\",\"#f97316\"],\"insBackground\":[\"#22c55e\",\"#22c55e\"],\"insBorderColor\":[\"#22c55e\",\"#22c55e\"],\"insDiffIndicatorColor\":[\"#22c55e\",\"#22c55e\"],\"delBackground\":[\"#ef4444\",\"#ef4444\"],\"delBorderColor\":[\"#ef4444\",\"#ef4444\"],\"delDiffIndicatorColor\":[\"#ef4444\",\"#ef4444\"]}}};\n      const expressiveCode = mergeCodeConfig(ecDefaults, config?.expressiveCode);\n      updateConfig({ customCss, components, expressiveCode });\n    }\n  } };\n}\n"
+    ],
+    [
+      "package.json",
+      "{\n  \"name\": \"loom-black-code-baseline\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"description\": \"loom-black-code Starlight theme\",\n  \"license\": \"AGPL-3.0-or-later\",\n  \"exports\": {\n    \".\": {\n      \"types\": \"./index.d.ts\",\n      \"import\": \"./index.js\"\n    },\n    \"./styles/*\": \"./styles/*\",\n    \"./components/*\": \"./components/*\"\n  },\n  \"files\": [\n    \"index.js\",\n    \"index.d.ts\",\n    \"styles\",\n    \"fonts\",\n    \"components\",\n    \"theme.json\",\n    \"theme.descriptor.json\",\n    \"provenance.json\",\n    \"README.md\",\n    \"LICENSE\",\n    \"NOTICE\",\n    \"COMMERCIAL-LICENSE.md\"\n  ],\n  \"peerDependencies\": {\n    \"astro\": \"^7.3.1\",\n    \"@astrojs/starlight\": \"^0.42.0\"\n  },\n  \"engines\": {\n    \"node\": \">=22\"\n  }\n}\n"
+    ],
+    [
+      "provenance.json",
+      "{\n  \"schema\": \"tfsl.package-provenance-v2\",\n  \"producer\": {\n    \"package\": \"@knowledge-forge-ai/theme-forge-stellar-loom\",\n    \"version\": \"0.1.1\"\n  },\n  \"descriptor\": {\n    \"schema\": \"tfsl.theme-descriptor-v2\",\n    \"schemaVersion\": 2,\n    \"themeSchemaVersion\": \"tfsl.theme-v2\",\n    \"themeName\": \"loom-black-code\",\n    \"themeVersion\": \"1.0.0\",\n    \"adapter\": \"starlight-v0.42\",\n    \"selectedAccent\": \"default\",\n    \"accent\": \"default\",\n    \"inputDigest\": \"bff062d3abead35e3efd0781236e71fffe2e389ebcbd1e33da7431cb77ee465c\",\n    \"outputDigest\": \"49c9de23f28b2849002ca44fcb26e7443d8502539b6e74f5aeaac8c95ca8c6c1\",\n    \"inventoryDigest\": \"eced7c5671e910db51d5dee9f2405dd537a994c451102321407561ffcbc97844\",\n    \"catalogIdentity\": \"tfsl.starlight-code-catalog-v1\",\n    \"catalogDigest\": \"a56cd99c26ce6e015854338eee63fd850121cf2c86af7cbe992cf39b4b58f34b\",\n    \"catalog\": {\n      \"identity\": \"tfsl.starlight-code-catalog-v1\",\n      \"digest\": \"a56cd99c26ce6e015854338eee63fd850121cf2c86af7cbe992cf39b4b58f34b\"\n    },\n    \"compilerSemantic\": \"tfsl.theme-compiler-v2-code-1\",\n    \"provenance\": {\n      \"categories\": [\n        \"user-authored-data\",\n        \"generated-syntax\",\n        \"first-party-expression\"\n      ],\n      \"semantic\": \"tfsl.theme-compiler-v2-code-1\",\n      \"compiler\": \"@knowledge-forge-ai/theme-forge-stellar-loom\",\n      \"compilerVersion\": \"0.1.1\"\n    }\n  },\n  \"packageName\": \"loom-black-code-baseline\",\n  \"packageVersion\": \"0.1.0\",\n  \"inventoryDigest\": \"9b246aa8a8aed0d87baccc5634e9ab8582465f5157a23b1ad523c3669196d3a4\",\n  \"inventoryExcludes\": [\n    \"provenance.json\"\n  ],\n  \"files\": [\n    {\n      \"path\": \"COMMERCIAL-LICENSE.md\",\n      \"size\": 932,\n      \"sha256\": \"a81bcda7ec57a5c09f1cc6d05de420db7a0053b9496f1762065e083a60e5ede2\"\n    },\n    {\n      \"path\": \"LICENSE\",\n      \"size\": 34460,\n      \"sha256\": \"62eef07fc3ad238dd889ff98cf9ed87b3ef0f421579b6945f87ec37c608afb62\"\n    },\n    {\n      \"path\": \"NOTICE\",\n      \"size\": 598,\n      \"sha256\": \"e711709e69f5f8fc65c55ff3b3e47c390ed8f60890eb38cf999d95c2494b5d17\"\n    },\n    {\n      \"path\": \"README.md\",\n      \"size\": 720,\n      \"sha256\": \"a34d2c0f5fb167d792e5ea3008b1dff3e8275b6bb37b3f26def0a1af0b8f1877\"\n    },\n    {\n      \"path\": \"components/PageTitleFrame.astro\",\n      \"size\": 341,\n      \"sha256\": \"ec6728e2cb2fc222140348152b7cc6d70bb403683aa493e119118d50229e5745\"\n    },\n    {\n      \"path\": \"index.d.ts\",\n      \"size\": 238,\n      \"sha256\": \"bfcb48e37fbc5599f0cac05405c9c7bdc858d4e8ada85fadc2a80c15db027a92\"\n    },\n    {\n      \"path\": \"index.js\",\n      \"size\": 5137,\n      \"sha256\": \"1ae3c6dc68ad75f76111d39eec96397d1440a3e31a4a311a143b268818f40aeb\"\n    },\n    {\n      \"path\": \"package.json\",\n      \"size\": 725,\n      \"sha256\": \"242b8ac1ef0a20711ce56fb0fa0a443b6aeab2dcd143b4b908252ef882f94620\"\n    },\n    {\n      \"path\": \"styles/accent.css\",\n      \"size\": 693,\n      \"sha256\": \"dad366838981255782a706ed1b2693777f46c687a1e922a309244ce7225b897d\"\n    },\n    {\n      \"path\": \"styles/base.css\",\n      \"size\": 2378,\n      \"sha256\": \"0f252f1ec2fd6e297da5d3a14267f826843cec4dc194b99f6016de0e15769dce\"\n    },\n    {\n      \"path\": \"styles/code.css\",\n      \"size\": 402,\n      \"sha256\": \"260665acc2797b18443497987bd9e0508fdf28edb0fc8df6df059b3744d6b7ca\"\n    },\n    {\n      \"path\": \"styles/layers.css\",\n      \"size\": 144,\n      \"sha256\": \"de5d41c727f757b231bbd7bc463e157f4f75bb04363c99faa8feeb0474a61290\"\n    },\n    {\n      \"path\": \"styles/overrides.css\",\n      \"size\": 466,\n      \"sha256\": \"87a8e2ea1ac8ba344246405fa9588dccbbaf6824113bfce17f3a5ab695f195d2\"\n    },\n    {\n      \"path\": \"styles/tokens.css\",\n      \"size\": 4141,\n      \"sha256\": \"5b0f058a3707033d4a339b4941382165fc00b13333c3a7c23980de50733e2ef5\"\n    },\n    {\n      \"path\": \"theme.descriptor.json\",\n      \"size\": 1140,\n      \"sha256\": \"cd70404ab5db76bcbc80c310268df86fd1237d812e4c15bec49615bdec417d06\"\n    },\n    {\n      \"path\": \"theme.json\",\n      \"size\": 6161,\n      \"sha256\": \"bff062d3abead35e3efd0781236e71fffe2e389ebcbd1e33da7431cb77ee465c\"\n    }\n  ],\n  \"fonts\": []\n}\n"
+    ],
+    [
+      "styles/accent.css",
+      "@layer tfsl.accent {\n  :root,\n  ::backdrop {\n    --tfsl-color-accent-base: #f97316;\n    --tfsl-color-accent-low: #431407;\n    --tfsl-color-accent-high: #fdba74;\n    --sl-color-accent: var(--tfsl-color-accent-base);\n    --sl-color-accent-low: var(--tfsl-color-accent-low);\n    --sl-color-accent-high: var(--tfsl-color-accent-high);\n  }\n\n  :root[data-theme='light'],\n  [data-theme='light'] ::backdrop {\n    --tfsl-color-accent-base: #ea580c;\n    --tfsl-color-accent-low: #ffedd5;\n    --tfsl-color-accent-high: #9a3412;\n    --sl-color-accent: var(--tfsl-color-accent-base);\n    --sl-color-accent-low: var(--tfsl-color-accent-low);\n    --sl-color-accent-high: var(--tfsl-color-accent-high);\n  }\n}\n"
+    ],
+    [
+      "styles/base.css",
+      "@layer tfsl.base {\n  body { font-family: var(--tfsl-font-body); font-size: 16px; line-height: 1.6; }\n  header, nav, aside, button, select, input { font-family: var(--tfsl-font-ui); font-size: 14px; line-height: 1.5; }\n  code, pre { font-family: var(--tfsl-font-code); font-size: 14px; line-height: 1.5; }\n  nav { background-color: var(--tfsl-color-navigation); }\n  .sl-markdown-content pre { background-color: var(--tfsl-color-code); }\n  .sl-markdown-content blockquote { background-color: var(--tfsl-color-panel); border-color: var(--tfsl-color-border); }\n  .sl-markdown-content details { background-color: var(--tfsl-color-raised); border-radius: var(--tfsl-radius-small); padding: var(--tfsl-space-small); }\n  .sl-markdown-content small { color: var(--tfsl-color-muted); }\n  @media (min-width: 50rem) { :root { --sl-content-width: min(1152px, 1152px); } }\n  h1, .sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {\n    font-family: var(--tfsl-font-heading, var(--sl-font));\n    line-height: var(--sl-line-height-headings, 1.2);\n    color: var(--tfsl-color-secondary, var(--sl-color-white));\n  }\n\n  .sl-markdown-content h1 {\n    font-size: var(--sl-text-h1);\n  }\n\n  .sl-markdown-content h2 {\n    font-size: var(--sl-text-h2);\n  }\n\n  .sl-markdown-content h3 {\n    font-size: var(--sl-text-h3);\n  }\n\n  .sl-markdown-content h4 {\n    font-size: var(--sl-text-h4);\n  }\n\n  .sl-markdown-content h5 {\n    font-size: var(--sl-text-h5);\n  }\n\n  .sl-markdown-content h6 {\n    font-size: var(--sl-text-h6);\n  }\n\n  /* Responsive heading scaling across breakpoints */\n  @media (min-width: 50rem) {\n    .sl-markdown-content h1 {\n      font-size: calc(var(--sl-text-h1) * 1.15);\n    }\n    .sl-markdown-content h2 {\n      font-size: calc(var(--sl-text-h2) * 1.1);\n    }\n  }\n\n  @media (min-width: 72rem) {\n    .sl-markdown-content h1 {\n      font-size: calc(var(--sl-text-h1) * 1.25);\n    }\n    .sl-markdown-content h2 {\n      font-size: calc(var(--sl-text-h2) * 1.15);\n    }\n  }\n\n  /* Card and surface styling */\n  .card,\n  .sl-markdown-content .card {\n    background-color: var(--tfsl-color-card);\n    border: var(--tfsl-border-width, 1px) var(--tfsl-border-style) var(--tfsl-color-border);\n    border-radius: var(--tfsl-radius, 8px);\n  }\n\n  /* Selection styling */\n  ::selection {\n    background-color: var(--tfsl-color-selection-background);\n    color: var(--tfsl-color-selection-text);\n  }\n}\n"
+    ],
+    [
+      "styles/code.css",
+      "/* Theme Forge Stellar Loom v2 - Expressive Code overrides */\n@layer tfsl.overrides {\n  .sl-markdown-content .expressive-code pre,\n  .expressive-code pre {\n    background-color: var(--code-background, var(--ec-codeBg));\n  }\n  .expressive-code pre, .expressive-code pre > code {\n    font-family: var(--ec-codeFontFml);\n    font-size: var(--ec-codeFontSize);\n    line-height: var(--ec-codeLineHt);\n  }\n}\n"
+    ],
+    [
+      "styles/layers.css",
+      "/* Theme Forge Stellar Loom v2 - Layer order declaration */\n@layer starlight, tfsl;\n@layer tfsl.tokens, tfsl.base, tfsl.accent, tfsl.overrides;\n"
+    ],
+    [
+      "styles/overrides.css",
+      "@layer tfsl.overrides {\n  :focus-visible {\n    outline: var(--tfsl-focus-width, 2px) solid var(--tfsl-color-focus);\n    outline-offset: var(--tfsl-focus-offset);\n  }\n\n  .sl-markdown-content a:focus-visible {\n    outline: var(--tfsl-focus-width, 2px) solid var(--tfsl-color-focus);\n    outline-offset: var(--tfsl-focus-offset);\n  }\n  .tfsl-page-title-frame {\n    border-left: 4px solid var(--sl-color-accent);\n    padding-left: 1rem;\n    margin-bottom: 1.5rem;\n  }\n}\n"
+    ],
+    [
+      "styles/tokens.css",
+      "@layer tfsl.tokens {\n  :root,\n  ::backdrop {\n    --sl-font: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n    --sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;\n    --tfsl-font-body: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n    --tfsl-font-heading: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n    --tfsl-font-ui: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n    --tfsl-font-code: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;\n    --sl-text-body: 16px;\n    --sl-line-height: 1.6;\n    --sl-line-height-headings: 1.25;\n    --sl-text-h1: 28px;\n    --sl-text-h2: 24px;\n    --sl-text-h3: 20px;\n    --sl-text-h4: 18px;\n    --sl-text-h5: 16px;\n    --sl-text-h6: 14px;\n    --sl-content-width: 1152px;\n    --sl-sidebar-width: 288px;\n    --tfsl-spacing: 4px;\n    --tfsl-space-small: 2px;\n    --tfsl-space-large: 8px;\n    --tfsl-space-section: 16px;\n    --tfsl-radius-small: 4px;\n    --tfsl-border-style: solid;\n    --tfsl-focus-offset: 2px;\n    --tfsl-radius: 8px;\n    --tfsl-border-width: 1px;\n    --tfsl-focus-width: 2px;\n\n    /* Theme color roles */\n    --tfsl-color-page: #0c0d10;\n    --tfsl-color-navigation: #12141a;\n    --tfsl-color-header: #12141a;\n    --tfsl-color-sidebar: #0f1015;\n    --tfsl-color-raised: #161922;\n    --tfsl-color-panel: #1a1e29;\n    --tfsl-color-card: #131620;\n    --tfsl-color-inline-code: #1e2330;\n    --tfsl-color-code: #090a0d;\n    --tfsl-color-body: #f0f2f5;\n    --tfsl-color-secondary: #e1e4ea;\n    --tfsl-color-muted: #8a92a6;\n    --tfsl-color-inverted: #0c0d10;\n    --tfsl-color-link: #60a5fa;\n    --tfsl-color-hairline: #232838;\n    --tfsl-color-border: #2e354a;\n    --tfsl-color-focus: #3b82f6;\n    --tfsl-color-selection-background: #3b82f6;\n    --tfsl-color-selection-text: #ffffff;\n\n    /* Starlight standard token mappings */\n    --sl-color-bg: var(--tfsl-color-page);\n    --sl-color-bg-nav: var(--tfsl-color-header);\n    --sl-color-bg-sidebar: var(--tfsl-color-sidebar);\n    --sl-color-bg-inline-code: var(--tfsl-color-inline-code);\n    --sl-color-text: var(--tfsl-color-body);\n    --sl-color-text-accent: var(--tfsl-color-link);\n    --sl-color-text-invert: var(--tfsl-color-inverted);\n    --sl-color-hairline: var(--tfsl-color-hairline);\n    --sl-color-hairline-light: var(--tfsl-color-border);\n    --sl-color-hairline-shade: var(--tfsl-color-border);\n    --sl-color-white: var(--tfsl-color-secondary);\n    --sl-color-black: var(--tfsl-color-page);\n  }\n\n  :root[data-theme='light'],\n  [data-theme='light'] ::backdrop {\n    /* Theme color roles */\n    --tfsl-color-page: #f8fafc;\n    --tfsl-color-navigation: #ffffff;\n    --tfsl-color-header: #ffffff;\n    --tfsl-color-sidebar: #f1f5f9;\n    --tfsl-color-raised: #ffffff;\n    --tfsl-color-panel: #f8fafc;\n    --tfsl-color-card: #ffffff;\n    --tfsl-color-inline-code: #e2e8f0;\n    --tfsl-color-code: #f1f5f9;\n    --tfsl-color-body: #0f172a;\n    --tfsl-color-secondary: #334155;\n    --tfsl-color-muted: #64748b;\n    --tfsl-color-inverted: #ffffff;\n    --tfsl-color-link: #2563eb;\n    --tfsl-color-hairline: #e2e8f0;\n    --tfsl-color-border: #cbd5e1;\n    --tfsl-color-focus: #2563eb;\n    --tfsl-color-selection-background: #2563eb;\n    --tfsl-color-selection-text: #ffffff;\n\n    /* Starlight standard token mappings */\n    --sl-color-bg: var(--tfsl-color-page);\n    --sl-color-bg-nav: var(--tfsl-color-header);\n    --sl-color-bg-sidebar: var(--tfsl-color-sidebar);\n    --sl-color-bg-inline-code: var(--tfsl-color-inline-code);\n    --sl-color-text: var(--tfsl-color-body);\n    --sl-color-text-accent: var(--tfsl-color-link);\n    --sl-color-text-invert: var(--tfsl-color-inverted);\n    --sl-color-hairline: var(--tfsl-color-hairline);\n    --sl-color-hairline-light: var(--tfsl-color-border);\n    --sl-color-hairline-shade: var(--tfsl-color-border);\n    --sl-color-white: var(--tfsl-color-secondary);\n    --sl-color-black: var(--tfsl-color-page);\n  }\n}\n"
+    ],
+    [
+      "theme.descriptor.json",
+      "{\n  \"schema\": \"tfsl.theme-descriptor-v2\",\n  \"schemaVersion\": 2,\n  \"themeSchemaVersion\": \"tfsl.theme-v2\",\n  \"themeName\": \"loom-black-code\",\n  \"themeVersion\": \"1.0.0\",\n  \"adapter\": \"starlight-v0.42\",\n  \"selectedAccent\": \"default\",\n  \"accent\": \"default\",\n  \"inputDigest\": \"bff062d3abead35e3efd0781236e71fffe2e389ebcbd1e33da7431cb77ee465c\",\n  \"outputDigest\": \"49c9de23f28b2849002ca44fcb26e7443d8502539b6e74f5aeaac8c95ca8c6c1\",\n  \"inventoryDigest\": \"eced7c5671e910db51d5dee9f2405dd537a994c451102321407561ffcbc97844\",\n  \"catalogIdentity\": \"tfsl.starlight-code-catalog-v1\",\n  \"catalogDigest\": \"a56cd99c26ce6e015854338eee63fd850121cf2c86af7cbe992cf39b4b58f34b\",\n  \"catalog\": {\n    \"identity\": \"tfsl.starlight-code-catalog-v1\",\n    \"digest\": \"a56cd99c26ce6e015854338eee63fd850121cf2c86af7cbe992cf39b4b58f34b\"\n  },\n  \"compilerSemantic\": \"tfsl.theme-compiler-v2-code-1\",\n  \"provenance\": {\n    \"categories\": [\n      \"user-authored-data\",\n      \"generated-syntax\",\n      \"first-party-expression\"\n    ],\n    \"semantic\": \"tfsl.theme-compiler-v2-code-1\",\n    \"compiler\": \"@knowledge-forge-ai/theme-forge-stellar-loom\",\n    \"compilerVersion\": \"0.1.1\"\n  }\n}\n"
+    ],
+    [
+      "theme.json",
+      "{\n  \"accentVariants\": {\n    \"default\": {\n      \"dark\": {\n        \"accent-base\": \"accent-base-dark\",\n        \"accent-high\": \"accent-high-dark\",\n        \"accent-low\": \"accent-low-dark\",\n        \"body\": \"text-body-dark\",\n        \"border\": \"border-dark\",\n        \"card\": \"bg-card-dark\",\n        \"code\": \"bg-code-dark\",\n        \"focus\": \"focus-ring-dark\",\n        \"hairline\": \"hairline-dark\",\n        \"header\": \"bg-nav-dark\",\n        \"inline-code\": \"bg-inline-code-dark\",\n        \"inverted\": \"text-invert-dark\",\n        \"link\": \"text-link-dark\",\n        \"muted\": \"text-muted-dark\",\n        \"navigation\": \"bg-nav-dark\",\n        \"page\": \"bg-page-dark\",\n        \"panel\": \"bg-panel-dark\",\n        \"raised\": \"bg-raised-dark\",\n        \"secondary\": \"text-secondary-dark\",\n        \"selection-background\": \"select-bg-dark\",\n        \"selection-text\": \"select-text-dark\",\n        \"sidebar\": \"bg-sidebar-dark\"\n      },\n      \"light\": {\n        \"accent-base\": \"accent-base-light\",\n        \"accent-high\": \"accent-high-light\",\n        \"accent-low\": \"accent-low-light\",\n        \"body\": \"text-body-light\",\n        \"border\": \"border-light\",\n        \"card\": \"bg-card-light\",\n        \"code\": \"bg-code-light\",\n        \"focus\": \"focus-ring-light\",\n        \"hairline\": \"hairline-light\",\n        \"header\": \"bg-nav-light\",\n        \"inline-code\": \"bg-inline-code-light\",\n        \"inverted\": \"text-invert-light\",\n        \"link\": \"text-link-light\",\n        \"muted\": \"text-muted-light\",\n        \"navigation\": \"bg-nav-light\",\n        \"page\": \"bg-page-light\",\n        \"panel\": \"bg-panel-light\",\n        \"raised\": \"bg-raised-light\",\n        \"secondary\": \"text-secondary-light\",\n        \"selection-background\": \"select-bg-light\",\n        \"selection-text\": \"select-text-light\",\n        \"sidebar\": \"bg-sidebar-light\"\n      },\n      \"tokenSet\": \"black-tokens\"\n    }\n  },\n  \"adapter\": \"starlight-v0.42\",\n  \"codePresentation\": {\n    \"copy\": \"standard\",\n    \"frame\": \"terminal\",\n    \"marks\": {\n      \"deleted\": \"#ef4444\",\n      \"inserted\": \"#22c55e\",\n      \"marked\": \"#f97316\"\n    },\n    \"mode\": \"expressive-code\",\n    \"syntaxTheme\": {\n      \"dark\": {\n        \"rules\": [\n          {\n            \"foreground\": \"#eda2cf\",\n            \"scopes\": [\n              \"keyword\"\n            ]\n          },\n          {\n            \"foreground\": \"#8bd0e8\",\n            \"scopes\": [\n              \"string\"\n            ]\n          },\n          {\n            \"foreground\": \"#a4b9ac\",\n            \"scopes\": [\n              \"comment\"\n            ]\n          },\n          {\n            \"foreground\": \"#efb18a\",\n            \"scopes\": [\n              \"entity.name.function\"\n            ]\n          },\n          {\n            \"foreground\": \"#bdb1eb\",\n            \"scopes\": [\n              \"variable\"\n            ]\n          },\n          {\n            \"foreground\": \"#d5d28b\",\n            \"scopes\": [\n              \"constant\"\n            ]\n          }\n        ]\n      },\n      \"light\": {\n        \"rules\": [\n          {\n            \"foreground\": \"#782765\",\n            \"scopes\": [\n              \"keyword\"\n            ]\n          },\n          {\n            \"foreground\": \"#27546a\",\n            \"scopes\": [\n              \"string\"\n            ]\n          },\n          {\n            \"foreground\": \"#50645c\",\n            \"scopes\": [\n              \"comment\"\n            ]\n          },\n          {\n            \"foreground\": \"#924019\",\n            \"scopes\": [\n              \"entity.name.function\"\n            ]\n          },\n          {\n            \"foreground\": \"#473d76\",\n            \"scopes\": [\n              \"variable\"\n            ]\n          },\n          {\n            \"foreground\": \"#5b5426\",\n            \"scopes\": [\n              \"constant\"\n            ]\n          }\n        ]\n      }\n    },\n    \"tabs\": \"deferred\"\n  },\n  \"components\": {\n    \"pageTitle\": \"page-title-frame\"\n  },\n  \"defaultAccent\": \"default\",\n  \"fonts\": [],\n  \"layoutPreset\": \"standard\",\n  \"name\": \"loom-black-code\",\n  \"schemaVersion\": \"tfsl.theme-v2\",\n  \"surfaces\": {\n    \"border\": 1,\n    \"borderStyle\": \"solid\",\n    \"content\": 1152,\n    \"focus\": 2,\n    \"focusOffset\": 2,\n    \"radii\": 8,\n    \"sidebar\": 288,\n    \"spacing\": 4\n  },\n  \"tokenSets\": {\n    \"black-tokens\": {\n      \"accent-base-dark\": \"#f97316\",\n      \"accent-base-light\": \"#ea580c\",\n      \"accent-high-dark\": \"#fdba74\",\n      \"accent-high-light\": \"#9a3412\",\n      \"accent-low-dark\": \"#431407\",\n      \"accent-low-light\": \"#ffedd5\",\n      \"bg-card-dark\": \"#131620\",\n      \"bg-card-light\": \"#ffffff\",\n      \"bg-code-dark\": \"#090a0d\",\n      \"bg-code-light\": \"#f1f5f9\",\n      \"bg-inline-code-dark\": \"#1e2330\",\n      \"bg-inline-code-light\": \"#e2e8f0\",\n      \"bg-nav-dark\": \"#12141a\",\n      \"bg-nav-light\": \"#ffffff\",\n      \"bg-page-dark\": \"#0c0d10\",\n      \"bg-page-light\": \"#f8fafc\",\n      \"bg-panel-dark\": \"#1a1e29\",\n      \"bg-panel-light\": \"#f8fafc\",\n      \"bg-raised-dark\": \"#161922\",\n      \"bg-raised-light\": \"#ffffff\",\n      \"bg-sidebar-dark\": \"#0f1015\",\n      \"bg-sidebar-light\": \"#f1f5f9\",\n      \"border-dark\": \"#2e354a\",\n      \"border-light\": \"#cbd5e1\",\n      \"focus-ring-dark\": \"#3b82f6\",\n      \"focus-ring-light\": \"#2563eb\",\n      \"hairline-dark\": \"#232838\",\n      \"hairline-light\": \"#e2e8f0\",\n      \"select-bg-dark\": \"#3b82f6\",\n      \"select-bg-light\": \"#2563eb\",\n      \"select-text-dark\": \"#ffffff\",\n      \"select-text-light\": \"#ffffff\",\n      \"text-body-dark\": \"#f0f2f5\",\n      \"text-body-light\": \"#0f172a\",\n      \"text-invert-dark\": {\n        \"alias\": \"bg-page-dark\"\n      },\n      \"text-invert-light\": {\n        \"alias\": \"bg-nav-light\"\n      },\n      \"text-link-dark\": \"#60a5fa\",\n      \"text-link-light\": \"#2563eb\",\n      \"text-muted-dark\": \"#8a92a6\",\n      \"text-muted-light\": \"#64748b\",\n      \"text-secondary-dark\": \"#e1e4ea\",\n      \"text-secondary-light\": \"#334155\"\n    }\n  },\n  \"typography\": {\n    \"body\": {\n      \"font\": \"system-sans\",\n      \"lineHeight\": 1.6,\n      \"size\": 16\n    },\n    \"code\": {\n      \"font\": \"system-mono\",\n      \"lineHeight\": 1.5,\n      \"size\": 14\n    },\n    \"heading\": {\n      \"font\": \"system-sans\",\n      \"lineHeight\": 1.25,\n      \"size\": 28\n    },\n    \"ui\": {\n      \"font\": \"system-sans\",\n      \"lineHeight\": 1.5,\n      \"size\": 14\n    }\n  },\n  \"version\": \"1.0.0\"\n}\n"
+    ]
+  ],
+  "packet": {
+    "schema": "tfsl.theme-candidate",
+    "schemaVersion": 2,
+    "candidateId": "candidate-1",
+    "semanticCompiler": "tfsl.theme-compiler-v2-code-1",
+    "adapter": "starlight-v0.42",
+    "catalog": "tfsl.starlight-code-catalog-v1",
+    "catalogDigest": "sha256:a56cd99c26ce6e015854338eee63fd850121cf2c86af7cbe992cf39b4b58f34b",
+    "producer": {
+      "package": "@knowledge-forge-ai/theme-forge-stellar-loom",
+      "version": "0.1.1",
+      "executableDigest": "sha256:98d0249667ed00c20bfc8623019b50efc0b8300c357de12545f1a8564854f3ba",
+      "packageDigest": "sha256:7cbea68c450e90bd90680af004e72db33dae67525500cab1b2e7790a7377772a"
+    },
+    "inputDigest": "sha256:bff062d3abead35e3efd0781236e71fffe2e389ebcbd1e33da7431cb77ee465c",
+    "themeDigest": "sha256:bff062d3abead35e3efd0781236e71fffe2e389ebcbd1e33da7431cb77ee465c",
+    "syntaxDigest": "sha256:228db7e60c3b82f107e0895dd3c9b4fbd3a0b8b6e89bd4aca96b530837649c07",
+    "runtime": "EC0.44.2 Shiki4.4.3",
+    "metadata": {
+      "name": "loom-black-code-baseline",
+      "version": "0.1.0",
+      "license": "AGPL-3.0-or-later"
+    },
+    "outputDigest": "sha256:49c9de23f28b2849002ca44fcb26e7443d8502539b6e74f5aeaac8c95ca8c6c1",
+    "outputInventory": [
+      {
+        "id": "COMMERCIAL-LICENSE.md",
+        "digest": "sha256:a81bcda7ec57a5c09f1cc6d05de420db7a0053b9496f1762065e083a60e5ede2"
+      },
+      {
+        "id": "LICENSE",
+        "digest": "sha256:62eef07fc3ad238dd889ff98cf9ed87b3ef0f421579b6945f87ec37c608afb62"
+      },
+      {
+        "id": "NOTICE",
+        "digest": "sha256:e711709e69f5f8fc65c55ff3b3e47c390ed8f60890eb38cf999d95c2494b5d17"
+      },
+      {
+        "id": "README.md",
+        "digest": "sha256:a34d2c0f5fb167d792e5ea3008b1dff3e8275b6bb37b3f26def0a1af0b8f1877"
+      },
+      {
+        "id": "components/PageTitleFrame.astro",
+        "digest": "sha256:ec6728e2cb2fc222140348152b7cc6d70bb403683aa493e119118d50229e5745"
+      },
+      {
+        "id": "index.d.ts",
+        "digest": "sha256:bfcb48e37fbc5599f0cac05405c9c7bdc858d4e8ada85fadc2a80c15db027a92"
+      },
+      {
+        "id": "index.js",
+        "digest": "sha256:1ae3c6dc68ad75f76111d39eec96397d1440a3e31a4a311a143b268818f40aeb"
+      },
+      {
+        "id": "package.json",
+        "digest": "sha256:242b8ac1ef0a20711ce56fb0fa0a443b6aeab2dcd143b4b908252ef882f94620"
+      },
+      {
+        "id": "provenance.json",
+        "digest": "sha256:db61ef2c66800c165b908c6150df8d8c9ccc6f34e925f42ab64c6620f0e23d47"
+      },
+      {
+        "id": "styles/accent.css",
+        "digest": "sha256:dad366838981255782a706ed1b2693777f46c687a1e922a309244ce7225b897d"
+      },
+      {
+        "id": "styles/base.css",
+        "digest": "sha256:0f252f1ec2fd6e297da5d3a14267f826843cec4dc194b99f6016de0e15769dce"
+      },
+      {
+        "id": "styles/code.css",
+        "digest": "sha256:260665acc2797b18443497987bd9e0508fdf28edb0fc8df6df059b3744d6b7ca"
+      },
+      {
+        "id": "styles/layers.css",
+        "digest": "sha256:de5d41c727f757b231bbd7bc463e157f4f75bb04363c99faa8feeb0474a61290"
+      },
+      {
+        "id": "styles/overrides.css",
+        "digest": "sha256:87a8e2ea1ac8ba344246405fa9588dccbbaf6824113bfce17f3a5ab695f195d2"
+      },
+      {
+        "id": "styles/tokens.css",
+        "digest": "sha256:5b0f058a3707033d4a339b4941382165fc00b13333c3a7c23980de50733e2ef5"
+      },
+      {
+        "id": "theme.descriptor.json",
+        "digest": "sha256:cd70404ab5db76bcbc80c310268df86fd1237d812e4c15bec49615bdec417d06"
+      },
+      {
+        "id": "theme.json",
+        "digest": "sha256:bff062d3abead35e3efd0781236e71fffe2e389ebcbd1e33da7431cb77ee465c"
+      }
+    ],
+    "state": "candidate",
+    "theme": {
+      "accentVariants": {
+        "default": {
+          "dark": {
+            "accent-base": "accent-base-dark",
+            "accent-high": "accent-high-dark",
+            "accent-low": "accent-low-dark",
+            "body": "text-body-dark",
+            "border": "border-dark",
+            "card": "bg-card-dark",
+            "code": "bg-code-dark",
+            "focus": "focus-ring-dark",
+            "hairline": "hairline-dark",
+            "header": "bg-nav-dark",
+            "inline-code": "bg-inline-code-dark",
+            "inverted": "text-invert-dark",
+            "link": "text-link-dark",
+            "muted": "text-muted-dark",
+            "navigation": "bg-nav-dark",
+            "page": "bg-page-dark",
+            "panel": "bg-panel-dark",
+            "raised": "bg-raised-dark",
+            "secondary": "text-secondary-dark",
+            "selection-background": "select-bg-dark",
+            "selection-text": "select-text-dark",
+            "sidebar": "bg-sidebar-dark"
+          },
+          "light": {
+            "accent-base": "accent-base-light",
+            "accent-high": "accent-high-light",
+            "accent-low": "accent-low-light",
+            "body": "text-body-light",
+            "border": "border-light",
+            "card": "bg-card-light",
+            "code": "bg-code-light",
+            "focus": "focus-ring-light",
+            "hairline": "hairline-light",
+            "header": "bg-nav-light",
+            "inline-code": "bg-inline-code-light",
+            "inverted": "text-invert-light",
+            "link": "text-link-light",
+            "muted": "text-muted-light",
+            "navigation": "bg-nav-light",
+            "page": "bg-page-light",
+            "panel": "bg-panel-light",
+            "raised": "bg-raised-light",
+            "secondary": "text-secondary-light",
+            "selection-background": "select-bg-light",
+            "selection-text": "select-text-light",
+            "sidebar": "bg-sidebar-light"
+          },
+          "tokenSet": "black-tokens"
+        }
+      },
+      "adapter": "starlight-v0.42",
+      "codePresentation": {
+        "copy": "standard",
+        "frame": "terminal",
+        "marks": {
+          "deleted": "#ef4444",
+          "inserted": "#22c55e",
+          "marked": "#f97316"
+        },
+        "mode": "expressive-code",
+        "syntaxTheme": {
+          "dark": {
+            "rules": [
+              {
+                "foreground": "#eda2cf",
+                "scopes": [
+                  "keyword"
+                ]
+              },
+              {
+                "foreground": "#8bd0e8",
+                "scopes": [
+                  "string"
+                ]
+              },
+              {
+                "foreground": "#a4b9ac",
+                "scopes": [
+                  "comment"
+                ]
+              },
+              {
+                "foreground": "#efb18a",
+                "scopes": [
+                  "entity.name.function"
+                ]
+              },
+              {
+                "foreground": "#bdb1eb",
+                "scopes": [
+                  "variable"
+                ]
+              },
+              {
+                "foreground": "#d5d28b",
+                "scopes": [
+                  "constant"
+                ]
+              }
+            ]
+          },
+          "light": {
+            "rules": [
+              {
+                "foreground": "#782765",
+                "scopes": [
+                  "keyword"
+                ]
+              },
+              {
+                "foreground": "#27546a",
+                "scopes": [
+                  "string"
+                ]
+              },
+              {
+                "foreground": "#50645c",
+                "scopes": [
+                  "comment"
+                ]
+              },
+              {
+                "foreground": "#924019",
+                "scopes": [
+                  "entity.name.function"
+                ]
+              },
+              {
+                "foreground": "#473d76",
+                "scopes": [
+                  "variable"
+                ]
+              },
+              {
+                "foreground": "#5b5426",
+                "scopes": [
+                  "constant"
+                ]
+              }
+            ]
+          }
+        },
+        "tabs": "deferred"
+      },
+      "components": {
+        "pageTitle": "page-title-frame"
+      },
+      "defaultAccent": "default",
+      "fonts": [],
+      "layoutPreset": "standard",
+      "name": "loom-black-code",
+      "schemaVersion": "tfsl.theme-v2",
+      "surfaces": {
+        "border": 1,
+        "borderStyle": "solid",
+        "content": 1152,
+        "focus": 2,
+        "focusOffset": 2,
+        "radii": 8,
+        "sidebar": 288,
+        "spacing": 4
+      },
+      "tokenSets": {
+        "black-tokens": {
+          "accent-base-dark": "#f97316",
+          "accent-base-light": "#ea580c",
+          "accent-high-dark": "#fdba74",
+          "accent-high-light": "#9a3412",
+          "accent-low-dark": "#431407",
+          "accent-low-light": "#ffedd5",
+          "bg-card-dark": "#131620",
+          "bg-card-light": "#ffffff",
+          "bg-code-dark": "#090a0d",
+          "bg-code-light": "#f1f5f9",
+          "bg-inline-code-dark": "#1e2330",
+          "bg-inline-code-light": "#e2e8f0",
+          "bg-nav-dark": "#12141a",
+          "bg-nav-light": "#ffffff",
+          "bg-page-dark": "#0c0d10",
+          "bg-page-light": "#f8fafc",
+          "bg-panel-dark": "#1a1e29",
+          "bg-panel-light": "#f8fafc",
+          "bg-raised-dark": "#161922",
+          "bg-raised-light": "#ffffff",
+          "bg-sidebar-dark": "#0f1015",
+          "bg-sidebar-light": "#f1f5f9",
+          "border-dark": "#2e354a",
+          "border-light": "#cbd5e1",
+          "focus-ring-dark": "#3b82f6",
+          "focus-ring-light": "#2563eb",
+          "hairline-dark": "#232838",
+          "hairline-light": "#e2e8f0",
+          "select-bg-dark": "#3b82f6",
+          "select-bg-light": "#2563eb",
+          "select-text-dark": "#ffffff",
+          "select-text-light": "#ffffff",
+          "text-body-dark": "#f0f2f5",
+          "text-body-light": "#0f172a",
+          "text-invert-dark": {
+            "alias": "bg-page-dark"
+          },
+          "text-invert-light": {
+            "alias": "bg-nav-light"
+          },
+          "text-link-dark": "#60a5fa",
+          "text-link-light": "#2563eb",
+          "text-muted-dark": "#8a92a6",
+          "text-muted-light": "#64748b",
+          "text-secondary-dark": "#e1e4ea",
+          "text-secondary-light": "#334155"
+        }
+      },
+      "typography": {
+        "body": {
+          "font": "system-sans",
+          "lineHeight": 1.6,
+          "size": 16
+        },
+        "code": {
+          "font": "system-mono",
+          "lineHeight": 1.5,
+          "size": 14
+        },
+        "heading": {
+          "font": "system-sans",
+          "lineHeight": 1.25,
+          "size": 28
+        },
+        "ui": {
+          "font": "system-sans",
+          "lineHeight": 1.5,
+          "size": 14
+        }
+      },
+      "version": "1.0.0"
+    },
+    "rationale": "Theme code candidate v2",
+    "selectedAccent": "default",
+    "candidateDigest": "sha256:2cbbebb0cc5e340d1c05d6d9a2ccb2ff5c0c56cc14d7793ab2f67b8ee1300d85"
+  }
+}

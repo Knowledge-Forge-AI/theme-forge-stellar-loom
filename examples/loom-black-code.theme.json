@@ -1,0 +1,238 @@
+{
+  "name": "loom-black-code",
+  "version": "1.0.0",
+  "schemaVersion": "tfsl.theme-v2",
+  "adapter": "starlight-v0.42",
+  "tokenSets": {
+    "black-tokens": {
+      "bg-page-dark": "#0c0d10",
+      "bg-page-light": "#f8fafc",
+      "bg-nav-dark": "#12141a",
+      "bg-nav-light": "#ffffff",
+      "bg-sidebar-dark": "#0f1015",
+      "bg-sidebar-light": "#f1f5f9",
+      "bg-raised-dark": "#161922",
+      "bg-raised-light": "#ffffff",
+      "bg-panel-dark": "#1a1e29",
+      "bg-panel-light": "#f8fafc",
+      "bg-card-dark": "#131620",
+      "bg-card-light": "#ffffff",
+      "bg-inline-code-dark": "#1e2330",
+      "bg-inline-code-light": "#e2e8f0",
+      "bg-code-dark": "#090a0d",
+      "bg-code-light": "#f1f5f9",
+      "text-body-dark": "#f0f2f5",
+      "text-body-light": "#0f172a",
+      "text-secondary-dark": "#e1e4ea",
+      "text-secondary-light": "#334155",
+      "text-muted-dark": "#8a92a6",
+      "text-muted-light": "#64748b",
+      "text-invert-dark": {
+        "alias": "bg-page-dark"
+      },
+      "text-invert-light": {
+        "alias": "bg-nav-light"
+      },
+      "text-link-dark": "#60a5fa",
+      "text-link-light": "#2563eb",
+      "hairline-dark": "#232838",
+      "hairline-light": "#e2e8f0",
+      "border-dark": "#2e354a",
+      "border-light": "#cbd5e1",
+      "focus-ring-dark": "#3b82f6",
+      "focus-ring-light": "#2563eb",
+      "select-bg-dark": "#3b82f6",
+      "select-bg-light": "#2563eb",
+      "select-text-dark": "#ffffff",
+      "select-text-light": "#ffffff",
+      "accent-base-dark": "#f97316",
+      "accent-base-light": "#ea580c",
+      "accent-low-dark": "#431407",
+      "accent-low-light": "#ffedd5",
+      "accent-high-dark": "#fdba74",
+      "accent-high-light": "#9a3412"
+    }
+  },
+  "accentVariants": {
+    "default": {
+      "tokenSet": "black-tokens",
+      "dark": {
+        "page": "bg-page-dark",
+        "navigation": "bg-nav-dark",
+        "header": "bg-nav-dark",
+        "sidebar": "bg-sidebar-dark",
+        "raised": "bg-raised-dark",
+        "panel": "bg-panel-dark",
+        "card": "bg-card-dark",
+        "inline-code": "bg-inline-code-dark",
+        "code": "bg-code-dark",
+        "body": "text-body-dark",
+        "secondary": "text-secondary-dark",
+        "muted": "text-muted-dark",
+        "inverted": "text-invert-dark",
+        "link": "text-link-dark",
+        "hairline": "hairline-dark",
+        "border": "border-dark",
+        "focus": "focus-ring-dark",
+        "selection-background": "select-bg-dark",
+        "selection-text": "select-text-dark",
+        "accent-base": "accent-base-dark",
+        "accent-low": "accent-low-dark",
+        "accent-high": "accent-high-dark"
+      },
+      "light": {
+        "page": "bg-page-light",
+        "navigation": "bg-nav-light",
+        "header": "bg-nav-light",
+        "sidebar": "bg-sidebar-light",
+        "raised": "bg-raised-light",
+        "panel": "bg-panel-light",
+        "card": "bg-card-light",
+        "inline-code": "bg-inline-code-light",
+        "code": "bg-code-light",
+        "body": "text-body-light",
+        "secondary": "text-secondary-light",
+        "muted": "text-muted-light",
+        "inverted": "text-invert-light",
+        "link": "text-link-light",
+        "hairline": "hairline-light",
+        "border": "border-light",
+        "focus": "focus-ring-light",
+        "selection-background": "select-bg-light",
+        "selection-text": "select-text-light",
+        "accent-base": "accent-base-light",
+        "accent-low": "accent-low-light",
+        "accent-high": "accent-high-light"
+      }
+    }
+  },
+  "defaultAccent": "default",
+  "typography": {
+    "body": {
+      "font": "system-sans",
+      "size": 16,
+      "lineHeight": 1.6
+    },
+    "heading": {
+      "font": "system-sans",
+      "size": 28,
+      "lineHeight": 1.25
+    },
+    "ui": {
+      "font": "system-sans",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    "code": {
+      "font": "system-mono",
+      "size": 14,
+      "lineHeight": 1.5
+    }
+  },
+  "surfaces": {
+    "spacing": 4,
+    "radii": 8,
+    "border": 1,
+    "focus": 2,
+    "content": 1152,
+    "sidebar": 288
+  },
+  "layoutPreset": "standard",
+  "components": {
+    "pageTitle": "page-title-frame"
+  },
+  "codePresentation": {
+    "mode": "expressive-code",
+    "syntaxTheme": {
+      "light": {
+        "rules": [
+          {
+            "scopes": [
+              "keyword"
+            ],
+            "foreground": "#782765"
+          },
+          {
+            "scopes": [
+              "string"
+            ],
+            "foreground": "#27546a"
+          },
+          {
+            "scopes": [
+              "comment"
+            ],
+            "foreground": "#50645c"
+          },
+          {
+            "scopes": [
+              "entity.name.function"
+            ],
+            "foreground": "#924019"
+          },
+          {
+            "scopes": [
+              "variable"
+            ],
+            "foreground": "#473d76"
+          },
+          {
+            "scopes": [
+              "constant"
+            ],
+            "foreground": "#5b5426"
+          }
+        ]
+      },
+      "dark": {
+        "rules": [
+          {
+            "scopes": [
+              "keyword"
+            ],
+            "foreground": "#eda2cf"
+          },
+          {
+            "scopes": [
+              "string"
+            ],
+            "foreground": "#8bd0e8"
+          },
+          {
+            "scopes": [
+              "comment"
+            ],
+            "foreground": "#a4b9ac"
+          },
+          {
+            "scopes": [
+              "entity.name.function"
+            ],
+            "foreground": "#efb18a"
+          },
+          {
+            "scopes": [
+              "variable"
+            ],
+            "foreground": "#bdb1eb"
+          },
+          {
+            "scopes": [
+              "constant"
+            ],
+            "foreground": "#d5d28b"
+          }
+        ]
+      }
+    },
+    "frame": "terminal",
+    "marks": {
+      "marked": "#f97316",
+      "inserted": "#22c55e",
+      "deleted": "#ef4444"
+    },
+    "copy": "standard",
+    "tabs": "deferred"
+  },
+  "fonts": []
+}

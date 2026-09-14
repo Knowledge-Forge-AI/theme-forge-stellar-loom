@@ -98,6 +98,7 @@ lerna-debug.log*
 .astro/
 .github/content-cache/
 packages/stellar-loom/fixture/src/styles/*
+!packages/stellar-loom/fixture/src/styles/catalog-consumer.css
 !packages/stellar-loom/fixture/src/styles/neutral.css
 
 # ============================================================================
@@ -142,3 +143,6 @@ INSTALL.md
 
 # Generated public composition qualification outputs
 .outbox/compositions/
+
+# Authenticated generated scene runtime; rebuilt from explicit archive input.
+apps/studio/src-tauri/scene-payload/

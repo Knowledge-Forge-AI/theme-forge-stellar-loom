@@ -154,7 +154,7 @@ describe("Theme Compiler", () => {
       provenance: {
         categories: ["user-authored-data", "generated-syntax", "first-party-expression"],
         compiler: "@knowledge-forge-ai/theme-forge-stellar-loom",
-        compilerVersion: "0.1.0",
+        compilerVersion: "0.2.0",
       },
     });
   });

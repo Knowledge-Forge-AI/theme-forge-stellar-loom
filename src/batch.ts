@@ -1,3 +1,6 @@
+import { isThemeV2 } from "./public-api.js";
+import { isThemeCode, compileThemeCode } from "./code/index.js";
+import { compileThemeV2 } from "./v2/index.js";
 import { assertNoDuplicateKeys } from "./design-exchange/canonical.js";
 import { compileTheme } from "./compiler/index.js";
 import { validateThemeSpecification, ValidationError } from "./schema/validator.js";
@@ -47,6 +50,7 @@ export interface BatchRequest {
   exampleName?: string | undefined;
   options?: {
     strictContrast?: boolean | undefined;
+    accent?: string | undefined;
   } | undefined;
   uiRevision?: number | undefined;
   // Exchange parameters
@@ -72,8 +76,9 @@ export interface BatchResponse {
   uiRevision?: number | undefined;
   valid: boolean;
   compiledCss?: string | undefined;
-  descriptor?: ThemeDescriptor | undefined;
-  diagnostics: ContrastDiagnostic[];
+  descriptor?: ThemeDescriptor | (ReturnType<typeof compileThemeV2> | ReturnType<typeof compileThemeCode>)["descriptor"] | undefined;
+  styles?: { path: string; css: string }[] | undefined;
+  diagnostics: (ContrastDiagnostic | ReturnType<typeof compileThemeV2>["diagnostics"][number])[];
   specification?: ThemeSpecification | undefined;
   exampleName?: string | undefined;
   // Exchange fields
@@ -176,6 +181,12 @@ function processBatchRequestInternal(request: BatchRequest): BatchResponse {
         descriptor: compileResult.descriptor,
         diagnostics,
       };
+    }
+
+    if ((request.action === "compile" || request.action === "validate") && isThemeV2(request.specification)) {
+      if (request.options?.strictContrast) throw new Error("V2 strict contrast is unsupported in core");
+      const result = (isThemeCode(request.specification) ? compileThemeCode : compileThemeV2)(request.specification, request.options?.accent === undefined ? undefined : { accent: request.options.accent });
+      return { status: "success", uiRevision, valid: true, diagnostics: result.diagnostics, ...(request.action === "compile" ? { compiledCss: result.css, descriptor: result.descriptor, styles: [...result.styles].map(([path, css]) => ({ path, css })) } : {}) };
     }
 
     if (request.action === "compile") {
