@@ -196,6 +196,15 @@ jobs:
         uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
         with:
           category: "/language:${{ matrix.language }}"
+          output: "${{ env.TFSB_CODEQL_REPORT_DIR }}"
+          upload: false
+      - name: Evaluate finding ratchet on CodeQL findings
+        run: node tools/ci/finding-ratchet.mjs --baseline tools/ci/finding-ratchet-baseline.json --input "$TFSB_CODEQL_REPORT_DIR" --product stellar-loom --tool codeql --check
+      - name: Upload CodeQL SARIF report
+        uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          sarif_file: "${{ env.TFSB_CODEQL_REPORT_DIR }}"
+          category: "/language:${{ matrix.language }}"
 
   supply-chain:
     name: Supply chain, Syft SBOMs, Grype scan, and audits
@@ -247,6 +256,8 @@ jobs:
           node tools/ci/run-syft-grype.mjs --target "$TFSB_RELEASE_DIR" --output-dir .test-reports/supply-chain --name root-package \
             --component-input "build-input:core-lock=$RUNNER_TEMP/tfsb-loom-inventory/core" \
             --component-catalogers core-lock=javascript-lock-cataloger,javascript-package-cataloger
+      - name: Evaluate finding ratchet on Grype findings
+        run: node tools/ci/finding-ratchet.mjs --baseline tools/ci/finding-ratchet-baseline.json --input .test-reports/supply-chain/root-package.grype.sarif --product stellar-loom --tool grype --check
       - name: Run selected workflow and secret checks
         run: node tools/ci/run-workflow-checks.mjs --root . --output-dir .test-reports/workflow-checks
       - name: Retain workflow and secret check outputs

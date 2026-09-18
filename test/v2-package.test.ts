@@ -40,9 +40,9 @@ describe("v2 package/public surfaces", () => {
       const result = generateThemePackageV2({ themeSpec: theme, metadata });
       const paths = result.provenance.files.map(file => file.path);
       expect(paths).toEqual([...paths].sort((a, b) => Buffer.compare(Buffer.from(a), Buffer.from(b))));
-      // Release 0.2.0 producer metadata changes the descriptor and its receipt.
-      expect(result.provenance.inventoryDigest).toBe("4f0e8a951023b21336ed83d3b7573e00cf875a42945e60e124c60f69f08fec00");
-      expect(hash(result.files.get("provenance.json")!)).toBe("f5410f7d04b862d1c7ecb8ddef8dfe93e957e4fe9c6782986535eb101db19f46");
+      // Release 0.3.0 producer metadata changes the descriptor and its receipt.
+      expect(result.provenance.inventoryDigest).toBe("0bc8c5fffd5cec2bbd3584cfa3fa0508eb316faacf4611045a79d369391dda38");
+      expect(hash(result.files.get("provenance.json")!)).toBe("f931f3908319cddcc49cc7f4a6a5f1e8f38390f2a33efc143ae459300b6ef082");
       expect(generateThemePackageV2({ themeSpec: theme, metadata }).files).toEqual(result.files);
     } finally { String.prototype.localeCompare = original; }
   });

@@ -74,7 +74,7 @@ describe("TFSL CLI", () => {
     try {
       const code = await runCli(["node", "tfsl", "--version"]);
       expect(code).toBe(0);
-      expect(output).toContain("@knowledge-forge-ai/theme-forge-stellar-loom 0.2.0");
+      expect(output).toContain("@knowledge-forge-ai/theme-forge-stellar-loom 0.3.0");
     } finally {
       process.stdout.write = origWrite;
     }
@@ -431,22 +431,32 @@ describe("TFSL CLI", () => {
     }) as any;
 
     const tmpDir = await mkdtemp(join(tmpdir(), "tfsl-test-early-fs-"));
+    const isRoot = typeof process.getuid === "function" && process.getuid() === 0;
+    let unreadableDir: string;
     try {
       const themePath = join(EXAMPLES_DIR, "stellar-cyan.theme.json");
-      const unreadableDir = join(tmpDir, "unreadable");
-      await mkdir(unreadableDir, { recursive: true });
-      const { chmod } = await import("node:fs/promises");
-      await chmod(unreadableDir, 0o000);
+      if (isRoot) {
+        const blocker = join(tmpDir, "blocker");
+        const { writeFile } = await import("node:fs/promises");
+        await writeFile(blocker, "regular-file");
+        unreadableDir = join(blocker, "cannot-traverse");
+      } else {
+        unreadableDir = join(tmpDir, "unreadable");
+        await mkdir(unreadableDir, { recursive: true });
+        const { chmod } = await import("node:fs/promises");
+        await chmod(unreadableDir, 0o000);
+      }
 
       const code = await runCli(["node", "tfsl", "compile", themePath, "--out", unreadableDir, "--overwrite", "--json"]);
       expect(code).toBe(3);
       const parsed = JSON.parse(outJson);
       expect(parsed.status).toBe("error");
       expect(parsed.code).toBe("OUTPUT_FS_ERROR");
-
-      // Reset permissions so cleanup succeeds
-      await chmod(unreadableDir, 0o755);
     } finally {
+      if (!isRoot && unreadableDir!) {
+        const { chmod } = await import("node:fs/promises");
+        await chmod(unreadableDir!, 0o755).catch(() => undefined);
+      }
       process.stdout.write = origOut;
       await rm(tmpDir, { recursive: true, force: true });
     }

@@ -1,5 +1,7 @@
-import type { ThemeCatalogConfig } from "../types.js";
-export function emitSidebarTree(): string {
+import type { ThemeCatalogConfig, BookChromeConfig } from "../types.js";
+export function emitSidebarTree(bookChrome: boolean | BookChromeConfig = false): string {
+  const chapterProgress = typeof bookChrome === "object" ? bookChrome.chapterProgress !== false : Boolean(bookChrome);
+  const chapterActiveAttr = chapterProgress ? ' data-tfsl-chapter-active={item.current ? "true" : undefined}' : "";
   return `---
 const {entries} = Astro.props;
 ---
@@ -7,7 +9,7 @@ const {entries} = Astro.props;
   {entries.map((item: any) => <li>
     {item.type === "group" ? <details open={item.current || !item.collapsed}>
       <summary>{item.label}</summary><Astro.self entries={item.entries} />
-    </details> : <a href={item.href} aria-current={item.current ? "page" : undefined} title={item.title} aria-label={item.ariaLabel}>{item.label}</a>}
+    </details> : <a href={item.href} aria-current={item.current ? "page" : undefined} title={item.title} aria-label={item.ariaLabel}${chapterActiveAttr}>{item.label}</a>}
   </li>)}
 </ul>
 <style>
@@ -19,12 +21,16 @@ const {entries} = Astro.props;
 </style>
 `;
 }
-export function emitSidebarComponent(_catalog: ThemeCatalogConfig): string {
+export function emitSidebarComponent(_catalog: ThemeCatalogConfig, isTs = false, bookChrome: boolean | BookChromeConfig = false): string {
+  const navImport = isTs ? "../dist/navigation.js" : "../navigation.js";
+  const isBook = Boolean(bookChrome);
+  const bookAttr = isBook ? ' data-tfsl-book-chrome="true"' : "";
+  const bookClass = isBook ? " tfsl-book-chrome" : "";
   return `---
 import MobileMenuFooter from "@astrojs/starlight/components/MobileMenuFooter.astro";
 import Tree from "./SidebarTree.astro";
 import data from "../catalog-data.json";
-import { projectNavigation } from "../navigation.js";
+import { projectNavigation } from "${navImport}";
 const mode = data.sidebar.mode;
 const entries = projectNavigation(Astro.locals.starlightRoute.sidebar);
 const ids = data.sidebar.groupIds;
@@ -35,7 +41,7 @@ if (mode !== "nested" && active.length > 1) throw new Error("Ambiguous active si
 const selected = active[0] ?? 0;
 const groups = entries.map((entry,i)=>({entry,id:ids[i] || String(i),active:i===selected}));
 ---
-<nav class="tfsl-sidebar-container" data-tfsl-sidebar-mode={mode} aria-label="Documentation navigation">
+<nav class="tfsl-sidebar-container${bookClass}" data-tfsl-sidebar-mode={mode}${bookAttr} aria-label="Documentation navigation">
   {mode === "nested" ? <Tree entries={entries} /> : <>
     {mode === "tabs" && <div role="tablist" class="tfsl-roving-tablist" aria-label="Documentation sections">
       {groups.map(g=><button type="button" role="tab" id={\`tfsl-nav-tab-\${g.id}\`} aria-controls={\`tfsl-nav-panel-\${g.id}\`} aria-selected={g.active ? "true":"false"} tabindex={g.active?0:-1}>{g.entry.label}</button>)}

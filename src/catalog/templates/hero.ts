@@ -1,9 +1,9 @@
 import type { ThemeCatalogConfig } from "../types.js";
 import { emitLoomOrbitSvg } from "./loom-orbit.js";
-export function emitHeroComponent(_catalog: ThemeCatalogConfig): string {
+export function emitHeroComponent(_catalog: ThemeCatalogConfig, isTs = false): string {
   return `---
 import DefaultHero from "@astrojs/starlight/components/Hero.astro";
-import { localHref } from "../navigation.js";
+import { localHref } from "${isTs ? "../dist/navigation.js" : "../navigation.js"}";
 const activeHero = (Astro.locals as any).tfslCatalogHero;
 const layout = activeHero?.layout;
 const base = import.meta.env.BASE_URL;

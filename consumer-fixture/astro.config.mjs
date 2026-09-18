@@ -14,11 +14,11 @@ const packages = {
   "nova-override": explicitPackageName,
 };
 if (scenario !== "disconnected" && scenario !== "nova-disconnected") {
-  const packageName = packages[scenario];
+  const packageName = explicitPackageName || packages[scenario];
   if (!packageName) throw new Error("Unknown consumer scenario or missing explicit theme package name");
   const { default: themePlugin } = await import(packageName);
   plugins.push(themePlugin());
-  if (scenario === "consumer-override" || scenario === "nova-override") {
+  if (scenario.includes("override")) {
     components.PageTitle = "./src/components/ConsumerPageTitle.astro";
   }
 }
@@ -34,7 +34,10 @@ export default defineConfig({
       sidebar: [
         {
           label: "Guides",
-          items: [{ label: "Overview", slug: "index" }],
+          items: [
+            { label: "Overview", slug: "index" },
+            { label: "Guide", slug: "guide" },
+          ],
         },
       ],
     }),

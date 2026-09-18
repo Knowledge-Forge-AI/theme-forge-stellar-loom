@@ -21,7 +21,7 @@ describe("TFSL Batch Adapter", () => {
     const parsed = processBatchRequest({ action: "exchange-packet-parse", packetJson: candidate, opaquePackets: true });
     expect(parsed.packet).toBeUndefined();
     expect(parsed.canonicalJson).toBe(candidate);
-    const duplicate = candidate.replace("{", '{"schema":"tfsl.theme-candidate",');
+    const duplicate = '{"schema":"tfsl.theme-candidate",' + candidate.slice(1);
     const rejected = processBatchRequest(JSON.parse(JSON.stringify({
       action: "exchange-candidate-verify", brief, candidate: duplicate, opaquePackets: true,
     })));

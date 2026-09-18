@@ -1272,17 +1272,6 @@ function emitFsError(command: string, code: string, message: string, json: boole
 
 async function writeAbsentPacket(filePath: string, canonicalString: string): Promise<string> {
   const absPath = resolve(process.cwd(), filePath);
-  try {
-    const existing = await stat(absPath);
-    if (existing) {
-      throw new FilesystemSafetyError(
-        `Target packet file '${absPath}' already exists; exchange packets are immutable and cannot overwrite existing files.`
-      );
-    }
-  } catch (err: any) {
-    if (err instanceof FilesystemSafetyError) throw err;
-    // Expected ENOENT
-  }
   await mkdir(dirname(absPath), { recursive: true });
   try {
     await writeFile(absPath, canonicalString, { flag: "wx", encoding: "utf8" });
