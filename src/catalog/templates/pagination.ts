@@ -1,14 +1,76 @@
-import type { ThemeCatalogConfig } from "../types.js";
+import type { ThemeCatalogConfig, BookChromeConfig } from "../types.js";
 
 /**
  * Emits Pagination.astro supporting plain, card, and compact variants.
  * Uses public starlightRoute props.
  */
-export function emitPaginationComponent(catalog: ThemeCatalogConfig): string {
+export function emitPaginationComponent(
+  catalog: ThemeCatalogConfig,
+  isTs = false,
+  bookChrome: boolean | BookChromeConfig = false
+): string {
   const variant = catalog.pagination.variant;
+  const navImport = isTs ? "../dist/navigation.js" : "../navigation.js";
+
+  const chapterNavigation = typeof bookChrome === "object" ? bookChrome.chapterNavigation !== false : Boolean(bookChrome);
+  const keyboardShortcuts = typeof bookChrome === "object" ? bookChrome.keyboardShortcuts !== false : Boolean(bookChrome);
+
+  const arrowsMarkup = chapterNavigation ? `
+<div class="tfsl-book-nav-arrows print:hidden" dir={dir}>
+  {prev && (
+    <a href={prev.href} rel="prev" class="tfsl-book-nav-arrow tfsl-book-nav-prev" title={prev.label} aria-label={prev.label}>
+      <span aria-hidden="true">{isRtl ? "→" : "←"}</span>
+    </a>
+  )}
+  {next && (
+    <a href={next.href} rel="next prefetch" class="tfsl-book-nav-arrow tfsl-book-nav-next" title={next.label} aria-label={next.label}>
+      <span aria-hidden="true">{isRtl ? "←" : "→"}</span>
+    </a>
+  )}
+</div>
+` : "";
+
+  const scriptSnippet = keyboardShortcuts ? `
+<script>
+  function fieldHasFocus(e: KeyboardEvent): boolean {
+    const target = (e.composedPath()[0] as HTMLElement | undefined) || (e.target as HTMLElement);
+    if (!target) return false;
+    if (target.isContentEditable) return true;
+    if (/^(?:input|select|textarea)$/i.test(target.nodeName)) return true;
+    if (target.closest?.('[role="tab"], [role="tablist"], [contenteditable="true"], .expressive-code, pre, code')) return true;
+    let el: HTMLElement | null = target;
+    let depth = 0;
+    while (el && depth < 5 && el !== document.body && el !== document.documentElement) {
+      if (el.scrollWidth - el.clientWidth >= 16) {
+        const style = window.getComputedStyle(el);
+        if (style.overflowX === "auto" || style.overflowX === "scroll") return true;
+      }
+      el = el.parentElement;
+      depth++;
+    }
+    return false;
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.defaultPrevented) return;
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    if (document.querySelector("dialog[open]")) return;
+    if (fieldHasFocus(e)) return;
+    const isRtl = document.documentElement.dir === "rtl";
+    let selector: string | null = null;
+    if (e.key === "ArrowRight") selector = isRtl ? ".tfsl-book-nav-prev, [rel='prev']" : ".tfsl-book-nav-next, [rel~='next']";
+    else if (e.key === "ArrowLeft") selector = isRtl ? ".tfsl-book-nav-next, [rel~='next']" : ".tfsl-book-nav-prev, [rel='prev']";
+    if (!selector) return;
+    const link = document.querySelector<HTMLAnchorElement>(selector);
+    if (link && link.href) {
+      e.preventDefault();
+      window.location.href = link.href;
+    }
+  });
+</script>
+` : "";
 
   return `---
-import { safeHref, text } from "../navigation.js";
+import { safeHref, text } from "${navImport}";
 const starlightRoute = Astro.locals.starlightRoute;
 const dir = starlightRoute?.dir || "ltr";
 const pagination = starlightRoute?.pagination || {};
@@ -17,8 +79,7 @@ const next = pagination.next ? { href:safeHref(pagination.next.href), label:text
 const variant = ${JSON.stringify(variant)};
 const isRtl = dir === "rtl";
 ---
-
-{Boolean(prev || next) && (
+${arrowsMarkup ? `${arrowsMarkup}\n` : "\n"}{Boolean(prev || next) && (
   <nav class:list={["tfsl-pagination", \`variant-\${variant}\`, "print:hidden"]} aria-label="Pagination" dir={dir}>
     {variant === "plain" && (
       <div class="pagination-plain">
@@ -168,6 +229,5 @@ const isRtl = dir === "rtl";
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-</style>
-`;
+</style>${scriptSnippet ? `\n${scriptSnippet.trim()}\n` : "\n"}`;
 }
