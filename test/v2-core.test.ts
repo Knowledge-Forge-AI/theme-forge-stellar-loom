@@ -112,13 +112,13 @@ describe("TFSB61B-core v2 domain & compiler", () => {
     it("pins compiler semantic identity and non-spoofable provenance", () => {
       expect(COMPILER_SEMANTIC).toBe("tfsl.theme-compiler-v2-core-1");
       expect(COMPILER_PRODUCER).toBe("@knowledge-forge-ai/theme-forge-stellar-loom");
-      expect(COMPILER_VERSION).toBe("0.2.0");
+      expect(COMPILER_VERSION).toBe("0.3.0");
 
       const comp = compileThemeV2(blackCoreJson);
       expect(comp.descriptor.compilerSemantic).toBe("tfsl.theme-compiler-v2-core-1");
       expect(comp.descriptor.provenance.semantic).toBe("tfsl.theme-compiler-v2-core-1");
       expect(comp.descriptor.provenance.compiler).toBe("@knowledge-forge-ai/theme-forge-stellar-loom");
-      expect(comp.descriptor.provenance.compilerVersion).toBe("0.2.0");
+      expect(comp.descriptor.provenance.compilerVersion).toBe("0.3.0");
       expect(comp.descriptor.catalogIdentity).toBe("tfsl.starlight-core-catalog-v1");
       expect(comp.descriptor.catalogDigest).toBe(CATALOG_DIGEST);
 

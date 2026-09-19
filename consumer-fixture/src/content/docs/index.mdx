@@ -10,3 +10,19 @@ Here is an [example link](https://starlight.astro.build) to verify link colors.
 Here is `inline-code-sample` to verify code background and text colors.
 
 <div class="consumer-custom-marker">Consumer Custom CSS Marker</div>
+
+## Overview and Reading Layout
+
+Testing reading layout centering, content measure, and consumer override precedence in Starlight.
+
+### Geometry and Constraints
+
+The reading preset applies an optimal line measure of min(704px, 48rem) to improve documentation readability.
+
+### Layer Cascade Architecture
+
+Starlight declares the `@layer tfsl.overrides` cascade boundary, allowing consumer `customCss` to win naturally.
+
+## Navigation and Content Hierarchy
+
+Ordinary documentation page structure verified through headings and multi-page sidebar links.

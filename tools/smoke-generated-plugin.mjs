@@ -274,17 +274,31 @@ export async function runGeneratedPluginSmoke() {
 
     // Verify determinism between cyanOut1 and cyanOut2 across independent directories/processes
     console.log("3. Verifying bit-for-bit byte equality across independent directories/processes...");
-    const files1 = await readdir(cyanOut1, { recursive: true });
-    const files2 = await readdir(cyanOut2, { recursive: true });
-    if (JSON.stringify(files1.sort()) !== JSON.stringify(files2.sort())) {
+    const entries1 = await readdir(cyanOut1, { recursive: true, withFileTypes: true });
+    entries1.sort((a, b) => {
+      const relA = relative(cyanOut1, join(a.parentPath, a.name));
+      const relB = relative(cyanOut1, join(b.parentPath, b.name));
+      return relA.localeCompare(relB);
+    });
+    const files1 = entries1.map((e) => relative(cyanOut1, join(e.parentPath, e.name)));
+
+    const entries2 = await readdir(cyanOut2, { recursive: true, withFileTypes: true });
+    entries2.sort((a, b) => {
+      const relA = relative(cyanOut2, join(a.parentPath, a.name));
+      const relB = relative(cyanOut2, join(b.parentPath, b.name));
+      return relA.localeCompare(relB);
+    });
+    const files2 = entries2.map((e) => relative(cyanOut2, join(e.parentPath, e.name)));
+
+    if (JSON.stringify(files1) !== JSON.stringify(files2)) {
       throw new Error("File lists differ between independent generation runs");
     }
 
-    for (const f of files1) {
-      const p1 = join(cyanOut1, f);
-      const p2 = join(cyanOut2, f);
-      const s1 = await stat(p1);
-      if (s1.isFile()) {
+    for (const entry of entries1) {
+      if (entry.isFile()) {
+        const f = relative(cyanOut1, join(entry.parentPath, entry.name));
+        const p1 = join(cyanOut1, f);
+        const p2 = join(cyanOut2, f);
         const b1 = await readFile(p1);
         const b2 = await readFile(p2);
         if (sha256(b1) !== sha256(b2)) {
@@ -797,11 +811,11 @@ export async function runGeneratedPluginSmoke() {
         ];
 
         for (const targetDir of dirsToAudit) {
-          const files = await readdir(targetDir, { recursive: true });
-          for (const file of files) {
-            const fullPath = join(targetDir, file);
-            const st = await stat(fullPath);
-            if (st.isFile()) {
+          const entries = await readdir(targetDir, { recursive: true, withFileTypes: true });
+          for (const entry of entries) {
+            if (entry.isFile()) {
+              const fullPath = join(entry.parentPath, entry.name);
+              const file = relative(targetDir, fullPath);
               const content = await readFile(fullPath, "utf8");
               if (content.includes("tfsl:attempt-command")) {
                 throw new Error(`Asset '${file}' in '${targetDir}' unexpectedly contains 'tfsl:attempt-command'`);
@@ -845,16 +859,30 @@ export async function runGeneratedPluginSmoke() {
  * @param {string} dir2
  */
 async function verifyDeterminism(dir1, dir2) {
-  const files1 = (await readdir(dir1, { recursive: true })).sort();
-  const files2 = (await readdir(dir2, { recursive: true })).sort();
+  const entries1 = await readdir(dir1, { recursive: true, withFileTypes: true });
+  entries1.sort((a, b) => {
+    const relA = relative(dir1, join(a.parentPath, a.name));
+    const relB = relative(dir1, join(b.parentPath, b.name));
+    return relA.localeCompare(relB);
+  });
+  const files1 = entries1.map((e) => relative(dir1, join(e.parentPath, e.name)));
+
+  const entries2 = await readdir(dir2, { recursive: true, withFileTypes: true });
+  entries2.sort((a, b) => {
+    const relA = relative(dir2, join(a.parentPath, a.name));
+    const relB = relative(dir2, join(b.parentPath, b.name));
+    return relA.localeCompare(relB);
+  });
+  const files2 = entries2.map((e) => relative(dir2, join(e.parentPath, e.name)));
+
   if (JSON.stringify(files1) !== JSON.stringify(files2)) {
     throw new Error(`File lists differ between independent generation runs: ${files1.join(",")} vs ${files2.join(",")}`);
   }
-  for (const f of files1) {
-    const p1 = join(dir1, f);
-    const p2 = join(dir2, f);
-    const s1 = await stat(p1);
-    if (s1.isFile()) {
+  for (const entry of entries1) {
+    if (entry.isFile()) {
+      const f = relative(dir1, join(entry.parentPath, entry.name));
+      const p1 = join(dir1, f);
+      const p2 = join(dir2, f);
       const b1 = await readFile(p1);
       const b2 = await readFile(p2);
       if (sha256(b1) !== sha256(b2)) {

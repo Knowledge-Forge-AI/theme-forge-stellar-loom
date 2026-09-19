@@ -8,6 +8,11 @@ import { generateThemePackageCode } from "../generator/code-emitter.js";
 import { writeV2Files, type GeneratedFile } from "../generator/v2-writer.js";
 import { MERGE_HELPER_STRING } from "../generator/code-merge.js";
 import { createCodeDefaults } from "../code/config.js";
+import {
+  compileSyntaxPalette,
+  deriveExpressiveCodeStyleOverrides,
+  CODE_TABS_CSS,
+} from "../syntax/index.js";
 import { compileThemeCatalog } from "./compiler.js";
 import { emitHeroComponent } from "./templates/hero.js";
 import { emitPageTitleComponent } from "./templates/page-title.js";
@@ -19,10 +24,45 @@ import { emitMiddleware } from "./templates/middleware.js";
 import type {
   GeneratePackageCatalogOptions,
   GeneratePackageCatalogResult,
+  BookChromeConfig,
 } from "./types.js";
 
 const hash = (bytes: string | Uint8Array) =>
   createHash("sha256").update(bytes).digest("hex");
+
+const TS_MERGE_HELPER_STRING = `function deepCloneSafe<T>(val: T): T {
+  if (Array.isArray(val)) return val.map(deepCloneSafe) as unknown as T;
+  if (val === null || typeof val !== "object") return val;
+  const result: Record<PropertyKey, unknown> = {};
+  for (const key of Object.keys(val)) {
+    if (["__proto__", "prototype", "constructor"].includes(key)) continue;
+    Object.defineProperty(result, key, { value: deepCloneSafe((val as Record<string, unknown>)[key]), enumerable: true, writable: true, configurable: true });
+  }
+  return result as T;
+}
+function mergeCodeConfig<T extends Record<string, unknown> | null | undefined, C>(defaults: T, consumer: C): Record<string, unknown> | boolean | undefined {
+  if (consumer === false) return false;
+  if (consumer === undefined || consumer === true) return deepCloneSafe(defaults) as Record<string, unknown>;
+  if (consumer === null || typeof consumer !== "object" || Array.isArray(consumer)) return consumer as Record<string, unknown>;
+  const proto = Object.getPrototypeOf(consumer);
+  if (proto !== Object.prototype && proto !== null) return consumer as Record<string, unknown>;
+  if (defaults === null || typeof defaults !== "object" || Array.isArray(defaults)) return consumer as Record<string, unknown>;
+  const result = deepCloneSafe(defaults) as Record<string, unknown>;
+  for (const key of Reflect.ownKeys(consumer)) {
+    if (typeof key === "string" && ["__proto__", "prototype", "constructor"].includes(key)) continue;
+    const descriptor = Object.getOwnPropertyDescriptor(consumer, key);
+    if (!descriptor) continue;
+    if (!("value" in descriptor)) { Object.defineProperty(result, key, descriptor); continue; }
+    const value = descriptor.value;
+    if (value === undefined) continue;
+    const themeValue = Object.hasOwn(defaults, key) ? (defaults as Record<PropertyKey, unknown>)[key] : undefined;
+    const branch = themeValue !== null && typeof themeValue === "object" && !Array.isArray(themeValue);
+    const merged = branch && value !== true ? mergeCodeConfig(themeValue as Record<string, unknown>, value) : value;
+    Object.defineProperty(result, key, { ...descriptor, value: merged });
+  }
+  return result;
+}
+`;
 
 /**
  * Generates an installable theme package within the TFSB61B catalog envelope.
@@ -39,7 +79,58 @@ export function generateThemePackageCatalog(
     );
   }
 
-  const compilation = compileThemeCatalog(options.themeSpec, {
+  if (options.language !== undefined && options.language !== "typescript" && options.language !== "javascript") {
+    throw new Error(`Unsupported language '${options.language}'; must be 'typescript' or 'javascript'`);
+  }
+
+  if (options.bookChrome !== undefined) {
+    if (typeof options.bookChrome !== "boolean" && (typeof options.bookChrome !== "object" || options.bookChrome === null)) {
+      throw new Error("Invalid bookChrome option: must be a boolean or BookChromeConfig object");
+    }
+    if (typeof options.bookChrome === "object") {
+      const allowed = new Set(["chapterNavigation", "chapterProgress", "keyboardShortcuts"]);
+      for (const key of Object.keys(options.bookChrome)) {
+        if (!allowed.has(key)) {
+          throw new Error(`Invalid bookChrome option key: '${key}'`);
+        }
+        if (typeof (options.bookChrome as any)[key] !== "boolean") {
+          throw new Error(`Invalid bookChrome option value for '${key}': must be boolean`);
+        }
+      }
+    }
+  }
+
+  let bookChromeConfig: BookChromeConfig | null = null;
+  if (options.bookChrome) {
+    if (typeof options.bookChrome === "boolean") {
+      bookChromeConfig = {
+        chapterNavigation: true,
+        chapterProgress: true,
+        keyboardShortcuts: true,
+      };
+    } else {
+      bookChromeConfig = {
+        chapterNavigation: options.bookChrome.chapterNavigation !== false,
+        chapterProgress: options.bookChrome.chapterProgress !== false,
+        keyboardShortcuts: options.bookChrome.keyboardShortcuts !== false,
+      };
+    }
+  }
+  const isBookChrome = bookChromeConfig !== null;
+
+  let themeSpecInput: unknown = options.themeSpec;
+  if (options.syntaxPalette) {
+    const specObj =
+      typeof options.themeSpec === "object" && options.themeSpec !== null
+        ? options.themeSpec
+        : {};
+    themeSpecInput = {
+      ...specObj,
+      codePresentation: compileSyntaxPalette(options.syntaxPalette),
+    };
+  }
+
+  const compilation = compileThemeCatalog(themeSpecInput, {
     accent: options.accent,
     strictContrast: options.strictContrast,
   });
@@ -75,35 +166,222 @@ export function generateThemePackageCatalog(
   for (const [name, content] of compilation.styles) {
     files.set(name, content);
   }
-  const cssPaths = [...compilation.styles.keys()].map(
-    (path) => `${metadata.name}/${path}`
-  );
+
+  // 2b. Optional Reading Layout Preset
+  if (options.readingLayout) {
+    const readingCss = `/* Reading layout preset: centered reading container and optimal reading measure (~48rem / 768px). */
+@layer tfsl.overrides {
+  @media (min-width: 50rem) {
+    :root {
+      --sl-content-width: min(${spec.surfaces.content}px, 48rem);
+    }
+  }
+  @media (min-width: 72rem) {
+    [data-has-sidebar][data-has-toc] .main-pane {
+      --sl-content-margin-inline: auto;
+    }
+    .sl-container {
+      margin-inline: auto;
+      max-width: var(--sl-content-width, 48rem);
+    }
+  }
+}
+`;
+    files.set("styles/reading.css", readingCss);
+  }
+
+  // 2c. Optional Book Chrome Layout Preset
+  if (isBookChrome) {
+    let navArrowCss = "";
+    if (bookChromeConfig?.chapterNavigation !== false) {
+      navArrowCss = `
+  .tfsl-book-nav-arrow {
+    display: none;
+  }
+  @media (min-width: 80rem) {
+    .tfsl-book-nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 5rem;
+      color: var(--sl-color-gray-3, #94a3b8);
+      background: var(--sl-color-bg-inline-code, rgba(0, 0, 0, 0.2));
+      border: 1px solid var(--sl-color-hairline, rgba(255, 255, 255, 0.1));
+      border-radius: var(--tfsl-radius-small, 0.25rem);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+    }
+    .tfsl-book-nav-arrow:hover,
+    .tfsl-book-nav-arrow:focus-visible {
+      opacity: 1;
+      color: var(--sl-color-accent-high, #38bdf8);
+      background: var(--sl-color-accent-low, rgba(56, 189, 248, 0.1));
+      border-color: var(--sl-color-accent, #38bdf8);
+      outline: 2px solid var(--sl-color-accent, #38bdf8);
+      outline-offset: 2px;
+    }
+    .tfsl-book-nav-prev {
+      left: max(1rem, calc((100vw - var(--sl-content-width, 48rem)) / 4));
+    }
+    .tfsl-book-nav-next {
+      right: max(1rem, calc((100vw - var(--sl-content-width, 48rem)) / 4));
+    }
+  }`;
+    }
+
+    let progressCss = "";
+    if (bookChromeConfig?.chapterProgress !== false) {
+      progressCss = `
+  .tfsl-nav-tree [data-tfsl-chapter-active="true"] {
+    font-weight: 600;
+    position: relative;
+  }
+  .tfsl-nav-tree [data-tfsl-chapter-active="true"]::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: -0.5rem;
+    top: 25%;
+    bottom: 25%;
+    width: 3px;
+    background: var(--sl-color-accent-high, #38bdf8);
+    border-radius: 2px;
+  }`;
+    }
+
+    const bookCss = `/* Book chrome layout preset: sequential chapter navigation, keyboard shortcuts, and deep document reading chrome. */
+@layer tfsl.overrides {
+  .tfsl-book-chrome {
+    --tfsl-book-nav-width: 3.5rem;
+  }${navArrowCss}${progressCss}
+}
+`;
+    files.set("styles/book.css", bookCss);
+  }
+
+  const cssPaths = [
+    ...compilation.styles.keys(),
+    ...(options.readingLayout ? ["styles/reading.css"] : []),
+    ...(isBookChrome ? ["styles/book.css"] : []),
+  ].map((path) => `${metadata.name}/${path}`);
+
+  const isTs = options.language === "typescript";
+  const hasHeroRoutes = spec.catalog.hero.routes.length > 0;
 
   // 3. Emit components
-  files.set("components/Hero.astro", emitHeroComponent(spec.catalog));
+  files.set("components/Hero.astro", emitHeroComponent(spec.catalog, isTs));
   files.set(
     "components/PageTitle.astro",
     emitPageTitleComponent(spec.catalog, spec.components?.pageTitle === "page-title-frame")
   );
-  files.set("components/Pagination.astro", emitPaginationComponent(spec.catalog));
-  files.set("components/Sidebar.astro", emitSidebarComponent(spec.catalog));
-  files.set("components/SidebarTree.astro", emitSidebarTree());
+  files.set("components/Pagination.astro", emitPaginationComponent(spec.catalog, isTs, bookChromeConfig ?? false));
+  files.set("components/Sidebar.astro", emitSidebarComponent(spec.catalog, isTs, bookChromeConfig ?? false));
+  files.set("components/SidebarTree.astro", emitSidebarTree(bookChromeConfig ?? false));
   files.set("catalog-data.json", JSON.stringify({ hero:catalog.hero, sidebar:catalog.sidebar }, null, 2) + "\n");
-  files.set("navigation.js", emitNavigationHelpers());
   files.set("assets/loom-orbit.svg", emitLoomOrbitSvg());
 
-  // 4. Emit route middleware if hero routes exist
-  const hasHeroRoutes = spec.catalog.hero.routes.length > 0;
-  if (hasHeroRoutes) {
-    files.set("middleware.js", emitMiddleware(spec.catalog.hero.routes));
+  if (isTs) {
+    files.delete("navigation.js");
+    files.set("src/navigation.ts", emitNavigationHelpers(true));
+    if (hasHeroRoutes) {
+      files.delete("middleware.js");
+      files.set("src/middleware.ts", emitMiddleware(spec.catalog.hero.routes, true));
+    }
+  } else {
+    files.set("navigation.js", emitNavigationHelpers(false));
+    if (hasHeroRoutes) {
+      files.set("middleware.js", emitMiddleware(spec.catalog.hero.routes, false));
+    }
   }
 
   // 5. Build index.js with consumer overrides winning
   const ecDefaults = isCode ? createCodeDefaults(lowered as any, options.accent) : null;
+  if (ecDefaults && options.syntaxPalette) {
+    ecDefaults.styleOverrides = deriveExpressiveCodeStyleOverrides(
+      options.syntaxPalette,
+      ecDefaults.styleOverrides
+    );
+  }
+  if (options.syntaxPalette?.tabs) {
+    files.set("styles/tabs.css", CODE_TABS_CSS);
+    cssPaths.push(`${metadata.name}/styles/tabs.css`);
+  }
 
-  files.set(
-    "index.js",
-    `${isCode ? MERGE_HELPER_STRING : ""}
+  if (isTs) {
+    files.delete("index.js");
+    files.delete("index.d.ts");
+    files.set(
+      "src/index.ts",
+      `import type { HookParameters, StarlightPlugin, StarlightUserConfig } from "@astrojs/starlight/types";
+${isCode ? TS_MERGE_HELPER_STRING : ""}
+export default function themePlugin(): StarlightPlugin {
+  return {
+    name: ${JSON.stringify(metadata.name)},
+    hooks: {
+      "config:setup"({ config, updateConfig${hasHeroRoutes ? ", addRouteMiddleware" : ""} }: HookParameters<"config:setup">) {
+        const defaults: string[] = ${JSON.stringify(cssPaths)};
+        const customCss = [
+          ...defaults,
+          ...(Array.isArray(config?.customCss) ? config.customCss : []).filter((path: string) => !defaults.includes(path)),
+        ];
+        const components = {
+          Hero: ${JSON.stringify(`${metadata.name}/components/Hero.astro`)},
+          PageTitle: ${JSON.stringify(`${metadata.name}/components/PageTitle.astro`)},
+          Pagination: ${JSON.stringify(`${metadata.name}/components/Pagination.astro`)},
+          Sidebar: ${JSON.stringify(`${metadata.name}/components/Sidebar.astro`)},
+          ...(config?.components ?? {})
+        };
+        ${
+          hasHeroRoutes
+            ? `addRouteMiddleware({ entrypoint: ${JSON.stringify(`${metadata.name}/middleware.js`)}, order: "default" });`
+            : ""
+        }
+        ${
+          isCode
+            ? `const ecDefaults = ${JSON.stringify(ecDefaults)};
+        const expressiveCode = mergeCodeConfig(ecDefaults, config?.expressiveCode) as StarlightUserConfig["expressiveCode"];
+        updateConfig({ customCss, components, expressiveCode });`
+            : `updateConfig({ customCss, components });`
+        }
+      }
+    }
+  };
+}
+`
+    );
+    files.set(
+      "tsconfig.json",
+      JSON.stringify(
+        {
+          compilerOptions: {
+            target: "ES2023",
+            module: "NodeNext",
+            moduleResolution: "NodeNext",
+            declaration: true,
+            declarationMap: true,
+            sourceMap: true,
+            strict: true,
+            noImplicitAny: true,
+            rootDir: "src",
+            outDir: "dist",
+            skipLibCheck: true,
+            resolveJsonModule: true,
+          },
+          include: ["src/**/*"],
+        },
+        null,
+        2
+      ) + "\n"
+    );
+  } else {
+    files.set(
+      "index.js",
+      `${isCode ? MERGE_HELPER_STRING : ""}
 export default function themePlugin() {
   return {
     name: ${JSON.stringify(metadata.name)},
@@ -138,11 +416,11 @@ export default function themePlugin() {
   };
 }
 `
-  );
+    );
 
-  files.set(
-    "index.d.ts",
-    `export default function themePlugin(): {
+    files.set(
+      "index.d.ts",
+      `export default function themePlugin(): {
   name: string;
   hooks: {
     'config:setup'(context: {
@@ -157,25 +435,26 @@ export default function themePlugin() {
   };
 };
 `
-  );
+    );
+  }
 
   // 6. Update package.json
   const pkgJson = JSON.parse(files.get("package.json") as string);
   pkgJson.exports = {
-    ".": { types: "./index.d.ts", import: "./index.js" },
+    ".": isTs ? { types: "./dist/index.d.ts", import: "./dist/index.js" } : { types: "./index.d.ts", import: "./index.js" },
     "./catalog-data.json": "./catalog-data.json",
-    "./navigation.js": "./navigation.js",
+    "./navigation.js": isTs ? { types: "./dist/navigation.d.ts", import: "./dist/navigation.js" } : "./navigation.js",
     "./styles/*": "./styles/*",
     "./components/*": "./components/*",
     "./assets/*": "./assets/*",
     "./licenses/*": "./licenses/*",
-    ...(hasHeroRoutes ? { "./middleware.js": "./middleware.js", "./middleware": "./middleware.js" } : {}),
+    ...(hasHeroRoutes ? {
+      "./middleware.js": isTs ? { types: "./dist/middleware.d.ts", import: "./dist/middleware.js" } : "./middleware.js",
+      "./middleware": isTs ? { types: "./dist/middleware.d.ts", import: "./dist/middleware.js" } : "./middleware.js",
+    } : {}),
   };
   pkgJson.files = [
-    "index.js",
-    "catalog-data.json",
-    "navigation.js",
-    "index.d.ts",
+    ...(isTs ? ["dist", "src", "tsconfig.json", "catalog-data.json"] : ["index.js", "catalog-data.json", "navigation.js", "index.d.ts"]),
     "styles",
     "fonts",
     "components",
@@ -188,9 +467,17 @@ export default function themePlugin() {
     "LICENSE",
     "NOTICE",
     "COMMERCIAL-LICENSE.md",
-    ...(hasHeroRoutes ? ["middleware.js"] : []),
+    ...(!isTs && hasHeroRoutes ? ["middleware.js"] : []),
   ];
-  delete pkgJson.scripts; // Ensure no scripts
+  if (isTs) {
+    pkgJson.scripts = { build: "tsc", prepare: "tsc" };
+    pkgJson.devDependencies = {
+      "@astrojs/starlight": "0.42.0",
+      typescript: "7.0.2",
+    };
+  } else {
+    delete pkgJson.scripts; // Ensure no scripts for JS mode
+  }
   files.set("package.json", JSON.stringify(pkgJson, null, 2) + "\n");
 
   // 7. Update theme.json & descriptor
@@ -212,7 +499,11 @@ The fixed stylesheet family loads before consumer customCss. The adapter declare
 Unlayered compat CSS ensures correct sidebar-less width and coherent light print palettes.
 Consumer component overrides and frontmatter hero configurations always win.
 Expressive Code defaults and route middleware are merged under consumer precedence.
-
+${options.readingLayout ? "\nReading layout preset is active. Centered reading container and optimal line measure are declared in @layer tfsl.overrides; matching consumer customCss rules override theme defaults under ordinary cascade rules.\n" : ""}${isBookChrome ? `\nBook chrome layout preset is active${
+  bookChromeConfig && (!bookChromeConfig.chapterNavigation || !bookChromeConfig.chapterProgress || !bookChromeConfig.keyboardShortcuts)
+    ? ` (${JSON.stringify(bookChromeConfig)})`
+    : ""
+}. Sequential chapter navigation, keyboard shortcuts, and deep document reading chrome are declared in @layer tfsl.overrides; matching consumer customCss rules override theme defaults under ordinary cascade rules.\n` : ""}${options.syntaxPalette?.tabs ? "\nCode tabs presentation is active (\`styles/tabs.css\`). Tab border and active indicator variables integrate with Starlight tab components under consumer cascade precedence.\n" : ""}
 System fonts do not promise pixel-identical rendering across operating systems.
 Package-local resources and font licenses are digest-bound; no runtime network requests are generated.
 `
@@ -228,12 +519,16 @@ Package-local resources and font licenses are digest-bound; no runtime network r
       sha256: hash(content),
     }));
 
+  const sourceProfileSha256 = (options as any).sourceProfileSha256 || compilation.descriptor.sourceProfileSha256;
   const provenance = {
     schema: "tfsl.package-provenance-v2" as const,
     producer: { package: COMPILER_PACKAGE, version: COMPILER_VERSION },
     descriptor: compilation.descriptor,
     packageName: metadata.name,
     packageVersion: metadata.version,
+    ...(isTs ? { language: "typescript" as const } : {}),
+    ...(bookChromeConfig ? { bookChrome: bookChromeConfig } : {}),
+    ...(sourceProfileSha256 ? { sourceProfileSha256 } : {}),
     inventoryDigest: hash(
       "tfsl.package-inventory-v2\n" + JSON.stringify(records)
     ),

@@ -1,6 +1,7 @@
 import { currentExchangeFixture } from "./current-exchange-fixture.js";
 import { describe, expect, it } from "vitest";
-import { readFileSync, rmSync, existsSync } from "node:fs";
+import { readFileSync, rmSync, existsSync, mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -136,7 +137,7 @@ describe("TFSL Design Exchange", () => {
 
         const verifyRes = verifyThemeCandidate(packet as any, briefPacket as any);
         expect(verifyRes.valid).toBe(false);
-        expect(verifyRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.2.0'"]);
+        expect(verifyRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.3.0'"]);
 
         const inspection = inspectThemeExchangePacket(packet);
         expect(inspection.valid).toBe(true);
@@ -159,7 +160,7 @@ describe("TFSL Design Exchange", () => {
 
       const linkRes = validateThemeReviewLinks(packet as any, [candA as any, candB as any], briefPacket as any);
       expect(linkRes.valid).toBe(false);
-      expect(linkRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.2.0'"]);
+      expect(linkRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.3.0'"]);
     });
 
     it("fails all cases in negative-corpus.json", () => {
@@ -435,7 +436,7 @@ describe("TFSL Design Exchange", () => {
   });
 
   describe("CLI Subcommands", () => {
-    const tmpDir = resolve(__dirname, "../tmp-cli-test");
+    const tmpDir = mkdtempSync(resolve(tmpdir(), "tfsl-cli-test-"));
     const briefOut = resolve(tmpDir, "cli-test.tfsl-brief.json");
     const candOut = resolve(tmpDir, "cli-test.tfsl-candidate.json");
     const reviewOut = resolve(tmpDir, "cli-test.tfsl-review.json");

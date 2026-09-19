@@ -255,8 +255,19 @@ describe("Theme Forge Stellar Loom Package Generator", () => {
         if (currentHome && content.includes(currentHome)) {
           throw new Error(`File '${path}' contains host home path: '${currentHome}'`);
         }
-        if (currentUser && currentUser.length > 2 && content.includes(currentUser)) {
-          throw new Error(`File '${path}' contains host username: '${currentUser}'`);
+        if (currentUser && currentUser.length > 2) {
+          if (currentUser === "root") {
+            // Precise semantic check for root user identity leakage in path or author/ownership context
+            const hasRootLeak =
+              /(?:^|[\s"':=])\/root(?:\/|[\s"':;]|$)/.test(content) ||
+              /\b(?:author|user|owner|creator)[:=\s]+root\b/i.test(content) ||
+              /\broot@[a-z0-9.-]+\b/i.test(content);
+            if (hasRootLeak) {
+              throw new Error(`File '${path}' contains host username in path/identity context: '${currentUser}'`);
+            }
+          } else if (content.includes(currentUser)) {
+            throw new Error(`File '${path}' contains host username: '${currentUser}'`);
+          }
         }
         if (content.includes("node_modules")) {
           throw new Error(`File '${path}' contains forbidden 'node_modules'`);

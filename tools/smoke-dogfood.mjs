@@ -662,17 +662,31 @@ export async function runDogfoodSmoke() {
     await loom.writeThemePackage(res2, runDir2);
 
     // Verify byte-for-byte directory determinism
-    const files1 = (await readdir(runDir1, { recursive: true })).sort();
-    const files2 = (await readdir(runDir2, { recursive: true })).sort();
+    const entries1 = await readdir(runDir1, { recursive: true, withFileTypes: true });
+    entries1.sort((a, b) => {
+      const relA = relative(runDir1, join(a.parentPath, a.name));
+      const relB = relative(runDir1, join(b.parentPath, b.name));
+      return relA.localeCompare(relB);
+    });
+    const files1 = entries1.map((e) => relative(runDir1, join(e.parentPath, e.name)));
+
+    const entries2 = await readdir(runDir2, { recursive: true, withFileTypes: true });
+    entries2.sort((a, b) => {
+      const relA = relative(runDir2, join(a.parentPath, a.name));
+      const relB = relative(runDir2, join(b.parentPath, b.name));
+      return relA.localeCompare(relB);
+    });
+    const files2 = entries2.map((e) => relative(runDir2, join(e.parentPath, e.name)));
+
     if (JSON.stringify(files1) !== JSON.stringify(files2)) {
       throw new Error(`Determinism failure: File inventories differ for ${themeInfo.id}`);
     }
 
-    for (const file of files1) {
-      const p1 = join(runDir1, file);
-      const p2 = join(runDir2, file);
-      const s1 = await stat(p1);
-      if (s1.isFile()) {
+    for (const entry of entries1) {
+      if (entry.isFile()) {
+        const file = relative(runDir1, join(entry.parentPath, entry.name));
+        const p1 = join(runDir1, file);
+        const p2 = join(runDir2, file);
         const b1 = await readFile(p1);
         const b2 = await readFile(p2);
         if (sha256(b1) !== sha256(b2)) {

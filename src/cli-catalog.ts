@@ -17,7 +17,8 @@ export async function runCli(argv: string[]): Promise<number> {
   for (let i = exchange ? 2 : 1; i < args.length; i++) {
     const arg = args[i]!;
     if (["--json", "--overwrite", "--strict-contrast"].includes(arg)) continue;
-    if (["--out", "--package", "--accent", "--font-root", "--font-ids", "--template"].includes(arg)) {
+    if (arg === "--reading-layout") { values.set("--reading-layout", "true"); continue; }
+    if (["--out", "--package", "--accent", "--font-root", "--font-ids", "--template", "--language"].includes(arg)) {
       if (values.has(arg) || !args[i + 1] || args[i + 1]!.startsWith("-")) { parseError = `Invalid or duplicate option ${arg}`; break; }
       values.set(arg, args[++i]!);
     } else if (arg.startsWith("-") || input) { parseError = `Unexpected argument ${arg}`; }
@@ -56,6 +57,11 @@ export async function runCli(argv: string[]): Promise<number> {
       const rel = relative(output, canonicalInput);
       if (rel === "" || (!rel.startsWith("..") && !rel.startsWith("/"))) throw new Error("Input/output collision");
     }
+    if (values.has("--reading-layout") || values.has("--language") || values.has("--book-chrome")) {
+      if (exchange || args[0] !== "generate") {
+        throw new Error("Options --reading-layout, --language, and --book-chrome are only supported for the 'generate' command");
+      }
+    }
     if (exchange || args[0] === "generate") {
       const packagePath = values.get("--package"); if (!packagePath) throw new Error("Missing --package metadata");
       const metadata = JSON.parse(await readFile(packagePath, "utf8"));
@@ -65,7 +71,23 @@ export async function runCli(argv: string[]): Promise<number> {
         await writeFile(output, serializeThemeCatalogCandidate(candidate), { flag: "wx" });
         process.stdout.write(JSON.stringify({ status: "success", candidateDigest: candidate.candidateDigest, state: "candidate" }) + "\n");
       } else {
-        const result = generateThemePackageCatalog({ themeSpec: spec, metadata, accent: values.get("--accent"), template: values.get("--template"), fontResources });
+        const readingLayout = values.get("--reading-layout") === "true";
+        const bookChrome = values.has("--book-chrome") ? (values.get("--book-chrome") === "false" ? false : true) : undefined;
+        const rawLanguage = values.get("--language");
+        if (rawLanguage !== undefined && rawLanguage !== "typescript" && rawLanguage !== "javascript") {
+          throw new Error(`Unsupported --language '${rawLanguage}'; must be 'typescript' or 'javascript'`);
+        }
+        const language = rawLanguage as "typescript" | "javascript" | undefined;
+        const result = generateThemePackageCatalog({
+          themeSpec: spec,
+          metadata,
+          accent: values.get("--accent"),
+          template: values.get("--template"),
+          fontResources,
+          readingLayout,
+          bookChrome,
+          language,
+        });
         const filesWritten = await writeV2Files(result.files, output);
         process.stdout.write(JSON.stringify({ status: "success", command: "generate", descriptor: result.descriptor, filesWritten }) + "\n");
       }

@@ -12,6 +12,7 @@ import type {
   CodePresentationConfig,
   ThemeSpecificationCode,
 } from "../code/types.js";
+import type { SyntaxPaletteModel } from "../syntax/types.js";
 import type {
   PackageMetadata,
 } from "../generator/types.js";
@@ -108,6 +109,7 @@ export interface ThemeDescriptorCatalog {
     compiler: typeof COMPILER_PRODUCER;
     compilerVersion: typeof COMPILER_VERSION;
   };
+  sourceProfileSha256?: string | undefined;
 }
 
 export interface CompilationResultCatalog {
@@ -123,9 +125,33 @@ export interface CompilationResultCatalog {
 export interface CompileThemeCatalogOptions {
   accent?: string | undefined;
   strictContrast?: boolean | undefined;
+  sourceProfileSha256?: string | undefined;
 }
 
-export type GeneratePackageCatalogOptions = GeneratePackageV2Options;
+export interface BookChromeConfig {
+  /** Enable floating previous/next chapter buttons. Defaults to true when bookChrome is enabled. */
+  chapterNavigation?: boolean | undefined;
+  /** Enable deep sidebar chapter progression indicators. Defaults to true when bookChrome is enabled. */
+  chapterProgress?: boolean | undefined;
+  /** Enable left/right arrow key shortcuts for sequential navigation. Defaults to true when bookChrome is enabled. */
+  keyboardShortcuts?: boolean | undefined;
+}
+
+/**
+ * Options for generating an installable Starlight theme package under the catalog envelope.
+ */
+export type GeneratePackageCatalogOptions = GeneratePackageV2Options & {
+  /** Optional reading layout preset applying centered reading container and optimal line measure in @layer tfsl.overrides. */
+  readingLayout?: boolean | undefined;
+  /** Language mode for emitted package entrypoint: 'javascript' (default) emits index.js + index.d.ts; 'typescript' emits src/index.ts + tsconfig.json. */
+  language?: ("typescript" | "javascript") | undefined;
+  /** Optional semantic syntax palette and chrome model compiled into Expressive Code defaults and Starlight tab presentation styles. */
+  syntaxPalette?: SyntaxPaletteModel | undefined;
+  /** Optional book chrome layout preset applying sequential chapter navigation, keyboard shortcuts, and deep document reading chrome. */
+  bookChrome?: boolean | BookChromeConfig | undefined;
+  /** Optional source profile digest for paired cross-framework provenance. */
+  sourceProfileSha256?: string | undefined;
+};
 
 export interface PackageProvenanceCatalog {
   schema: "tfsl.package-provenance-v2";
@@ -133,6 +159,9 @@ export interface PackageProvenanceCatalog {
   descriptor: ThemeDescriptorCatalog;
   packageName: string;
   packageVersion: string;
+  language?: ("typescript" | "javascript") | undefined;
+  bookChrome?: boolean | BookChromeConfig | undefined;
+  sourceProfileSha256?: string | undefined;
   inventoryDigest: string;
   inventoryExcludes: string[];
   files: Array<{ path: string; size: number; sha256: string }>;

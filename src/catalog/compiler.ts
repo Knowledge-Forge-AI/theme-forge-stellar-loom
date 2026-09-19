@@ -38,6 +38,7 @@ export function compileThemeCatalog(
 
   // Lower by removing catalog property for core/code execution
   const { catalog, ...lowered } = spec;
+  const { sourceProfileSha256, ...baseOptions } = options || {};
 
   const isCode =
     Boolean(lowered.codePresentation) &&
@@ -45,8 +46,8 @@ export function compileThemeCatalog(
     (lowered.codePresentation as any).mode === "expressive-code";
 
   const baseResult = isCode
-    ? compileThemeCode(lowered as any, options)
-    : compileThemeV2(lowered as any, options);
+    ? compileThemeCode(lowered as any, baseOptions)
+    : compileThemeV2(lowered as any, baseOptions);
 
   // Generate unlayered compat CSS
   const compatCss = emitCompatCss(spec, baseResult.descriptor.selectedAccent);
@@ -110,6 +111,7 @@ export function compileThemeCatalog(
       compiler: COMPILER_PRODUCER,
       compilerVersion: COMPILER_VERSION,
     },
+    ...(options?.sourceProfileSha256 ? { sourceProfileSha256: options.sourceProfileSha256 } : {}),
   };
 
   return {

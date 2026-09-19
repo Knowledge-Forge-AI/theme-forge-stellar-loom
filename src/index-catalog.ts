@@ -6,6 +6,7 @@ export { verifyThemeCandidateCompatible } from "./design-exchange-catalog/index.
 export { isThemeCatalog, validateThemeCatalog, parseThemeCatalog, canonicalizeThemeCatalog, compileThemeCatalog, generateThemePackageCatalog, writeThemePackageCatalog, CATALOG_COMPILER_SEMANTIC } from "./catalog/index.js";
 export { CATALOG_IDENTITY as COMPONENT_CATALOG_IDENTITY, CATALOG_DIGEST as COMPONENT_CATALOG_DIGEST } from "./catalog/index.js";
 export type { ThemeSpecificationCatalog } from "./catalog/types.js";
+export * from "./syntax/index.js";
 import * as historical from "./index.js";
 import * as catalog from "./catalog/index.js";
 import type { CompileOptions } from "./types.js";
