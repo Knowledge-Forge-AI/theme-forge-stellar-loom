@@ -10,10 +10,7 @@ Install from the registry:
 npm install @knowledge-forge-ai/theme-forge-stellar-loom
 ```
 
-The 0.2.0 source candidate adds Theme v2, the finite component catalog, code
-presentation and local exchange verification. It has not been published.
-Install the exact candidate archive for local qualification; registry examples
-refer to the release once available. No hosted npm provenance is claimed.
+The 0.3.0 source candidate introduces reading layout presets (`--reading-layout`), distribution-safe TypeScript emission (`--language typescript`), Expressive Code syntax styling derivation, and book-chrome navigation.
 
 ### Theme v2 and catalog
 
@@ -292,6 +289,122 @@ export default defineConfig({
 - **CSS Cascade**: The plugin injects `${packageName}/styles/theme.css` before any existing entries in `config.customCss`. This cascade order guarantees that consumer CSS rules take precedence over theme defaults.
 - **Idempotence**: Repeated hook invocations do not duplicate stylesheet registrations.
 - **Component Overrides**: If the package includes the opt-in `page-title-frame` template, it registers `components.PageTitle` only if the consumer has not already configured a custom `PageTitle` component, strictly preserving consumer overrides.
+
+## Code Presentation & Syntax Palette Integration
+
+Stellar Loom v0.2.0 introduces code presentation configuration and full syntax palette catalog support:
+
+### Syntax Palette Model & Schema
+
+The `syntaxPalette` specification allows pairing custom syntax highlighting tokens with Expressive Code chrome:
+- **`syntax`**: Light and dark hex color mappings for 11 syntax roles (`keyword`, `string`, `number`, `constant`, `function`, `type`, `variable`, `comment`, `punctuation`, `tag`, `attribute`).
+- **`chrome`**: Light and dark role mappings for frame surfaces:
+  - `background`: Editor frame code background.
+  - `foreground`: Default text / copy button foreground.
+  - `border`: Editor frame and inactive tab border.
+  - `focus`: Copy button focus outline and active element highlight.
+  - `tabBarBackground`: Starlight tablist / header strip background.
+  - `activeTabBackground`: Active tab background surface.
+  - `activeTabIndicator`: Active tab bottom accent line (`--sl-tab-color-border`).
+  - `copyButtonForeground`: Copy button text/icon color.
+- **`tabs`**: Tabbed presentation settings (e.g. `activeIndicator: "bottom"`).
+- **`frame`**: Frame style: `"editor"`, `"terminal"`, or `"plain"`.
+
+### Starlight Tabs Presentation
+
+When `syntaxPalette` is supplied to `generateThemePackageCatalog`:
+1. **`styles/tabs.css`**: Emitted as part of the theme package and automatically included in `customCss`.
+2. **Visual Differentiation**: Active tab bottom border (`--sl-tab-color-border`) maps to `chrome[mode].activeTabIndicator`, while inactive tabs use `chrome[mode].border`, ensuring distinct, accessible visual state.
+3. **Tablist Bottom Border**: Distinct 2px border separating the tab strip from tab content panels.
+
+### STTN TypeScript Authoring & Distribution Build Closure
+
+Theme packages can be emitted in either JavaScript (default) or TypeScript:
+- **CLI**: Pass `--language typescript` to `tfsl generate`.
+- **Catalog API**: Set `language: "typescript"` in `generateThemePackageCatalog({ ... })`.
+- **Authoring Workflow**:
+  - Emits typed source files (`src/index.ts`, `src/navigation.ts`, `src/middleware.ts`) alongside `tsconfig.json`.
+  - Configures `build: "tsc"` and `prepare: "tsc"` package scripts.
+  - Package exports map strictly to compiled `./dist/` artifacts (`./dist/index.js`, `./dist/index.d.ts`, `./dist/navigation.js`, `./dist/navigation.d.ts`).
+  - Isolated distribution build closure ensures downstream consumers run standard type-checked JavaScript without requiring TypeScript runtime compilation.
+- **Parity Guarantee**: TypeScript packages match JavaScript package browser rendering and CSS output byte-for-byte in consumer builds, verified via automated CI test suites (`test/ci/terminal-nova-rc.test.ts`).
+
+### Book Chrome Layouts
+
+Stellar Loom supports an integrated "Book Chrome" reading layout designed for dense technical documentation, long-form manuals, and book-style guides:
+- **Configuration**: Set `bookChrome: true`, `bookChrome: false`, or provide a granular `BookChromeConfig`:
+  ```typescript
+  interface BookChromeConfig {
+    chapterNavigation?: boolean; // Sequential next/previous chapter badges (default: true)
+    chapterProgress?: boolean;   // Reading progress indicator and sidebar chapter markers (default: true)
+    keyboardShortcuts?: boolean; // ArrowLeft / ArrowRight navigation shortcuts (default: true)
+  }
+  ```
+- **Granular Markup Control**:
+  - `chapterNavigation`: Controls emission of next/previous chapter links and side navigation arrows (`.tfsl-book-nav-arrow`) in `components/Pagination.astro`. Arrows are hidden on compact viewports and display on viewports `>= 80rem`.
+  - `chapterProgress`: Emits reading progress badges in `components/Pagination.astro` and active chapter markers (`chapterActiveFontWeight: "600"`) in `components/Sidebar.astro` and `components/SidebarTree.astro`.
+  - `keyboardShortcuts`: Emits client-side arrow key navigation listeners in `components/Pagination.astro`.
+- **Keyboard & A11y Collision Safety**:
+  Keyboard shortcuts respect user focus and assistive workflows. Event listeners immediately bail out when:
+  - An event was already handled (`e.defaultPrevented`).
+  - Active element is an editable input (`<input>`, `<select>`, `<textarea>`, or `isContentEditable`).
+  - Focus resides inside interactive controls: tabs/roving tablists (`[role="tab"]`, `[role="tablist"]`), code blocks (`.expressive-code`, `<pre>`, `<code>`), open `<dialog>` elements, or horizontally scrollable containers.
+- **Layered Styling & Zero `!important`**:
+  All book chrome rules are scoped under `@layer tfsl.overrides` and `.tfsl-book-chrome`, guaranteeing zero `!important` declarations and complete respect for consumer unlayered custom CSS.
+- **Deterministic Provenance**:
+  Granular and boolean `BookChromeConfig` settings are normalized into an effective configuration object in `provenance.bookChrome`, ensuring semantically equivalent options (such as `bookChrome: true` and `bookChrome: {}`) yield identical package inventory digests, while distinct effective configurations yield distinct digests.
+
+### Flexoki Paired Profile Cross-Framework Proof
+
+Stellar Loom and Solar Sail share a unified design profile model (`packages/solar-sail/examples/flexoki.profile.json`) conforming to `tf-paired-profile-v1`:
+- **Dual-Engine Compilation**: A single JSON design profile independently compiles into:
+  1. A Tailwind v4 + shadcn/ui application theme (via Solar Sail).
+  2. An Astro / Starlight documentation theme (via Stellar Loom).
+- **Digest Equality & Determinism**:
+  Both compilers compute identical canonical SHA-256 profile digests, guaranteeing provenance alignment across disparate component architectures.
+- **Change Propagation & Target Overrides**:
+  - Shared profile updates (e.g. primary/accent colors) propagate symmetrically to both targets.
+  - Target-specific overrides (`targetOverrides.solarSail` vs `targetOverrides.loom`) modify only the selected framework's generated output while leaving the sibling engine's output digest unchanged.
+- **Paired Browser Smoke Qualification**:
+  Headless browser qualification (`node packages/stellar-loom/tools/smoke-code.mjs`) verifies both engines simultaneously:
+  - Tests mobile (390px), desktop (1280px), and wide (1440px) viewports with zero horizontal overflow.
+  - Asserts computed token styles across light and dark modes: teal primary (`#24837b` light, `#3aa99f` dark), surface backgrounds, elevated card styling, active chapter badges, and nested sidebar group hierarchies.
+
+
+### Consumer Override Precedence & Negative Controls
+
+Emitted themes strictly adhere to consumer sovereignty:
+1. **Leaf Options**: Consumer Expressive Code options (e.g. `styleOverrides.frames.editorBackground`) deep-merge over theme defaults.
+2. **Array Replacement**: Consumer array properties (e.g. `themes: ["github-light"]`) replace theme defaults rather than concatenating.
+3. **Unlayered Custom CSS**: Consumer `customCss` stylesheets load after theme stylesheets and reside in unlayered space, overriding `@layer tfsl` rules under standard CSS cascade semantics.
+4. **PageTitle Component Precedence**: Consumer-configured `components.PageTitle` completely bypasses theme frame wrappers.
+5. **False Expressive Code Control**: Setting `expressiveCode: false` completely disables Expressive Code rendering, gracefully falling back to standard Markdown `<pre><code>`.
+
+### Expressive Code Contrast Normalization
+
+Expressive Code enforces a default minimum syntax contrast ratio of 5.5:1 (`minSyntaxHighlightingColorContrast: 5.5`).
+- When a requested syntax token already achieves >= 5.5:1 contrast against `codeBackground`, Expressive Code renders the exact specified hex color.
+- When a requested token has < 5.5:1 raw contrast (such as teal `#24837b` on light cream `#fffcf0`, ~4.1:1), Expressive Code dynamically adjusts luminance (darkening on light backgrounds or lightening on dark backgrounds) to reach at least 5.5:1.
+- Both requested intent and normalized observed colors are tracked and validated in qualification receipts.
+
+### Provenance Architecture & Output Digest Boundaries
+
+Theme Forge distinguishes between CSS compilation output and package-level runtime configuration:
+- **`cssOutputDigest`**: Represents the compilation digest of purely CSS-derived theme output (`styles/tokens.css`, `styles/base.css`, `styles/layers.css`, `styles/accent.css`, `styles/overrides.css`, and `styles/tabs.css`). Because `compileSyntaxPalette` digests the CSS compilation output, changing only JavaScript/runtime chrome roles (such as `frames.inlineButtonForeground` or `editorTabBarBackground` in `ecDefaults.styleOverrides`) does not alter `cssOutputDigest`.
+- **`provenance.inventoryDigest`**: Covers the comprehensive file tree of the generated theme package, including `index.js` (or `src/index.ts`), component templates, and style assets. When any runtime chrome role in `syntaxPalette.chrome` changes, `ecDefaults.styleOverrides` changes in `index.js`/`src/index.ts`, modifying `provenance.inventoryDigest` while preserving `cssOutputDigest`.
+- **Paired Role Fail-Closed Invariant**: Expressive Code requires tuples `[dark, light]` for style overrides. Every chrome role must be defined symmetrically in both dark and light modes; defining a role in only one mode throws a `[SYNTAX_PALETTE_VALIDATION_ERROR]` rather than silently dropping the specification.
+
+### Qualification Modes: Hermetic Container vs Developer-Local Smoke
+
+Theme Forge provides two operational qualification paths:
+1. **Hermetic Container Matrix** (`npm run test:portable` / `npm test` / `node tools/scratch/run-container-suite.mjs`):
+   - Fully isolated, non-mutating execution inside `tfsb-node:22-noble-pw1.62.1` (built from `mcr.microsoft.com/playwright:v1.62.1-noble` with Node 22).
+   - Mounts source `:ro` with disposable named volumes and anonymous volumes for package `dist/`.
+   - Runs offline (`--network=none`), builds tarballs, and runs the 9-suite matrix including `stellar-loom-browser-consumer`.
+   - Automatically promotes bounded qualification receipts, evidence manifests, and paired-candidate screenshots to the configured evidence outbox directory (configured via `OUTBOX_DIR` or `THEME_FORGE_OUTBOX_DIR`, defaulting to `<outbox-root>/<run-id>/qualification`).
+2. **Developer-Local Smoke** (`node packages/stellar-loom/tools/smoke-code.mjs`):
+   - Standalone developer runner that packs fresh tarballs, builds disposable Astro consumers, launches headless Chromium, and evaluates all mandatory browser checks with live DOM/CSSOM inspection.
+   - Outputs TAP version 13 summary and writes `receipt.json` and `evidence-manifest.json`.
 
 ## Licensing
 

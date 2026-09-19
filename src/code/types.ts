@@ -142,6 +142,9 @@ export interface PublicEcFramesStyleOverrides {
   editorTabBarBorderColor: [string, string];
   editorTabBarBorderBottomColor: [string, string];
   editorTabBorderRadius: string;
+  editorActiveTabIndicatorHeight?: string | undefined;
+  editorActiveTabIndicatorTopColor?: [string, string] | undefined;
+  editorActiveTabIndicatorBottomColor?: [string, string] | undefined;
   terminalBackground: [string, string];
   terminalTitlebarBackground: [string, string];
   terminalTitlebarForeground: [string, string];
