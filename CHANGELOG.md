@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 — Unreleased source candidate
+
+- Assign the TFSB71 source-build and distribution changes to a new release version.
+- Release artifacts and installation qualification remain pending.
+
+Version 0.3.0 is published on npm. The following entry retains its historical
+pre-publication wording.
+
 ## 0.3.0 — Unreleased candidate
 
 - Reading layout preset: `--reading-layout` (CLI) and `readingLayout: true` (`GenerateCatalogPackageOptions`) emitting `--sl-content-margin-inline: auto` and centered content measure within `@layer tfsl.overrides`.

@@ -137,7 +137,7 @@ describe("TFSL Design Exchange", () => {
 
         const verifyRes = verifyThemeCandidate(packet as any, briefPacket as any);
         expect(verifyRes.valid).toBe(false);
-        expect(verifyRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.3.0'"]);
+        expect(verifyRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.4.0'"]);
 
         const inspection = inspectThemeExchangePacket(packet);
         expect(inspection.valid).toBe(true);
@@ -160,7 +160,7 @@ describe("TFSL Design Exchange", () => {
 
       const linkRes = validateThemeReviewLinks(packet as any, [candA as any, candB as any], briefPacket as any);
       expect(linkRes.valid).toBe(false);
-      expect(linkRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.3.0'"]);
+      expect(linkRes.errors).toEqual(["Brief compilerVersion '0.1.0' differs from local compiler version '0.4.0'"]);
     });
 
     it("fails all cases in negative-corpus.json", () => {
