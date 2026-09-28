@@ -98,6 +98,13 @@ jobs:
         run: |
           npm pack --pack-destination .test-reports/root-package --json > .test-reports/root-package/pack-manifest.json
           mv .test-reports/root-package/*.tgz .test-reports/root-package/root-package.tgz
+      - name: Qualify the exact installed portable npm artifact
+        run: |
+          INSTALL_ROOT="$RUNNER_TEMP/js-installed"
+          PROBE_ROOT="$RUNNER_TEMP/js-probe"
+          mkdir -p "$INSTALL_ROOT"
+          npm install --ignore-scripts --no-audit --no-fund --prefix "$INSTALL_ROOT" .test-reports/root-package/root-package.tgz
+          node tools/qualify-installed.mjs --package-root "$INSTALL_ROOT/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom" --node "$(command -v node)" --work-dir "$PROBE_ROOT"
       - name: Check git diff cleanliness
         run: git diff --check
       - name: Bind root artifact bytes
