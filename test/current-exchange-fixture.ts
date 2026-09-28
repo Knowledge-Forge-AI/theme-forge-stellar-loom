@@ -14,6 +14,11 @@ export function currentExchangeFixture(filename: string): string {
     const packet = JSON.parse(raw);
     if (packet.schema === "tfsl.theme-brief") packet.compilerVersion = COMPILER_VERSION;
     if (packet.claimedProvenance?.toolVersion) packet.claimedProvenance.toolVersion = COMPILER_VERSION;
+    if (packet.schema === "tfsl.theme-review") {
+      packet.candidateDigests.sort();
+      packet.dispositions.sort((a: { candidateDigest: string }, b: { candidateDigest: string }) =>
+        a.candidateDigest < b.candidateDigest ? -1 : a.candidateDigest > b.candidateDigest ? 1 : 0);
+    }
     const field = packet.schema === "tfsl.theme-brief" ? "briefDigest" : packet.schema === "tfsl.theme-candidate" ? "candidateDigest" : "reviewDigest";
     packet[field] = computePacketDigest(packet);
     digests.set(original[field], packet[field]);
