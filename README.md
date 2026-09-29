@@ -10,7 +10,7 @@ Install from the registry:
 npm install @knowledge-forge-ai/theme-forge-stellar-loom
 ```
 
-The 0.3.0 source candidate introduces reading layout presets (`--reading-layout`), distribution-safe TypeScript emission (`--language typescript`), Expressive Code syntax styling derivation, and book-chrome navigation.
+The 0.4.0 source candidate retains reading layout presets (`--reading-layout`), distribution-safe TypeScript emission (`--language typescript`), Expressive Code syntax styling derivation, and book-chrome navigation.
 
 ### Theme v2 and catalog
 
@@ -85,6 +85,9 @@ Generated plugin compatibility is demonstrated with Astro 7.3.1 and Starlight
 0.42.0. Ordinary generated packages remain private by default.
 
 Theme Forge Stellar Loom compiles typed, versioned theme specifications into canonical, deterministic CSS custom properties and theme descriptors for Starlight documentation sites.
+
+The 0.4.0 candidate includes the TFSB71 source-build and distribution changes.
+Its release artifacts and installation qualification remain pending.
 
 ## Overview
 
@@ -432,3 +435,42 @@ For source qualification, run `npm ci --ignore-scripts`,
 `node tools/build-catalog-evidence.mjs`, `npm run typecheck`, and `npm test`.
 The catalog build command emits the executable identity required by exchange
 verification and packaged consumers.
+
+## Paired Profile v2 checkpoint
+
+The private B2 [paired protocol](../../protocol/tf-paired-profile-v2/README.md)
+defines neutral semantic groups and separately named target adapters. Existing
+paired v1 functions and historical identities remain maintained. V2 requires
+explicit version migration, source-byte binding and capability reports; it is
+not a silent replacement for v1. Unsupported intent remains visible.
+
+Loom pixel geometry does not imply rem/em conversion, and font families require
+explicit font-ID bindings. Code/syntax mapping is part of the report. Solar
+component/sidebar/chart vocabulary stays in target-only overrides. Complete
+invocations additionally bind base inputs, final configuration, generation
+options and compiler identity. Report or profile equality alone is insufficient.
+
+See the [B2 evaluation](../../docs/evaluations/tfsb71b2-paired-profile-candidate-set.md)
+for qualification and limitations. Current Studio ingestion/adoption is not
+qualified for v2. No release or adoption authorization is implied.
+
+V2 application requires an explicit complete base catalog, token-set key, primary
+and secondary families, default accent, and any family-to-font-ID bindings.
+The mapper returns both catalog and syntax; pass both to the existing catalog
+generator and bind reading, book-chrome, language and package options separately.
+Relative lengths and alpha colors remain visible unsupported effects; no root-size
+or alpha-compositing conversion is inferred. Native validators remain authoritative.
+Font declarations are generation inputs; resource bytes and license readback are
+separate execution evidence. No Loom compiler vocabulary or package API changes
+are needed for this adapter.
+
+
+## Next-release package distribution
+
+The maintained public source composition includes `DISTRIBUTION.md`,
+`release-layout.json`, a locked first-party flake and an installed-package probe.
+Use that public source for sibling-free builds. See
+[the public distribution guide](DISTRIBUTION.md) in composed releases; in the
+private development tree the source is `docs/operations/loom-solar-distribution.md`.
+The three required systems are Apple Silicon macOS, Linux ARM64 and Linux AMD64.
+Declared packaging coverage and qualified native execution remain separate gates.

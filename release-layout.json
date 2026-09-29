@@ -1,0 +1,40 @@
+{
+  "schema": "theme-forge.js-release-layout-v1",
+  "status": "next-release-candidate",
+  "versionAuthority": "package.json and package-lock.json; release version assignment is a separate authorized action",
+  "products": [
+    "@knowledge-forge-ai/theme-forge-stellar-loom",
+    "@knowledge-forge-ai/theme-forge-solar-sail"
+  ],
+  "portablePayloadsPerProduct": 1,
+  "source": {
+    "reference": "github:Knowledge-Forge-AI/<product>/v<version>",
+    "archive": "<product>-<version>-source.tar.gz",
+    "requiredMembers": ["package.json", "package-lock.json", "src", "bin", "flake.nix", "flake.lock", "nix/package.nix", "tools/qualify-installed.mjs", "DISTRIBUTION.md"]
+  },
+  "npm": {
+    "archive": "knowledge-forge-ai-<product>-<version>.tgz",
+    "reference": "<scoped-package>@<version>",
+    "platformDuplicates": false
+  },
+  "requiredReleaseEvidence": [
+    "composition-manifest.json",
+    "pack-manifest.json",
+    "SHA256SUMS",
+    "root-package.syft.json",
+    "root-package.spdx.json",
+    "root-package.cdx.json",
+    "root-package.receipt.json",
+    "artifact-manifest.json",
+    "platform-channel-matrix.json"
+  ],
+  "publication": {
+    "authorizedByThisLayout": false,
+    "requirements": [
+      "assigned release version with unchanged immutable reference semantics",
+      "accepted native platform qualification",
+      "trusted source/tag and archive hash binding",
+      "existing npm provenance and GitHub release attestation policy"
+    ]
+  }
+}
