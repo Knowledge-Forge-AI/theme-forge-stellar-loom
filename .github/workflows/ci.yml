@@ -99,11 +99,12 @@ jobs:
           npm pack --pack-destination .test-reports/root-package --json > .test-reports/root-package/pack-manifest.json
           mv .test-reports/root-package/*.tgz .test-reports/root-package/root-package.tgz
       - name: Qualify the exact installed portable npm artifact
-        run: |
+        run: | # zizmor: ignore[adhoc-packages]
+          # The packed Loom root declares no dependencies; --offline fails closed if installing it ever needs registry resolution.
           INSTALL_ROOT="$RUNNER_TEMP/js-installed"
           PROBE_ROOT="$RUNNER_TEMP/js-probe"
           mkdir -p "$INSTALL_ROOT"
-          npm install --ignore-scripts --no-audit --no-fund --prefix "$INSTALL_ROOT" .test-reports/root-package/root-package.tgz
+          npm install --offline --ignore-scripts --no-audit --no-fund --prefix "$INSTALL_ROOT" .test-reports/root-package/root-package.tgz
           node tools/qualify-installed.mjs --package-root "$INSTALL_ROOT/node_modules/@knowledge-forge-ai/theme-forge-stellar-loom" --node "$(command -v node)" --work-dir "$PROBE_ROOT"
       - name: Check git diff cleanliness
         run: git diff --check
@@ -318,9 +319,10 @@ jobs:
       - name: Run selected workflow and secret checks
         run: node tools/ci/run-workflow-checks.mjs --root . --output-dir .test-reports/workflow-checks
       - name: Retain workflow and secret check outputs
+        if: ${{ !cancelled() }}
         run: |
           rm -rf .test-reports/supply-chain/workflow-checks
-          mv .test-reports/workflow-checks .test-reports/supply-chain/workflow-checks
+          if [ -d .test-reports/workflow-checks ]; then mv .test-reports/workflow-checks .test-reports/supply-chain/workflow-checks; fi
           find .test-reports/supply-chain -type f -size 0 -delete
       - name: Bind supply-chain artifacts
         run: |
