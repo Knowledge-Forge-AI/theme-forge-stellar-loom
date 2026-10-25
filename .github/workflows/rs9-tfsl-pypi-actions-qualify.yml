@@ -1,0 +1,286 @@
+# rs9-loom-actions-qualification-v1
+# Tooling repository: Knowledge-Forge-AI/release-starport-9; commit: aa51e710429d9cba372e7d5b7301e4de858f3f2d
+# Execution/token repository: Knowledge-Forge-AI/theme-forge-stellar-loom; publication: false
+name: RS9 Loom 0.5.0 Actions Artifact Qualification
+run-name: 'Loom 0.5.0 qualification / ${{ inputs.dispatch_id }}'
+on:
+  workflow_dispatch:
+    inputs:
+      dispatch_id:
+        description: 'Attended intent correlation; not publication authority'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: rs9-tfsl-actions-qualify-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build_verify:
+    if: ${{ github.repository == 'Knowledge-Forge-AI/theme-forge-stellar-loom' }}
+    name: Admit exact upstream CI artifact and build distributions
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout exact RS9 source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          repository: Knowledge-Forge-AI/release-starport-9
+          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          persist-credentials: false
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+      - name: Admit reviewed upstream artifact into local inputs
+        env:
+          PYTHONPATH: src
+          PYTHONDONTWRITEBYTECODE: '1'
+          GH_TOKEN: '${{ github.token }}'
+        run: python3 -B -m rs9.tf_pypi_loom_actions_intake --output transport
+      - name: Build using maintained local input API
+        env:
+          PYTHONPATH: src
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -B -m rs9.tf_pypi_publish build --project theme-forge-stellar-loom --pin operators/tf-pypi/theme-forge-stellar-loom-0.5.0.json --inputs transport/inputs --output dist
+      - name: Retain transport evidence independently
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: upstream-transport-evidence
+          path: transport/
+          retention-days: 14
+          if-no-files-found: error
+      - name: Stage verified distributions
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: pypi-artifacts
+          path: dist/
+          retention-days: 14
+          if-no-files-found: error
+
+  native_darwin_arm64:
+    if: ${{ github.repository == 'Knowledge-Forge-AI/theme-forge-stellar-loom' }}
+    name: Native macOS ARM64 installed consumer
+    needs: [build_verify]
+    runs-on: macos-15
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          repository: Knowledge-Forge-AI/release-starport-9
+          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          persist-credentials: false
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+      - name: Set up Node 22
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Download the same run's verified distributions
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: pypi-artifacts
+          path: dist/
+      - name: Test exact wheel and sdist with networking denied
+        env:
+          PYTHONPATH: src
+          PYTHONDONTWRITEBYTECODE: '1'
+          QUALIFY_COMMIT: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          QUALIFY_RUN_ID: '${{ github.run_id }}'
+          QUALIFY_RUN_ATTEMPT: '${{ github.run_attempt }}'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PHYSICAL_TMP="$(python3 -c 'import os,tempfile; print(os.path.realpath(tempfile.gettempdir()))')"
+          export TMPDIR="$PHYSICAL_TMP" TMP="$PHYSICAL_TMP" TEMP="$PHYSICAL_TMP"
+          PHYSICAL_RUNNER_TEMP="$(python3 -c 'import os; print(os.path.realpath(os.environ["RUNNER_TEMP"]))')"
+          mkdir -p "$PHYSICAL_RUNNER_TEMP/tf-consumer-report"
+          /usr/bin/sandbox-exec -p '(version 1)(allow default)(deny network*)' \
+            python3 -B -m rs9.tf_pypi_hosted qualify --project theme-forge-stellar-loom --pin operators/tf-pypi/theme-forge-stellar-loom-0.5.0.json \
+            --target darwin-arm64 \
+            --dist "$GITHUB_WORKSPACE/dist" --work "$PHYSICAL_RUNNER_TEMP/tf-consumer" \
+            --report "$PHYSICAL_RUNNER_TEMP/tf-consumer-report/result.json" \
+            --expected-commit "$QUALIFY_COMMIT" \
+            --run-id "$QUALIFY_RUN_ID" --run-attempt "$QUALIFY_RUN_ATTEMPT"
+      - name: Preserve native consumer result
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-consumer-theme-forge-stellar-loom-darwin-arm64
+          path: '${{ runner.temp }}/tf-consumer-report/'
+          retention-days: 14
+          if-no-files-found: error
+  native_linux_arm64:
+    if: ${{ github.repository == 'Knowledge-Forge-AI/theme-forge-stellar-loom' }}
+    name: Native Linux ARM64 GNU installed consumer
+    needs: [build_verify]
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          repository: Knowledge-Forge-AI/release-starport-9
+          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          persist-credentials: false
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+      - name: Set up Node 22
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Download the same run's verified distributions
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: pypi-artifacts
+          path: dist/
+      - name: Test exact wheel and sdist with networking denied
+        env:
+          PYTHONPATH: src
+          PYTHONDONTWRITEBYTECODE: '1'
+          QUALIFY_COMMIT: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          QUALIFY_RUN_ID: '${{ github.run_id }}'
+          QUALIFY_RUN_ATTEMPT: '${{ github.run_attempt }}'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PHYSICAL_TMP="$(python3 -c 'import os,tempfile; print(os.path.realpath(tempfile.gettempdir()))')"
+          export TMPDIR="$PHYSICAL_TMP" TMP="$PHYSICAL_TMP" TEMP="$PHYSICAL_TMP"
+          PHYSICAL_RUNNER_TEMP="$(python3 -c 'import os; print(os.path.realpath(os.environ["RUNNER_TEMP"]))')"
+          mkdir -p "$PHYSICAL_RUNNER_TEMP/tf-consumer-report"
+          python3 -B -m rs9.tf_pypi_hosted qualify --project theme-forge-stellar-loom --pin operators/tf-pypi/theme-forge-stellar-loom-0.5.0.json \
+            --target linux-arm64-gnu \
+            --dist "$GITHUB_WORKSPACE/dist" --work "$PHYSICAL_RUNNER_TEMP/tf-consumer" \
+            --report "$PHYSICAL_RUNNER_TEMP/tf-consumer-report/result.json" \
+            --expected-commit "$QUALIFY_COMMIT" \
+            --run-id "$QUALIFY_RUN_ID" --run-attempt "$QUALIFY_RUN_ATTEMPT"
+      - name: Preserve native consumer result
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-consumer-theme-forge-stellar-loom-linux-arm64-gnu
+          path: '${{ runner.temp }}/tf-consumer-report/'
+          retention-days: 14
+          if-no-files-found: error
+  native_linux_x64:
+    if: ${{ github.repository == 'Knowledge-Forge-AI/theme-forge-stellar-loom' }}
+    name: Native Linux x86_64 GNU installed consumer
+    needs: [build_verify]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          repository: Knowledge-Forge-AI/release-starport-9
+          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          persist-credentials: false
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+      - name: Set up Node 22
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Download the same run's verified distributions
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: pypi-artifacts
+          path: dist/
+      - name: Test exact wheel and sdist with networking denied
+        env:
+          PYTHONPATH: src
+          PYTHONDONTWRITEBYTECODE: '1'
+          QUALIFY_COMMIT: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          QUALIFY_RUN_ID: '${{ github.run_id }}'
+          QUALIFY_RUN_ATTEMPT: '${{ github.run_attempt }}'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PHYSICAL_TMP="$(python3 -c 'import os,tempfile; print(os.path.realpath(tempfile.gettempdir()))')"
+          export TMPDIR="$PHYSICAL_TMP" TMP="$PHYSICAL_TMP" TEMP="$PHYSICAL_TMP"
+          PHYSICAL_RUNNER_TEMP="$(python3 -c 'import os; print(os.path.realpath(os.environ["RUNNER_TEMP"]))')"
+          mkdir -p "$PHYSICAL_RUNNER_TEMP/tf-consumer-report"
+          python3 -B -m rs9.tf_pypi_hosted qualify --project theme-forge-stellar-loom --pin operators/tf-pypi/theme-forge-stellar-loom-0.5.0.json \
+            --target linux-x64-gnu \
+            --dist "$GITHUB_WORKSPACE/dist" --work "$PHYSICAL_RUNNER_TEMP/tf-consumer" \
+            --report "$PHYSICAL_RUNNER_TEMP/tf-consumer-report/result.json" \
+            --expected-commit "$QUALIFY_COMMIT" \
+            --run-id "$QUALIFY_RUN_ID" --run-attempt "$QUALIFY_RUN_ATTEMPT"
+      - name: Preserve native consumer result
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-consumer-theme-forge-stellar-loom-linux-x64-gnu
+          path: '${{ runner.temp }}/tf-consumer-report/'
+          retention-days: 14
+          if-no-files-found: error
+
+  qualification_gate:
+    if: ${{ github.repository == 'Knowledge-Forge-AI/theme-forge-stellar-loom' }}
+    name: Three-host qualification gate
+    needs: [build_verify, native_darwin_arm64, native_linux_arm64, native_linux_x64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact RS9 source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          repository: Knowledge-Forge-AI/release-starport-9
+          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          persist-credentials: false
+      - name: Download staged artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: pypi-artifacts
+          path: dist/
+      - name: Download darwin-arm64 consumer receipt
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: native-consumer-theme-forge-stellar-loom-darwin-arm64
+          path: receipts/darwin-arm64/
+      - name: Download linux-arm64-gnu consumer receipt
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: native-consumer-theme-forge-stellar-loom-linux-arm64-gnu
+          path: receipts/linux-arm64-gnu/
+      - name: Download linux-x64-gnu consumer receipt
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: native-consumer-theme-forge-stellar-loom-linux-x64-gnu
+          path: receipts/linux-x64-gnu/
+      - name: Admit three-host native matrix receipts
+        env:
+          PYTHONPATH: src
+          QUALIFY_COMMIT: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          QUALIFY_RUN_ID: '${{ github.run_id }}'
+          QUALIFY_RUN_ATTEMPT: '${{ github.run_attempt }}'
+        run: python3 -B -m rs9.tf_pypi_hosted admit --project theme-forge-stellar-loom --pin operators/tf-pypi/theme-forge-stellar-loom-0.5.0.json --dist dist --receipts receipts --expected-commit "$QUALIFY_COMMIT" --run-id "$QUALIFY_RUN_ID" --run-attempt "$QUALIFY_RUN_ATTEMPT" > matrix-result.json
+      - name: Retain native matrix admission
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-matrix-admission
+          path: matrix-result.json
+          retention-days: 14
+          if-no-files-found: error
