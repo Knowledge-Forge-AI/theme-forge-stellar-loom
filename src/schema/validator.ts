@@ -138,8 +138,17 @@ export function validateDimension(val: unknown, path: string, role: DimensionRol
       "INVALID_FORMAT"
     );
   }
-  const num = parseFloat(match[1]);
-  const unit = match[2].toLowerCase() as DimensionUnit;
+  const numberPart = match[1];
+  const unitPart = match[2];
+  if (numberPart === undefined || unitPart === undefined) {
+    throw new ValidationError(
+      `Invalid dimension '${val}', must match /^[0-9]+(\\.[0-9]+)?(px|rem|em|ch)$/i`,
+      path,
+      "INVALID_FORMAT"
+    );
+  }
+  const num = parseFloat(numberPart);
+  const unit = unitPart.toLowerCase() as DimensionUnit;
 
   if (!Number.isFinite(num) || num <= 0) {
     throw new ValidationError(

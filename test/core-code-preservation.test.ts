@@ -5,10 +5,16 @@ vi.mock("../src/v2/types.js", async (original) => ({
   ...await original<typeof import("../src/v2/types.js")>(),
   COMPILER_VERSION: "0.1.1",
 }));
+vi.mock("../src/generator/legal.js", async (original) =>
+  (await import("./historical-legal-profile.js")).historicalLegalModule(
+    await original<typeof import("../src/generator/legal.js")>()
+  )
+);
 import { describe, it, expect } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { type ThemeSpecificationV2, compileTheme, generateThemePackage } from "../src/index.js";
 import { verifyThemeCandidateV2 } from "../src/design-exchange-v2/index.js";
+import { assertHistoricalLegalRecord } from "./historical-legal-profile.js";
 
 const root = new URL("./fixtures/core-code-baseline/", import.meta.url);
 describe("literal accepted core preservation across code dispatch", () => {
@@ -20,6 +26,7 @@ describe("literal accepted core preservation across code dispatch", () => {
       expect(compiled.descriptor).toEqual(baseline.descriptor);
       return;
     }
+    assertHistoricalLegalRecord(baseline.files, name);
     const resources = baseline.fontBytes
       ? new Map([[baseline.spec.fonts[0].id, Buffer.from(baseline.fontBytes, "base64")]])
       : new Map<string, Uint8Array>();

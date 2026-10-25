@@ -5,15 +5,22 @@ vi.mock("../src/v2/types.js", async (original) => ({
   ...await original<typeof import("../src/v2/types.js")>(),
   COMPILER_VERSION: "0.1.1",
 }));
+vi.mock("../src/generator/legal.js", async (original) =>
+  (await import("./historical-legal-profile.js")).historicalLegalModule(
+    await original<typeof import("../src/generator/legal.js")>()
+  )
+);
 import { describe, it, expect } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { generateThemePackage } from "../src/index-catalog.js";
 import { verifyThemeCandidateCompatible } from "../src/design-exchange-code/index.js";
+import { assertHistoricalLegalRecord } from "./historical-legal-profile.js";
 
 const root = new URL("./fixtures/code-catalog-baseline/", import.meta.url);
 describe("literal accepted code packages and packets across catalog dispatch", () => {
   for (const name of readdirSync(root)) it(name, () => {
     const baseline = JSON.parse(readFileSync(new URL(name, root), "utf8"));
+    assertHistoricalLegalRecord(baseline.files, name);
     const result = generateThemePackage({ themeSpec: baseline.spec, metadata: baseline.metadata, accent: baseline.accent });
     expect([...result.files]).toEqual(baseline.files);
     expect(verifyThemeCandidateCompatible(baseline.packet).valid).toBe(true);

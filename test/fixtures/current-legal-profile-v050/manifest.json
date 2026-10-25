@@ -1,0 +1,95 @@
+{
+  "schema": "loom.current-legal-profile.v2",
+  "source": {
+    "commit": "198ef4b9eb8f0becee303bea584d81a9c61735ff",
+    "tree": "34a21c0b3215812795c997025a719fed72440f0d",
+    "packageVersion": "0.5.0",
+    "packageMetadataPath": "packages/stellar-loom/package.json",
+    "packageMetadataSha256": "168b43aba5a8966b0caee78d441f4bb63787889bb2895120e44f505194b3236c",
+    "legalSourcePath": "packages/stellar-loom/src/generator/legal.ts",
+    "legalSourceSha256": "e71b5c1b0a98089b0d4f5ff31dac7d3280a0e47a3cd3b9b5f5d150852048db5b",
+    "contact": "sam.lair@knowledge-forge.ai",
+    "previousContact": "lair001@gmail.com"
+  },
+  "receipt": {
+    "resultSha256": "6e99b2a36dc1a07bf72a34f09b56ebb158574f7aee88633f8146de2d53a910c1",
+    "outerResultSha256": "f0d3fc357d0677469933a9a26df059018bc6256faf0df28f93de58a6b867b135",
+    "producerStdoutSha256": "8ad15c022ae977a7043a17fe191ff5022e2b86a172b80ce3edce4c81550d1f63",
+    "producerSchema": "loom.current-legal-profile-producer-receipt.v2-prep2",
+    "producerInvoked": "generateThemePackageV2",
+    "parentAcceptanceSha256": "b9ff2338add62b3526c2f613db9dc8700e6e4591760784afe06e6cc0cf841060",
+    "independentReviewSha256": "dba8de7d4bfc9c282f1047f1b80850f8e7b87ec0837845e1deba8b9a45e736a1",
+    "parentReviewedCurrentReceipt": true,
+    "sourceAndFixtureWrites": false,
+    "repeatedOutputEqual": true,
+    "fullQualification": false,
+    "publication": false
+  },
+  "legalRows": [
+    {
+      "path": "COMMERCIAL-LICENSE.md",
+      "bytes": 942,
+      "sha256": "63ddf934056e5e21f70b5fca6824679bff8c759e14c59b9b1704412d5ccc1747"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 34460,
+      "sha256": "62eef07fc3ad238dd889ff98cf9ed87b3ef0f421579b6945f87ec37c608afb62"
+    },
+    {
+      "path": "NOTICE",
+      "bytes": 608,
+      "sha256": "a7cef97febccf21c5db0854d09806c2b42ed526190d0ef3fd39d877de53a1a0a"
+    }
+  ],
+  "v2Package": {
+    "input": {
+      "example": "packages/stellar-loom/examples/loom-black-core.theme.json",
+      "exampleSha256": "57606976c4683da74d8d000c87c891fe6b4e6afd72b8b686ea8ed2adfdc78eff",
+      "metadata": {
+        "name": "loom-core-test",
+        "version": "0.1.0"
+      }
+    },
+    "inputIdentity": "9e0e60a0e090762e44237c67274e5712587dff8871bc1c90ca017b3f911bd434",
+    "inventoryDigest": "66adb4696e80bd8112ff8ca31bbb7208705384d488d1a8949febc1ad084029bc",
+    "provenanceSha256": "818962d83527bc6d9b24abd620dcda1acebc82f39c9dec37b1a1119dafcf233f"
+  },
+  "counterfactualReceipt": {
+    "producerVersion": "0.5.0",
+    "inputIdentity": "9e0e60a0e090762e44237c67274e5712587dff8871bc1c90ca017b3f911bd434",
+    "inventoryDigest": "f1488f2f37ef18bba12c35c7d763082d868ac1ea9bd45cceb420312ecf9dce1a",
+    "provenanceSha256": "1186a933c2a6c2236c711a2cfcb82545e8d2977f223f9018b8775df2c0eb475f",
+    "substitutions": [
+      "NOTICE",
+      "COMMERCIAL-LICENSE.md"
+    ],
+    "legalRows": [
+      {
+        "path": "COMMERCIAL-LICENSE.md",
+        "bytes": 932,
+        "sha256": "a81bcda7ec57a5c09f1cc6d05de420db7a0053b9496f1762065e083a60e5ede2"
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 34460,
+        "sha256": "62eef07fc3ad238dd889ff98cf9ed87b3ef0f421579b6945f87ec37c608afb62"
+      },
+      {
+        "path": "NOTICE",
+        "bytes": 598,
+        "sha256": "e711709e69f5f8fc65c55ff3b3e47c390ed8f60890eb38cf999d95c2494b5d17"
+      }
+    ]
+  },
+  "historicalReference": {
+    "manifestPath": "packages/stellar-loom/test/fixtures/current-legal-profile/manifest.json",
+    "manifestSha256": "e9a58299b14ddc1fe7b77e948ea75094c162a8fe215bd9d73a1b40d7c9023d9b",
+    "receiptSha256": "4123ec0a208d48aed773a39d63532402e4417ec072b136a95946a82b4f046e64",
+    "inventoryDigest": "5312a83626b5937f97e677286f01711c916b3375633f91703a28eeae3bb45759",
+    "provenanceSha256": "77b86e5eb0f55881d128500deceffc53bb82152d53b8aec01ee294b26399f725",
+    "counterfactualInventoryDigest": "ba15effeb6888296df3afe2f47556e7fe53dda123091f27ef754bf660bae2699",
+    "counterfactualProvenanceSha256": "18d645330407aa5b4febc0195e67ca4ef92d7ea350b4dccc6bdbffd2fcfb5aac"
+  },
+  "scope": "Current Loom 0.5.0 test expectation/profile fixture only; no release, native, or publication qualification."
+}

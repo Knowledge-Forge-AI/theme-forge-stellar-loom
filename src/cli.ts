@@ -162,6 +162,20 @@ interface ParsedCliArgs {
   version: boolean;
 }
 
+function nextOptionValue(args: string[], index: number): string | undefined {
+  const value = args[index + 1];
+  return value === undefined || value.startsWith("-") ? undefined : value;
+}
+
+function emitInvalidArguments(isJson: boolean, message: string): number {
+  if (isJson) {
+    process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message }, null, 2) + "\n");
+  } else {
+    process.stderr.write(`Error: ${message}\n`);
+  }
+  return 2;
+}
+
 
 
 function parseArguments(args: string[]): { parsed?: ParsedCliArgs; error?: string } {
@@ -181,11 +195,15 @@ function parseArguments(args: string[]): { parsed?: ParsedCliArgs; error?: strin
   let i = 0;
   while (i < args.length) {
     const arg = args[i];
+    if (arg === undefined) return { error: `Invalid argument at position ${i}: missing argv value.` };
 
     if (arg === "--accent" || arg === "--font-root" || arg === "--font-ids") {
-      if (flags.has(arg) || !args[i + 1] || args[i + 1].startsWith("-")) return { error: `Invalid or duplicate option: ${arg}` };
+      const value = args[i + 1];
+      if (flags.has(arg) || value === undefined || value.length === 0 || value.startsWith("-")) {
+        return { error: `Invalid or duplicate option: ${arg}` };
+      }
       flags.add(arg);
-      v2Options[arg === "--accent" ? "accent" : arg === "--font-root" ? "fontRoot" : "fontIds"] = args[i + 1];
+      v2Options[arg === "--accent" ? "accent" : arg === "--font-root" ? "fontRoot" : "fontIds"] = value;
       i += 2; continue;
     }
 
@@ -236,10 +254,11 @@ function parseArguments(args: string[]): { parsed?: ParsedCliArgs; error?: strin
         return { error: "Duplicate option: --out" };
       }
       flags.add("--out");
-      if (i + 1 >= args.length || args[i + 1].startsWith("-")) {
+      const value = nextOptionValue(args, i);
+      if (value === undefined) {
         return { error: "Missing value for option: --out <dir>" };
       }
-      outDir = args[i + 1];
+      outDir = value;
       i += 2;
       continue;
     }
@@ -249,10 +268,11 @@ function parseArguments(args: string[]): { parsed?: ParsedCliArgs; error?: strin
         return { error: "Duplicate option: --package" };
       }
       flags.add("--package");
-      if (i + 1 >= args.length || args[i + 1].startsWith("-")) {
+      const value = nextOptionValue(args, i);
+      if (value === undefined) {
         return { error: "Missing value for option: --package <file>" };
       }
-      packagePath = args[i + 1];
+      packagePath = value;
       i += 2;
       continue;
     }
@@ -262,10 +282,11 @@ function parseArguments(args: string[]): { parsed?: ParsedCliArgs; error?: strin
         return { error: "Duplicate option: --template" };
       }
       flags.add("--template");
-      if (i + 1 >= args.length || args[i + 1].startsWith("-")) {
+      const value = nextOptionValue(args, i);
+      if (value === undefined) {
         return { error: "Missing value for option: --template <id>" };
       }
-      template = args[i + 1];
+      template = value;
       i += 2;
       continue;
     }
@@ -1301,7 +1322,10 @@ export function getPacketPublicId(packet: ThemeExchangePacket): string {
 }
 
 export async function runExchangeCli(args: string[]): Promise<number> {
-  if (["v2-create", "v2-verify", "v1-import"].includes(args[0])) return runExchangeV2Cli(args);
+  const firstArg = args[0];
+  if (firstArg !== undefined && ["v2-create", "v2-verify", "v1-import"].includes(firstArg)) {
+    return runExchangeV2Cli(args);
+  }
   if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
     process.stdout.write(EXCHANGE_HELP);
     return 0;
@@ -1365,6 +1389,7 @@ async function runExchangeBrief(subArgs: string[], isJson: boolean): Promise<num
   let i = 0;
   while (i < subArgs.length) {
     const arg = subArgs[i];
+    if (arg === undefined) return emitInvalidArguments(isJson, `Invalid argument at position ${i}: missing argv value.`);
     if (arg === "--json") {
       i++;
       continue;
@@ -1374,35 +1399,38 @@ async function runExchangeBrief(subArgs: string[], isJson: boolean): Promise<num
       return 0;
     }
     if (arg === "--name" || arg === "--brief-id") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --name <id>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      name = subArgs[i + 1];
+      name = value;
       i += 2;
       continue;
     }
     if (arg === "--theme" || arg === "--baseline") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --theme <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      themePath = subArgs[i + 1];
+      themePath = value;
       i += 2;
       continue;
     }
     if (arg === "--out") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --out <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      outPath = subArgs[i + 1];
+      outPath = value;
       i += 2;
       continue;
     }
@@ -1452,13 +1480,14 @@ async function runExchangeBrief(subArgs: string[], isJson: boolean): Promise<num
       continue;
     }
     if (arg === "--visual") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --visual <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      visualPaths.push(subArgs[i + 1]);
+      visualPaths.push(value);
       i += 2;
       continue;
     }
@@ -1590,6 +1619,7 @@ async function runExchangeCandidate(subArgs: string[], isJson: boolean): Promise
   let i = 0;
   while (i < subArgs.length) {
     const arg = subArgs[i];
+    if (arg === undefined) return emitInvalidArguments(isJson, `Invalid argument at position ${i}: missing argv value.`);
     if (arg === "--json") {
       i++;
       continue;
@@ -1599,35 +1629,38 @@ async function runExchangeCandidate(subArgs: string[], isJson: boolean): Promise
       return 0;
     }
     if (arg === "--brief") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --brief <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      briefPath = subArgs[i + 1];
+      briefPath = value;
       i += 2;
       continue;
     }
     if (arg === "--theme") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --theme <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      themePath = subArgs[i + 1];
+      themePath = value;
       i += 2;
       continue;
     }
     if (arg === "--out") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --out <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      outPath = subArgs[i + 1];
+      outPath = value;
       i += 2;
       continue;
     }
@@ -1662,13 +1695,14 @@ async function runExchangeCandidate(subArgs: string[], isJson: boolean): Promise
       continue;
     }
     if (arg === "--visual") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --visual <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      visualPaths.push(subArgs[i + 1]);
+      visualPaths.push(value);
       i += 2;
       continue;
     }
@@ -1800,6 +1834,7 @@ async function runExchangeReview(subArgs: string[], isJson: boolean): Promise<nu
   let i = 0;
   while (i < subArgs.length) {
     const arg = subArgs[i];
+    if (arg === undefined) return emitInvalidArguments(isJson, `Invalid argument at position ${i}: missing argv value.`);
     if (arg === "--json") {
       i++;
       continue;
@@ -1809,35 +1844,38 @@ async function runExchangeReview(subArgs: string[], isJson: boolean): Promise<nu
       return 0;
     }
     if (arg === "--brief") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --brief <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      briefPath = subArgs[i + 1];
+      briefPath = value;
       i += 2;
       continue;
     }
     if (arg === "--candidate") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --candidate <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      candidatePaths.push(subArgs[i + 1]);
+      candidatePaths.push(value);
       i += 2;
       continue;
     }
     if (arg === "--out") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --out <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      outPath = subArgs[i + 1];
+      outPath = value;
       i += 2;
       continue;
     }
@@ -1994,30 +2032,33 @@ async function runExchangeValidate(subArgs: string[], isJson: boolean): Promise<
 
   for (let i = 0; i < subArgs.length; i++) {
     const arg = subArgs[i];
+    if (arg === undefined) return emitInvalidArguments(isJson, `Invalid argument at position ${i}: missing argv value.`);
     if (arg === "--json") continue;
     if (arg === "--help" || arg === "-h") {
       process.stdout.write(EXCHANGE_HELP);
       return 0;
     }
     if (arg === "--brief") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --brief <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      briefPath = subArgs[i + 1];
+      briefPath = value;
       i++;
       continue;
     }
     if (arg === "--candidate") {
-      if (i + 1 >= subArgs.length || subArgs[i + 1].startsWith("-")) {
+      const value = nextOptionValue(subArgs, i);
+      if (value === undefined) {
         const msg = "Missing value for option: --candidate <file>";
         if (isJson) process.stdout.write(JSON.stringify({ status: "error", code: "INVALID_ARGUMENTS", message: msg }, null, 2) + "\n");
         else process.stderr.write(`Error: ${msg}\n`);
         return 2;
       }
-      candidatePaths.push(subArgs[i + 1]);
+      candidatePaths.push(value);
       i++;
       continue;
     }
@@ -2147,6 +2188,7 @@ async function runExchangeInspect(subArgs: string[], isJson: boolean): Promise<n
 
   for (let i = 0; i < subArgs.length; i++) {
     const arg = subArgs[i];
+    if (arg === undefined) return emitInvalidArguments(isJson, `Invalid argument at position ${i}: missing argv value.`);
     if (arg === "--json") continue;
     if (arg === "--help" || arg === "-h") {
       process.stdout.write(EXCHANGE_HELP);

@@ -2,15 +2,14 @@
 
 Starlight theme-builder backend, library, and CLI.
 
-Version 0.1.0 is published on [npm](https://www.npmjs.com/package/@knowledge-forge-ai/theme-forge-stellar-loom)
-and [GitHub](https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom/releases/tag/v0.1.0).
-Install from the registry:
+Install the published registry release from [npm](https://www.npmjs.com/package/@knowledge-forge-ai/theme-forge-stellar-loom).
+See [GitHub releases](https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom/releases) for version history:
 
 ```sh
 npm install @knowledge-forge-ai/theme-forge-stellar-loom
 ```
 
-The 0.4.0 source candidate retains reading layout presets (`--reading-layout`), distribution-safe TypeScript emission (`--language typescript`), Expressive Code syntax styling derivation, and book-chrome navigation.
+The 0.5.0 source retains reading layout presets (`--reading-layout`), distribution-safe TypeScript emission (`--language typescript`), Expressive Code syntax styling derivation, and book-chrome navigation.
 
 ### Theme v2 and catalog
 
@@ -73,8 +72,8 @@ and requires exact bound output/inventory equality; a producer patch version
 cannot conceal changed output. Explicit v1 import creates a fresh unadopted v2
 candidate linked to the historical packet; it never changes historical bytes.
 
-For offline installation of the candidate:
-`npm install --ignore-scripts ./knowledge-forge-ai-theme-forge-stellar-loom-0.2.0.tgz`.
+For offline installation of a locally produced candidate, install the generated tarball with
+`npm install --ignore-scripts <candidate-tarball>`.
 
 [Repository](https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom) ·
 [Issues](https://github.com/Knowledge-Forge-AI/theme-forge-stellar-loom/issues) ·
@@ -86,8 +85,7 @@ Generated plugin compatibility is demonstrated with Astro 7.3.1 and Starlight
 
 Theme Forge Stellar Loom compiles typed, versioned theme specifications into canonical, deterministic CSS custom properties and theme descriptors for Starlight documentation sites.
 
-The 0.4.0 candidate includes the TFSB71 source-build and distribution changes.
-Its release artifacts and installation qualification remain pending.
+This source describes version 0.5.0.
 
 ## Overview
 
