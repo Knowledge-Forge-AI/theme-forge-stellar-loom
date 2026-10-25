@@ -20,6 +20,19 @@ const TFSL_BIN = resolve(LOOM_ROOT, "bin/tfsl.js");
 const EXAMPLE_CYAN = resolve(LOOM_ROOT, "examples/stellar-cyan.theme.json");
 const EXAMPLE_AMBER = resolve(LOOM_ROOT, "examples/amber-forge.theme.json");
 
+/** @typedef {string | Uint8Array} HashInput */
+/** @typedef {{ filename: string, size: number, files: Array<{ path: string }> }} PackInfo */
+/** @typedef {{ name: string, version: string, description?: string, author?: string, template?: string, [key: string]: unknown }} PackageMetadata */
+/** @typedef {{ port: number, close: () => Promise<void> }} StaticServer */
+/** @typedef {{ slAccent: string, slBg: string, slText: string, slBgNav: string, slBgInlineCode: string, slContentWidth: string, slSidebarWidth: string, slLineHeight: string, bodyBg: string, bodyColor: string, bodyFont: string, linkColor: string | null, codeBg: string | null, codeColor?: string | null, codeFont: string | null, h1Color: string | null, h1FontSize: string | null, h1FontWeight: string | null }} StyleMeasurement */
+/** @typedef {{ selector: string, foreground: string, background: string, ratio?: number | null }} ContrastPair */
+/** @typedef {{ name: string, file: string, fullPath: string, package: string, mode: string, viewport: string }} ScreenshotRecord */
+/** @typedef {{ packageSha256: string, themeDigest: string, cssDigest: string, packageMembersEqual: boolean, packBytesEqual: boolean }} IdentityRecord */
+/** @typedef {{ metadata?: PackageMetadata | string | undefined, packageMetadata?: PackageMetadata | undefined, metadataPath?: string | undefined, template?: string | undefined, tfslBin?: string | undefined, packedTfslPath?: string | undefined, workDir?: string | undefined, scenario?: string | undefined, demoOverlayDir?: string | undefined }} SavedThemeOptions */
+/** @typedef {{ novaRoot?: string | undefined, workDir?: string | undefined, packedTfslPath?: string | undefined, tfslBin?: string | undefined, demoOverlayDir?: string | undefined }} NovaSmokeOptions */
+/** @typedef {{ playwrightModule?: string | undefined, selectedOnly?: boolean | undefined, candidateDirectory?: string | undefined }} NovaObserveOptions */
+
+/** @param {HashInput} strOrBuf */
 function sha256(strOrBuf) {
   return createHash("sha256").update(strOrBuf).digest("hex");
 }
@@ -27,7 +40,7 @@ function sha256(strOrBuf) {
 /**
  * Parse hex or rgb color string to [r, g, b] array.
  * @param {string | null | undefined} colorStr
- * @returns {[number, number, number] | null}
+ * @returns {[number, number, number] | null} Finite RGB channels, or null when unavailable/invalid.
  */
 function parseColor(colorStr) {
   if (!colorStr) return null;
@@ -38,16 +51,21 @@ function parseColor(colorStr) {
       hex = hex.split("").map((c) => c + c).join("");
     }
     if (hex.length === 6) {
-      return [
+      if (!/^[0-9a-f]{6}$/.test(hex)) return null;
+      /** @type {[number, number, number]} */
+      const rgb = [
         parseInt(hex.slice(0, 2), 16),
         parseInt(hex.slice(2, 4), 16),
         parseInt(hex.slice(4, 6), 16),
       ];
+      return rgb.every(Number.isFinite) ? rgb : null;
     }
   }
   const match = s.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
-  if (match) {
-    return [parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3], 10)];
+  if (match && match[1] !== undefined && match[2] !== undefined && match[3] !== undefined) {
+    /** @type {[number, number, number]} */
+    const rgb = [parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3], 10)];
+    return rgb.every(Number.isFinite) ? rgb : null;
   }
   return null;
 }
@@ -58,10 +76,14 @@ function parseColor(colorStr) {
  * @returns {number}
  */
 function relativeLuminance([r, g, b]) {
-  const [rs, gs, bs] = [r, g, b].map((c) => {
+  /** @param {number} c */
+  const channel = (c) => {
     const val = c / 255;
     return val <= 0.04045 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
-  });
+  };
+  const rs = channel(r);
+  const gs = channel(g);
+  const bs = channel(b);
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 }
 
@@ -69,7 +91,7 @@ function relativeLuminance([r, g, b]) {
  * Calculate WCAG contrast ratio between two colors.
  * @param {string | null | undefined} color1
  * @param {string | null | undefined} color2
- * @returns {number | null}
+ * @returns {number | null} A finite contrast ratio, or null when either color is unavailable.
  */
 function calculateContrastRatio(color1, color2) {
   const rgb1 = parseColor(color1);
@@ -79,7 +101,8 @@ function calculateContrastRatio(color1, color2) {
   const l2 = relativeLuminance(rgb2);
   const lighter = Math.max(l1, l2);
   const darker = Math.min(l1, l2);
-  return Number(((lighter + 0.05) / (darker + 0.05)).toFixed(2));
+  const ratio = Number(((lighter + 0.05) / (darker + 0.05)).toFixed(2));
+  return Number.isFinite(ratio) ? ratio : null;
 }
 
 /**
@@ -93,6 +116,11 @@ function hexToRgbTuple(hex) {
   return `${parsed[0]}, ${parsed[1]}, ${parsed[2]}`;
 }
 
+/**
+ * @param {string | null | undefined} actual
+ * @param {string | null | undefined} hex
+ * @param {string | null | undefined} rgbTuple
+ */
 function colorMatches(actual, hex, rgbTuple) {
   if (!actual) return false;
   const s = actual.toLowerCase();
@@ -100,7 +128,7 @@ function colorMatches(actual, hex, rgbTuple) {
   if (hex && hex.length === 7 && hex[1] === hex[2] && hex[3] === hex[4] && hex[5] === hex[6]) {
     shortHex = `#${hex[1]}${hex[3]}${hex[5]}`.toLowerCase();
   }
-  return (
+  return Boolean(
     (hex && s.includes(hex.toLowerCase())) ||
     (shortHex !== null && s.includes(shortHex)) ||
     (rgbTuple && s.includes(rgbTuple.toLowerCase()))
@@ -108,8 +136,10 @@ function colorMatches(actual, hex, rgbTuple) {
 }
 
 
-/** Simple static HTTP server for serving Astro build directories */
+/** Simple static HTTP server for serving Astro build directories. */
+/** @param {string} rootDir @param {number} [port] @returns {Promise<StaticServer>} */
 function startStaticServer(rootDir, port = 0) {
+  /** @type {Record<string, string>} */
   const MIME_TYPES = {
     ".html": "text/html",
     ".css": "text/css",
@@ -164,7 +194,7 @@ function startStaticServer(rootDir, port = 0) {
             if (typeof server.closeAllConnections === "function") {
               server.closeAllConnections();
             }
-            server.close(done);
+            server.close(() => done());
           }),
       });
     });
@@ -317,24 +347,30 @@ export async function runGeneratedPluginSmoke() {
       cwd: cyanOut1,
       encoding: "utf8",
     });
+    /** @type {PackInfo[]} */
     const packCyanJson = JSON.parse(packCyanRaw);
-    const cyanTarballName = packCyanJson[0].filename;
+    const cyanPack = packCyanJson[0];
+    if (!cyanPack) throw new Error("npm pack returned no cyan package metadata");
+    const cyanTarballName = cyanPack.filename;
     const cyanTarballPath = join(cyanOut1, cyanTarballName);
 
     const packAmberRaw = execFileSync("npm", ["pack", "--json"], {
       cwd: amberOut,
       encoding: "utf8",
     });
+    /** @type {PackInfo[]} */
     const packAmberJson = JSON.parse(packAmberRaw);
-    const amberTarballName = packAmberJson[0].filename;
+    const amberPack = packAmberJson[0];
+    if (!amberPack) throw new Error("npm pack returned no amber package metadata");
+    const amberTarballName = amberPack.filename;
     const amberTarballPath = join(amberOut, amberTarballName);
 
-    console.log(`   Packed ${cyanTarballName} (${packCyanJson[0].size} bytes)`);
-    console.log(`   Packed ${amberTarballName} (${packAmberJson[0].size} bytes)`);
+    console.log(`   Packed ${cyanTarballName} (${cyanPack.size} bytes)`);
+    console.log(`   Packed ${amberTarballName} (${amberPack.size} bytes)`);
 
     // Verify package members from npm pack metadata
-    const cyanEntryFiles = packCyanJson[0].files.map((f) => f.path);
-    const amberEntryFiles = packAmberJson[0].files.map((f) => f.path);
+    const cyanEntryFiles = cyanPack.files.map((f) => f.path);
+    const amberEntryFiles = amberPack.files.map((f) => f.path);
 
     if (!cyanEntryFiles.includes("index.js") || !cyanEntryFiles.includes("styles/theme.css")) {
       throw new Error("Cyan package tarball is missing required runtime entry files");
@@ -414,6 +450,7 @@ export async function runGeneratedPluginSmoke() {
       { name: "disconnected", outDir: distDisconnected, env: { CONSUMER_SCENARIO: "disconnected", ASTRO_OUT_DIR: distDisconnected } },
     ];
 
+    /** @type {Record<string, number>} */
     const buildDurations = {};
     for (const sc of scenarios) {
       const startTime = performance.now();
@@ -522,11 +559,11 @@ export async function runGeneratedPluginSmoke() {
         if (!cyanDarkStyles.codeFont || !cyanDarkStyles.codeFont.toLowerCase().includes("monospace")) {
           throw new Error(`Expected system-mono code font stack, got: ${cyanDarkStyles.codeFont}`);
         }
-        const cyanH1Size = parseInt(cyanDarkStyles.h1FontSize, 10);
+        const cyanH1Size = parseInt(cyanDarkStyles.h1FontSize ?? "", 10);
         if (!cyanH1Size || cyanH1Size < 24) {
           throw new Error(`Expected prominent h1 font size (>= 24px), got: ${cyanDarkStyles.h1FontSize}`);
         }
-        const cyanH1Weight = parseInt(cyanDarkStyles.h1FontWeight, 10);
+        const cyanH1Weight = parseInt(cyanDarkStyles.h1FontWeight ?? "", 10);
         if (!cyanH1Weight || cyanH1Weight < 600) {
           throw new Error(`Expected bold h1 font weight (>= 600), got: ${cyanDarkStyles.h1FontWeight}`);
         }
@@ -683,11 +720,11 @@ export async function runGeneratedPluginSmoke() {
         if (!amberDarkStyles.codeFont || !amberDarkStyles.codeFont.toLowerCase().includes("monospace")) {
           throw new Error(`Expected system-mono code font stack, got: ${amberDarkStyles.codeFont}`);
         }
-        const amberH1Size = parseInt(amberDarkStyles.h1FontSize, 10);
+        const amberH1Size = parseInt(amberDarkStyles.h1FontSize ?? "", 10);
         if (!amberH1Size || amberH1Size < 24) {
           throw new Error(`Expected prominent h1 font size (>= 24px), got: ${amberDarkStyles.h1FontSize}`);
         }
-        const amberH1Weight = parseInt(amberDarkStyles.h1FontWeight, 10);
+        const amberH1Weight = parseInt(amberDarkStyles.h1FontWeight ?? "", 10);
         if (!amberH1Weight || amberH1Weight < 600) {
           throw new Error(`Expected bold h1 font weight (>= 600), got: ${amberDarkStyles.h1FontWeight}`);
         }
@@ -922,17 +959,7 @@ function verifyPackageMembers(packInfo, hasTemplate) {
  * Backward compatible: accepts optional metadata, packed API/CLI, and options.
  * @param {string} savedSpecificationPath
  * @param {string} verifiedThemeDigest
- * @param {{
- *   metadata?: any,
- *   packageMetadata?: any,
- *   metadataPath?: string,
- *   template?: string,
- *   tfslBin?: string,
- *   packedTfslPath?: string,
- *   workDir?: string,
- *   scenario?: string,
- *   demoOverlayDir?: string,
- * }} [options]
+ * @param {SavedThemeOptions} [options]
  */
 export async function runSavedThemeConsumerSmoke(savedSpecificationPath, verifiedThemeDigest, options = {}) {
   const scratchDir = options.workDir ? resolve(options.workDir) : await mkdtemp(join(tmpdir(), "tfsl-adopted-consumer-"));
@@ -947,13 +974,16 @@ export async function runSavedThemeConsumerSmoke(savedSpecificationPath, verifie
   }
   const apiPath = resolve(dirname(await realpath(tfslBin)), "../dist/index.js");
   const { compileTheme, validateThemeSpecification } = await import(pathToFileURL(apiPath).href);
-  const specification = validateThemeSpecification(JSON.parse(await readFile(savedSpecificationPath, "utf8")));
+  // Normalize once so the digest read and generator invocation share one path identity.
+  const resolvedSavedSpecificationPath = resolve(savedSpecificationPath);
+  const specification = validateThemeSpecification(JSON.parse(await readFile(resolvedSavedSpecificationPath, "utf8")));
   const compiled = compileTheme(specification);
   if (`sha256:${compiled.descriptor.inputDigest}` !== verifiedThemeDigest) {
     throw new Error("Saved specification identity differs from locally verified candidate");
   }
 
   // Resolve metadata: object, string path, or default cyan
+  /** @type {PackageMetadata} */
   let pkgMeta = { name: "starlight-theme-stellar-cyan", version: "0.1.0" };
   if (typeof options.metadata === "object" && options.metadata !== null) {
     pkgMeta = { ...options.metadata };
@@ -974,14 +1004,17 @@ export async function runSavedThemeConsumerSmoke(savedSpecificationPath, verifie
     const metadata = join(scratchDir, "package-metadata.json");
     await writeFile(metadata, JSON.stringify(pkgMeta, null, 2), "utf8");
     const generated = join(scratchDir, "generated");
-    const genArgs = [tfslBin, "generate", resolve(savedSpecificationPath), "--package", metadata, "--out", generated, "--json"];
+    const genArgs = [tfslBin, "generate", resolvedSavedSpecificationPath, "--package", metadata, "--out", generated, "--json"];
     if (pkgMeta.template) {
       genArgs.push("--template", pkgMeta.template);
     }
     execFileSync(process.execPath, genArgs);
     const generatedCss = await readFile(join(generated, "styles/theme.css"), "utf8");
     if (sha256(generatedCss) !== compiled.descriptor.outputDigest) throw new Error("Generated CSS differs from verified compilation");
+    /** @type {PackInfo[]} */
     const packed = JSON.parse(execFileSync("npm", ["pack", "--json"], { cwd: generated, encoding: "utf8" }));
+    const packedInfo = packed[0];
+    if (!packedInfo) throw new Error("npm pack returned no saved-theme package metadata");
     const consumer = join(scratchDir, "consumer");
     await cp(CONSUMER_FIXTURE_DIR, consumer, {
       recursive: true,
@@ -994,7 +1027,7 @@ export async function runSavedThemeConsumerSmoke(savedSpecificationPath, verifie
       });
     }
     execFileSync("npm", ["ci", "--ignore-scripts"], { cwd: consumer, stdio: "pipe" });
-    execFileSync("npm", ["install", "--ignore-scripts", "--no-save", "--package-lock=false", join(generated, packed[0].filename)], { cwd: consumer, stdio: "pipe" });
+    execFileSync("npm", ["install", "--ignore-scripts", "--no-save", "--package-lock=false", join(generated, packedInfo.filename)], { cwd: consumer, stdio: "pipe" });
     const output = join(consumer, "dist");
     const scenario = options.scenario || (pkgMeta.name === "starlight-theme-stellar-cyan" ? "cyan" : "nova");
     execFileSync("npm", ["exec", "--", "astro", "build"], {
@@ -1012,6 +1045,7 @@ export async function runSavedThemeConsumerSmoke(savedSpecificationPath, verifie
     browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(`http://127.0.0.1:${server.port}/`);
+    /** @type {Record<string, { accent: string, headingCount: number, bodyBackground: string, templateFrameCount: number }>} */
     const measurements = {};
     for (const mode of ["dark", "light"]) {
       const observed = await page.evaluate((themeMode) => {
@@ -1023,8 +1057,11 @@ export async function runSavedThemeConsumerSmoke(savedSpecificationPath, verifie
           templateFrameCount: document.querySelectorAll(".tfsl-page-title-frame").length,
         };
       }, mode);
+      /** @type {string} */
       const expected = specification.colors[mode].accent.base;
-      const rgb = expected.slice(1).match(/../g).map((pair) => parseInt(pair, 16)).join(", ");
+      const rgbPairs = expected.slice(1).match(/../g);
+      if (!rgbPairs) throw new Error(`Saved candidate has an invalid accent color: ${expected}`);
+      const rgb = rgbPairs.map(/** @param {string} pair */ (pair) => parseInt(pair, 16)).join(", ");
       if (!colorMatches(observed.accent, expected, rgb) || observed.headingCount !== 1) {
         throw new Error(`Saved candidate consumer style mismatch in ${mode} mode`);
       }
@@ -1040,8 +1077,8 @@ export async function runSavedThemeConsumerSmoke(savedSpecificationPath, verifie
       measurements,
       packageName: pkgMeta.name,
       template: pkgMeta.template || null,
-      packageSha256: sha256(await readFile(join(generated, packed[0].filename))),
-      packageMembers: packed[0].files.map(file => file.path),
+      packageSha256: sha256(await readFile(join(generated, packedInfo.filename))),
+      packageMembers: packedInfo.files.map(file => file.path),
     };
   } finally {
     if (browser) await browser.close();
@@ -1061,13 +1098,7 @@ export async function runSavedThemeConsumerSmoke(savedSpecificationPath, verifie
  * contrast ratios, focus, reduced-motion, and nav/brand styling,
  * and outputs sanitized JSON render receipts and screenshots.
  *
- * @param {{
- *   novaRoot?: string,
- *   workDir?: string,
- *   packedTfslPath?: string,
- *   tfslBin?: string,
- *   demoOverlayDir?: string,
- * }} [options]
+ * @param {NovaSmokeOptions} [options]
  */
 export async function runTerminalNovaConsumerSmoke(options = {}) {
   console.log("=== TFSB54 Terminal Nova Installed Consumer Qualification ===");
@@ -1119,6 +1150,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
     } else {
       console.log("4. Packing TFSL package from source checkout...");
       const packRaw = execFileSync("npm", ["pack", "--json", "--pack-destination", workDir], { cwd: LOOM_ROOT, encoding: "utf8" });
+      /** @type {PackInfo} */
       const packInfo = JSON.parse(packRaw)[0];
       packedTfslTarball = join(workDir, packInfo.filename);
       console.log(`   Packed ${packInfo.filename} (${packInfo.size} bytes) into ${workDir}`);
@@ -1214,10 +1246,12 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
   // Pack candidate packages via npm pack & verify members
   console.log("6. Packing candidate packages via npm pack and verifying package inventory...");
   const forgePackRaw = execFileSync("npm", ["pack", "--json"], { cwd: forgeOut1, encoding: "utf8" });
+  /** @type {PackInfo} */
   const forgePackJson = JSON.parse(forgePackRaw)[0];
   const forgeTarballPath = join(forgeOut1, forgePackJson.filename);
 
   const obsPackRaw = execFileSync("npm", ["pack", "--json"], { cwd: obsOut1, encoding: "utf8" });
+  /** @type {PackInfo} */
   const obsPackJson = JSON.parse(obsPackRaw)[0];
   const obsTarballPath = join(obsOut1, obsPackJson.filename);
 
@@ -1226,11 +1260,15 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
   verifyPackageMembers(obsPackJson, false);
   console.log(`   ✓ ${obsPackJson.filename} members verified (CSS-only, no component override, no hygiene violations).`);
 
+  /** @type {Record<string, IdentityRecord>} */
   const identities = {};
-  for (const [id, firstDir, secondDir, packed] of [
+  /** @type {Array<[string, string, string, PackInfo]>} */
+  const identityInputs = [
     ["forge-console", forgeOut1, forgeOut2, forgePackJson],
     ["nova-observatory", obsOut1, obsOut2, obsPackJson],
-  ]) {
+  ];
+  for (const [id, firstDir, secondDir, packed] of identityInputs) {
+    /** @type {PackInfo} */
     const second = JSON.parse(execFileSync("npm", ["pack", "--json"], { cwd: secondDir, encoding: "utf8" }))[0];
     if (JSON.stringify(packed.files) !== JSON.stringify(second.files)) throw new Error(`${id}: package members differ`);
     const digest = sha256(await readFile(join(firstDir, packed.filename)));
@@ -1244,6 +1282,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
   const consumerForge = join(workDir, "consumer-forge");
   const consumerObs = join(workDir, "consumer-observatory");
 
+  /** @param {string} target */
   const copyFixture = async (target) => {
     await cp(CONSUMER_FIXTURE_DIR, target, {
       recursive: true,
@@ -1286,8 +1325,10 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
   const distForgeDisconnected = join(consumerForge, "dist/disconnected");
   const distObsDefault = join(consumerObs, "dist/default");
 
+  /** @type {Record<string, number>} */
   const buildDurations = {};
 
+  /** @param {string} cwd @param {string} scenario @param {string} packageName @param {string} outDir @param {string} key */
   const buildAstro = (cwd, scenario, packageName, outDir, key) => {
     const t0 = performance.now();
     const res = spawnSync("npm", ["exec", "--", "astro", "build"], {
@@ -1326,6 +1367,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
   const browser = await chromium.launch({ headless: true });
 
   const servers = [];
+  /** @type {ScreenshotRecord[]} */
   const screenshots = [];
   let forgeDefaultMeasurements;
   let obsDefaultMeasurements;
@@ -1344,6 +1386,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
     const page = await browser.newPage();
 
     // Listen for runtime externals
+    /** @type {string[]} */
     const externalRequests = [];
     page.on("request", (req) => {
       try {
@@ -1355,6 +1398,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
     });
 
     // Helper to extract styles and custom properties in given mode
+    /** @param {string} mode @returns {Promise<StyleMeasurement>} */
     const measurePageStyles = async (mode) => {
       await page.evaluate((m) => {
         document.documentElement.dataset.theme = m;
@@ -1393,6 +1437,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
     };
 
     // Helper to capture a screenshot
+    /** @param {string} name @param {string} pkg @param {string} mode @param {string} viewport */
     const captureScreenshot = async (name, pkg, mode, viewport) => {
       const filename = `${name}.png`;
       const fullPath = join(screenshotsDir, filename);
@@ -1436,7 +1481,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
 
     // Contrast check dark
     const forgeDarkContrast = calculateContrastRatio(forgeDark.bodyColor, forgeDark.bodyBg);
-    if (forgeDarkContrast !== null && forgeDarkContrast < 4.5) {
+    if (forgeDarkContrast === null || !Number.isFinite(forgeDarkContrast) || forgeDarkContrast < 4.5) {
       throw new Error(`Forge Console dark mode body contrast ratio ${forgeDarkContrast} is below WCAG AA 4.5:1`);
     }
 
@@ -1471,7 +1516,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
 
     // Contrast check light
     const forgeLightContrast = calculateContrastRatio(forgeLight.bodyColor, forgeLight.bodyBg);
-    if (forgeLightContrast !== null && forgeLightContrast < 4.5) {
+    if (forgeLightContrast === null || !Number.isFinite(forgeLightContrast) || forgeLightContrast < 4.5) {
       throw new Error(`Forge Console light mode body contrast ratio ${forgeLightContrast} is below WCAG AA 4.5:1`);
     }
 
@@ -1602,7 +1647,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
 
     // Contrast check dark
     const obsDarkContrast = calculateContrastRatio(obsDark.bodyColor, obsDark.bodyBg);
-    if (obsDarkContrast !== null && obsDarkContrast < 4.5) {
+    if (obsDarkContrast === null || !Number.isFinite(obsDarkContrast) || obsDarkContrast < 4.5) {
       throw new Error(`Nova Observatory dark mode body contrast ratio ${obsDarkContrast} is below WCAG AA 4.5:1`);
     }
 
@@ -1630,7 +1675,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
       throw new Error(`Nova Observatory light bodyColor mismatch: expected ${obsSpec.colors.light.neutrals.text}, got ${obsLight.bodyColor}`);
     }
     const obsLightContrast = calculateContrastRatio(obsLight.bodyColor, obsLight.bodyBg);
-    if (obsLightContrast !== null && obsLightContrast < 4.5) {
+    if (obsLightContrast === null || !Number.isFinite(obsLightContrast) || obsLightContrast < 4.5) {
       throw new Error(`Nova Observatory light mode body contrast ratio ${obsLightContrast} is below WCAG AA 4.5:1`);
     }
     await captureScreenshot("nova-observatory-light-desktop", obsMeta.name, "light", "1280x800");
@@ -1726,6 +1771,7 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
       sha256: sha256(await readFile(s.fullPath)),
       identity: identities[s.name.startsWith("nova-observatory") ? "nova-observatory" : "forge-console"],
     }))),
+    interactions: /** @type {unknown} */ (undefined),
   };
 
   receipt.interactions = await observeNovaConsumers(workDir, novaRoot);
@@ -1738,36 +1784,54 @@ export async function runTerminalNovaConsumerSmoke(options = {}) {
   return receipt;
 }
 
-/** Observe real installed Nova builds; also callable without repeating install/build. */
+/** Observe real installed Nova builds; also callable without repeating install/build.
+ * @param {string} workDir
+ * @param {string} novaRoot
+ * @param {NovaObserveOptions} [options]
+ */
 export async function observeNovaConsumers(workDir, novaRoot, options = {}) {
   const playwright = await import(options.playwrightModule ?? "@playwright/test");
   const { chromium, expect } = playwright.default ?? playwright;
+  /** @type {import("@playwright/test").Browser} */
   const browser = await chromium.launch();
+  /** @type {Record<string, unknown>} */
   const observations = {};
+  /** @type {string[]} */
   const external = [];
+  /** @param {boolean} condition @param {string} message */
   const assert = (condition, message) => { if (!condition) throw new Error(message); };
   try {
-    for (const [id, consumer] of (options.selectedOnly ? [["forge-console", "consumer-forge"]] : [["forge-console", "consumer-forge"], ["nova-observatory", "consumer-observatory"]])) {
+    /** @type {Array<[string, string]>} */
+    const consumers = options.selectedOnly ? [["forge-console", "consumer-forge"]] : [["forge-console", "consumer-forge"], ["nova-observatory", "consumer-observatory"]];
+    for (const [id, consumer] of consumers) {
       const spec = JSON.parse(await readFile(join(novaRoot, options.candidateDirectory ?? "candidates", `${id}.theme.json`), "utf8"));
       const server = await startStaticServer(join(workDir, consumer, "dist/default"));
       const page = await browser.newPage();
       page.on("request", (request) => {
         if (new URL(request.url()).hostname !== "127.0.0.1") external.push(request.url());
       });
+      /** @type {Array<Record<string, unknown>>} */
       const records = [];
       try {
         for (const mode of ["dark", "light"]) {
           for (const width of [1440, 375]) {
             await page.setViewportSize({ width, height: 900 });
             await page.goto(`http://127.0.0.1:${server.port}/`);
-            await page.evaluate((m) => { document.documentElement.dataset.theme = m; }, mode);
+            await page.evaluate(/** @param {string} m */ (m) => { document.documentElement.dataset.theme = m; }, mode);
             const measurements = await page.evaluate(() => {
-              const style = (selector) => getComputedStyle(document.querySelector(selector));
+              /** @param {string} selector */
+              const style = (selector) => {
+                const element = document.querySelector(selector);
+                if (!element) throw new Error(`Missing style target: ${selector}`);
+                return getComputedStyle(element);
+              };
               const p = style(".sl-markdown-content > p");
               const inline = style(".sl-markdown-content p code");
               const block = style(".expressive-code pre");
               const link = style(".sl-markdown-content p a");
-              const content = document.querySelector(".sl-markdown-content").getBoundingClientRect();
+              const contentElement = document.querySelector(".sl-markdown-content");
+              if (!contentElement) throw new Error("Missing markdown content container");
+              const content = contentElement.getBoundingClientRect();
               return {
                 bodyBg: getComputedStyle(document.body).backgroundColor,
                 bodyText: p.color, link: link.color, inlineText: inline.color,
@@ -1790,22 +1854,32 @@ export async function observeNovaConsumers(workDir, novaRoot, options = {}) {
             assert(measurements.font.includes(id === "forge-console" ? "sans-serif" : "ui-serif"), "Actual prose font differs");
 
             // Composite actual transparent panel backgrounds before measuring adjacent pairs.
+            /** @type {ContrastPair[]} */
             const pairs = await page.evaluate(() => {
               const canvas = document.createElement("canvas"); canvas.width = canvas.height = 1;
               const ctx = canvas.getContext("2d");
+              if (!ctx) throw new Error("Canvas 2D context unavailable");
+              /** @param {string} color @returns {number[]} */
               const rgba = (color) => { ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); return [...ctx.getImageData(0, 0, 1, 1).data]; };
-              const blend = (fg, bg) => fg.slice(0, 3).map((v, i) => Math.round(v * fg[3] / 255 + bg[i] * (1 - fg[3] / 255)));
+              /** @param {number[]} fg @param {number[]} bg @returns {number[]} */
+              const blend = (fg, bg) => {
+                const [r = 0, g = 0, b = 0, alpha = 255] = fg;
+                return [r, g, b].map((value, index) => Math.round(value * alpha / 255 + (bg[index] ?? 255) * (1 - alpha / 255)));
+              };
+              /** @param {Element} el @returns {number[]} */
               const background = (el) => {
-                const chain = []; for (let p = el; p; p = p.parentElement) chain.unshift(p);
+                /** @type {Element[]} */
+                const chain = [];
+                for (let p = /** @type {Element | null} */ (el); p !== null; p = p.parentElement) chain.unshift(p);
                 return chain.reduce((bg, p) => blend(rgba(getComputedStyle(p).backgroundColor), bg), [255, 255, 255]);
               };
               const selectors = [".sl-markdown-content > p", ".sl-markdown-content p a", ".sl-markdown-content p code", ".starlight-aside p", ".card .title", "th", "td", "#starlight__sidebar a[aria-current='page']", ".expressive-code pre code span[style]"];
-              return selectors.flatMap((selector) => [...document.querySelectorAll(selector)].filter(el => el.textContent.trim() && el.getBoundingClientRect().height).map(el => {
+              return selectors.flatMap((selector) => [...document.querySelectorAll(selector)].filter(/** @param {Element} el */ (el) => el.textContent?.trim() && el.getBoundingClientRect().height).map(/** @param {Element} el */ (el) => {
                 const bg = background(el); const fg = blend(rgba(getComputedStyle(el).color), bg);
                 return { selector, foreground: `rgb(${fg.join(", ")})`, background: `rgb(${bg.join(", ")})` };
               }));
             });
-            assert(pairs.some(p => p.selector.includes("expressive-code")), "Fenced syntax text not observed");
+            assert(pairs.some(/** @param {ContrastPair} p */ (p) => p.selector.includes("expressive-code")), "Fenced syntax text not observed");
             for (const pair of pairs) {
               pair.ratio = calculateContrastRatio(pair.foreground, pair.background);
               assert(pair.ratio !== null && pair.ratio >= 4.5, `${id} ${mode} adjacent text contrast: ${JSON.stringify(pair)}`);
@@ -1814,18 +1888,20 @@ export async function observeNovaConsumers(workDir, novaRoot, options = {}) {
             const link = page.locator(".sl-markdown-content p a").first();
             await link.hover();
             const hover = await link.evaluate(el => getComputedStyle(el).color);
-            assert(calculateContrastRatio(hover, measurements.bodyBg) >= 4.5, "Hovered link contrast");
+            const hoverContrast = calculateContrastRatio(hover, measurements.bodyBg);
+            assert(hoverContrast !== null && hoverContrast >= 4.5, "Hovered link contrast");
             await page.mouse.move(0, 0);
             await page.keyboard.press("Tab");
             await link.focus();
             const focus = await link.evaluate(el => ({ visible: el.matches(":focus-visible"), width: getComputedStyle(el).outlineWidth, style: getComputedStyle(el).outlineStyle, color: getComputedStyle(el).outlineColor }));
             assert(focus.visible && parseFloat(focus.width) >= 1 && focus.style !== "none", `Keyboard focus is not visibly outlined: ${JSON.stringify(focus)}`);
-            assert(calculateContrastRatio(focus.color, measurements.bodyBg) >= 3, `${id} ${mode} ${width}: Focus ring contrast ${JSON.stringify({ focus, background: measurements.bodyBg })}`);
+            const focusContrast = calculateContrastRatio(focus.color, measurements.bodyBg);
+            assert(focusContrast !== null && focusContrast >= 3, `${id} ${mode} ${width}: Focus ring contrast ${JSON.stringify({ focus, background: measurements.bodyBg })}`);
 
             await page.emulateMedia({ reducedMotion: "reduce" });
             const motion = await page.evaluate(() => ({
               scroll: getComputedStyle(document.documentElement).scrollBehavior,
-              running: document.getAnimations().filter(a => a.playState === "running" && a.effect.getTiming().iterations === Infinity).length,
+              running: document.getAnimations().filter(a => a.playState === "running" && a.effect?.getTiming().iterations === Infinity).length,
             }));
             assert(motion.scroll === "auto" && motion.running === 0, "Reduced-motion behavior differs");
             await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -1850,27 +1926,30 @@ export async function observeNovaConsumers(workDir, novaRoot, options = {}) {
             await tabs.first().focus(); await page.keyboard.press("ArrowRight");
             await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
 
-            const brand = await page.locator(".site-title img:visible").evaluate(el => {
+            const brand = await page.locator(".site-title img:visible").evaluate(/** @param {HTMLImageElement} el */ (el) => {
               const box = el.getBoundingClientRect(); const title = el.closest("a");
+              if (!title) throw new Error("Visible site-title image has no anchor");
               return { width: box.width, height: box.height, loaded: el.complete && el.naturalWidth > 0, gap: parseFloat(getComputedStyle(title).columnGap), src: el.getAttribute("src"), ratio: el.naturalWidth / el.naturalHeight };
             });
             assert(brand.loaded && brand.width >= 24 && brand.gap >= brand.width / 6, "Brand size/clear space not preserved");
             assert(Math.abs(brand.width / brand.height - brand.ratio) < 0.01, "Brand proportions changed");
-            assert(brand.src.includes(`mark-on-${mode}`), "Wrong surface-specific mark");
-            const uniquePairs = [...new Map(pairs.map(pair => [JSON.stringify(pair), pair])).values()];
+            if (!brand.src || !brand.src.includes(`mark-on-${mode}`)) throw new Error("Wrong surface-specific mark");
+            const uniquePairs = [...new Map(pairs.map(/** @param {ContrastPair} pair */ (pair) => [JSON.stringify(pair), pair])).values()];
             records.push({ mode, width, measurements, pairs: uniquePairs, hover, focus, motion, brand, keyboardMenu: width === 375, searchResults: true, keyboardTabs: true });
           }
         }
       } finally { await page.close(); await server.close(); }
+      /** @type {Record<string, Record<string, unknown>>} */
       const controls = {};
       for (const variant of ["override", "disconnected"]) {
         const controlServer = await startStaticServer(join(workDir, consumer, `dist/${variant}`));
         const controlPage = await browser.newPage();
         try {
           await controlPage.goto(`http://127.0.0.1:${controlServer.port}/`);
+          /** @type {Record<string, unknown>} */
           const modes = {};
           for (const mode of ["dark", "light"]) {
-            await controlPage.evaluate(m => document.documentElement.dataset.theme = m, mode);
+            await controlPage.evaluate(/** @param {string} m */ (m) => document.documentElement.dataset.theme = m, mode);
             const observed = await controlPage.evaluate(() => ({
               hairline: getComputedStyle(document.documentElement).getPropertyValue("--sl-color-hairline").trim(),
               background: getComputedStyle(document.body).backgroundColor,
@@ -1933,16 +2012,23 @@ export async function runReleaseNovaConsumer(sourceRoot, packagePath, workDir) {
 const isDirect = process.argv[1] && resolve(fileURLToPath(import.meta.url)) === resolve(process.argv[1]);
 if (isDirect) {
   const args = process.argv.slice(2);
+  /** @param {string} flag @returns {string | undefined} */
   const getArg = (flag) => {
     const idx = args.indexOf(flag);
     return idx >= 0 && idx + 1 < args.length ? args[idx + 1] : undefined;
   };
+  /** @param {string} flag */
+  const requireArg = (flag) => {
+    const value = getArg(flag);
+    if (value === undefined) throw new Error(`Missing required argument: ${flag}`);
+    return value;
+  };
 
   let runPromise;
   if (args.includes("--release-nova-root")) {
-    runPromise = runReleaseNovaConsumer(getArg("--release-nova-root"),getArg("--packed-theme"),getArg("--work-dir"));
+    runPromise = runReleaseNovaConsumer(requireArg("--release-nova-root"), requireArg("--packed-theme"), requireArg("--work-dir"));
   } else if (args.includes("--observe-nova-work-dir")) {
-    runPromise = observeNovaConsumers(resolve(getArg("--observe-nova-work-dir")), resolve(getArg("--nova-root") || "themes/terminal-nova"));
+    runPromise = observeNovaConsumers(requireArg("--observe-nova-work-dir"), resolve(getArg("--nova-root") || "themes/terminal-nova"));
   } else if (args.includes("--nova-root") || args.includes("--nova-smoke")) {
     runPromise = runTerminalNovaConsumerSmoke({
       novaRoot: getArg("--nova-root"),
@@ -1952,8 +2038,8 @@ if (isDirect) {
       demoOverlayDir: getArg("--demo-dir"),
     });
   } else if (args.includes("--saved-specification")) {
-    const specPath = getArg("--saved-specification");
-    const digest = getArg("--verified-theme-digest");
+    const specPath = requireArg("--saved-specification");
+    const digest = requireArg("--verified-theme-digest");
     const metadataArg = getArg("--package-metadata") || getArg("--metadata");
     const template = getArg("--template");
     const tfslBin = getArg("--tfsl-bin");

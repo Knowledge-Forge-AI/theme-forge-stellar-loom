@@ -74,7 +74,7 @@ describe("TFSL CLI", () => {
     try {
       const code = await runCli(["node", "tfsl", "--version"]);
       expect(code).toBe(0);
-      expect(output).toContain("@knowledge-forge-ai/theme-forge-stellar-loom 0.4.0");
+      expect(output).toContain("@knowledge-forge-ai/theme-forge-stellar-loom 0.5.0");
     } finally {
       process.stdout.write = origWrite;
     }
@@ -124,6 +124,135 @@ describe("TFSL CLI", () => {
       expect(errOutput).toContain("Unexpected surplus operand: 'extra-file.json'");
     } finally {
       process.stderr.write = origErr;
+    }
+  });
+
+  it("fails closed when root and exchange options are missing their values", async () => {
+    let errOutput = "";
+    const origErr = process.stderr.write;
+    process.stderr.write = ((chunk: any) => {
+      errOutput += chunk;
+      return true;
+    }) as any;
+
+    const themePath = join(EXAMPLES_DIR, "stellar-cyan.theme.json");
+    const cases = [
+      {
+        argv: ["node", "tfsl", "compile", themePath, "--accent"],
+        message: "Invalid or duplicate option: --accent",
+      },
+      {
+        argv: ["node", "tfsl", "exchange", "brief", "--name"],
+        message: "Missing value for option: --name <id>",
+      },
+      {
+        argv: ["node", "tfsl", "exchange", "candidate", "--brief"],
+        message: "Missing value for option: --brief <file>",
+      },
+      {
+        argv: ["node", "tfsl", "exchange", "review", "--candidate"],
+        message: "Missing value for option: --candidate <file>",
+      },
+      {
+        argv: ["node", "tfsl", "exchange", "validate", "packet.json", "--candidate"],
+        message: "Missing value for option: --candidate <file>",
+      },
+      {
+        argv: ["node", "tfsl", "exchange", "brief", "--visual"],
+        message: "Missing value for option: --visual <file>",
+      },
+    ];
+
+    try {
+      for (const testCase of cases) {
+        errOutput = "";
+        expect(await runCli(testCase.argv)).toBe(2);
+        expect(errOutput).toContain(testCase.message);
+      }
+    } finally {
+      process.stderr.write = origErr;
+    }
+  });
+
+  it("resets an optional exchange value when a repeated option is trailing", async () => {
+    const scratch = await mkdtemp(join(tmpdir(), "tfsl-test-trailing-option-"));
+    try {
+      const themePath = join(EXAMPLES_DIR, "stellar-cyan.theme.json");
+      const outPath = join(scratch, "brief.json");
+      const code = await runCli([
+        "node",
+        "tfsl",
+        "exchange",
+        "brief",
+        "--name",
+        "brief-default-title",
+        "--theme",
+        themePath,
+        "--out",
+        outPath,
+        "--title",
+        "temporary-title",
+        "--title",
+      ]);
+
+      expect(code).toBe(0);
+      const packet = JSON.parse(await readFile(outPath, "utf8"));
+      expect(packet.title).toBe("brief-default-title");
+    } finally {
+      await rm(scratch, { recursive: true, force: true });
+    }
+  });
+
+  it("fails closed on sparse root and exchange argv without executing the command", async () => {
+    let errOutput = "";
+    const origErr = process.stderr.write;
+    process.stderr.write = ((chunk: any) => {
+      errOutput += chunk;
+      return true;
+    }) as any;
+
+    const themePath = join(EXAMPLES_DIR, "stellar-cyan.theme.json");
+    const rootArgs = ["node", "tfsl", "compile", themePath, "--strict-contrast"] as (string | undefined)[];
+    rootArgs[4] = undefined;
+    const exchangeArgs = [
+      "node",
+      "tfsl",
+      "exchange",
+      "validate",
+      "candidate.json",
+      "--brief",
+      "brief.json",
+    ] as (string | undefined)[];
+    exchangeArgs[5] = undefined;
+
+    try {
+      expect(await runCli(rootArgs as string[])).toBe(2);
+      expect(errOutput).toContain("Invalid argument at position 2");
+      expect(errOutput).not.toContain("Compiled");
+
+      errOutput = "";
+      expect(await runCli(exchangeArgs as string[])).toBe(2);
+      expect(errOutput).toContain("Invalid argument at position 1");
+      expect(errOutput).not.toContain("OK:");
+    } finally {
+      process.stderr.write = origErr;
+    }
+  });
+
+  it("emits JSON INVALID_ARGUMENTS when a required value is followed by another option", async () => {
+    let output = "";
+    const origWrite = process.stdout.write;
+    process.stdout.write = ((chunk: any) => {
+      output += chunk;
+      return true;
+    }) as any;
+
+    try {
+      const code = await runCli(["node", "tfsl", "exchange", "brief", "--name", "--json"]);
+      expect(code).toBe(2);
+      expect(JSON.parse(output)).toMatchObject({ status: "error", code: "INVALID_ARGUMENTS" });
+    } finally {
+      process.stdout.write = origWrite;
     }
   });
 

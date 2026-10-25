@@ -1,0 +1,58 @@
+{
+  "schema": "loom.current-legal-profile.v1",
+  "source": {
+    "commit": "adc8bf911fa7ea82817dd343125de8344be1e29b",
+    "tree": "1377f20ce5219493508e3f71441b4d6b88345baf",
+    "legalSourcePath": "packages/stellar-loom/src/generator/legal.ts",
+    "legalSourceSha256": "e71b5c1b0a98089b0d4f5ff31dac7d3280a0e47a3cd3b9b5f5d150852048db5b",
+    "contact": "sam.lair@knowledge-forge.ai",
+    "previousContact": "lair001@gmail.com"
+  },
+  "receipt": {
+    "resultSha256": "4123ec0a208d48aed773a39d63532402e4417ec072b136a95946a82b4f046e64",
+    "parentAcceptanceSha256": "1b526693b275d3fea9c3d612279a5564401861e419b5dc5584f537f587387a4c",
+    "causalDiagnosticSha256": "2f70b22dd1a69738c6fee458afa6886d959e160f335f44a4abe62a5f50cf92c2",
+    "parentReviewedCurrentReceipt": true,
+    "unchangedSourceAndToolPins": true,
+    "onlyTwoContactRowsExplainPriorDigestPair": true
+  },
+  "legalRows": [
+    {
+      "path": "COMMERCIAL-LICENSE.md",
+      "bytes": 942,
+      "sha256": "63ddf934056e5e21f70b5fca6824679bff8c759e14c59b9b1704412d5ccc1747"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 34460,
+      "sha256": "62eef07fc3ad238dd889ff98cf9ed87b3ef0f421579b6945f87ec37c608afb62"
+    },
+    {
+      "path": "NOTICE",
+      "bytes": 608,
+      "sha256": "a7cef97febccf21c5db0854d09806c2b42ed526190d0ef3fd39d877de53a1a0a"
+    }
+  ],
+  "v2Package": {
+    "input": {
+      "example": "packages/stellar-loom/examples/loom-black-core.theme.json",
+      "exampleSha256": "57606976c4683da74d8d000c87c891fe6b4e6afd72b8b686ea8ed2adfdc78eff",
+      "metadata": {
+        "name": "loom-core-test",
+        "version": "0.1.0"
+      }
+    },
+    "inputIdentity": "9e0e60a0e090762e44237c67274e5712587dff8871bc1c90ca017b3f911bd434",
+    "inventoryDigest": "5312a83626b5937f97e677286f01711c916b3375633f91703a28eeae3bb45759",
+    "provenanceSha256": "77b86e5eb0f55881d128500deceffc53bb82152d53b8aec01ee294b26399f725"
+  },
+  "previousReceipt": {
+    "inventoryDigest": "ba15effeb6888296df3afe2f47556e7fe53dda123091f27ef754bf660bae2699",
+    "provenanceSha256": "18d645330407aa5b4febc0195e67ca4ef92d7ea350b4dccc6bdbffd2fcfb5aac",
+    "onlyReplacedDiagnosticRows": [
+      "NOTICE",
+      "COMMERCIAL-LICENSE.md"
+    ]
+  },
+  "scope": "current test expectation/profile only; no release/native/publication qualification"
+}

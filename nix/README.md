@@ -31,7 +31,7 @@ nix flake check
 
 1. **Pure Source Derivation**:
    TypeScript is compiled from clean source in an isolated build environment using `pkgs.buildNpmPackage` with Node 22.
-   All build dependencies are locked via `npmDepsHash = "sha256-DLKVAiTQf9h3kUT4wAIVHML759NmPQ2isRUXTM+CRjw="`.
+   All build dependencies are locked via `npmDepsHash = "sha256-spYJ6KrT/CI4OVy2FPxUu8g367TTLkAH2FKUOX9VSQ4="`.
 
 2. **Catalog Build Evidence Integrity**:
    During build, `tools/build-catalog-evidence.mjs` executes to bind compiled JavaScript outputs,

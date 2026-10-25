@@ -101,7 +101,7 @@
     },
     {
       "path": "src/cli.ts",
-      "sha256": "5215516eacdf4385884947dc6a30b40857989c00a2dae1901a99f1b908935ad3"
+      "sha256": "4347ce5b2c2febda6a956feeef43cf04a93a3ce224587ade6054b0b5186af3bf"
     },
     {
       "path": "src/code/canonical.ts",
@@ -145,7 +145,7 @@
     },
     {
       "path": "src/compiler/contrast.ts",
-      "sha256": "8210cf4aee52f3ec5ae20caae692008acfd342a1215759bb7060120aa16f1377"
+      "sha256": "56d68e3733379907d3389b1e4772848dd6f4b6765e737ef0c26677f20ae8c146"
     },
     {
       "path": "src/compiler/descriptor.ts",
@@ -249,7 +249,7 @@
     },
     {
       "path": "src/design-exchange/canonical.ts",
-      "sha256": "5bf6321c0048c75e79f80e13cc3acbff4b7d9cc25928e92b3fc49522a528f71a"
+      "sha256": "3180e476b79f8ca8d95d05fe6086c1a09316d5a3ec5fd081e5cbc05de08a2473"
     },
     {
       "path": "src/design-exchange/constants.ts",
@@ -321,7 +321,7 @@
     },
     {
       "path": "src/generator/legal.ts",
-      "sha256": "1f389ed0d1286e9603890f7fd9ed5f2a4fd91c2981901dfea4ae4cb3b9a9b918"
+      "sha256": "e71b5c1b0a98089b0d4f5ff31dac7d3280a0e47a3cd3b9b5f5d150852048db5b"
     },
     {
       "path": "src/generator/metadata.ts",
@@ -361,7 +361,7 @@
     },
     {
       "path": "src/schema/validator.ts",
-      "sha256": "1f05b0c8a4979cdba8932ef88b2835aaea5053c4e494deca8e6786793d8e5381"
+      "sha256": "f0ba6d74243f0119cb380946f4649c3b2c080dc22c6c273cc264c38b2ccb0310"
     },
     {
       "path": "src/syntax/index.ts",
@@ -409,7 +409,7 @@
     },
     {
       "path": "tools/build-catalog-evidence.mjs",
-      "sha256": "cf803e93aaf75603afd481d4bcaf43fc7d43b469cee232429f0340382eac8110"
+      "sha256": "dc163af37af86987429b804222ec54b865654c9121a4eadc6c76cfd31ffbc424"
     },
     {
       "path": "tsconfig.build.json",
@@ -435,6 +435,16 @@
       "design-exchange-catalog/executable.ts": {
         "historicalSha256": "3128345b10e0de685e467ee52ebd997c66d06dfdb2bd76fca1a92f1fc6c10058",
         "qualifiedSha256": "64fa7caf7bb47d7ef4206b565c10b2a735eda1e0f01910540c80223cb09deb4c"
+      }
+    }
+  },
+  "contactSourceAmendment": {
+    "phase": "TFNC3-CTTN-DEVOPS-FOUNDATION1",
+    "scope": "Maintained business contact only; license terms, historical protocol pins and frozen baselines preserved",
+    "sources": {
+      "src/generator/legal.ts": {
+        "previousQualifiedSha256": "1f389ed0d1286e9603890f7fd9ed5f2a4fd91c2981901dfea4ae4cb3b9a9b918",
+        "qualifiedSha256": "e71b5c1b0a98089b0d4f5ff31dac7d3280a0e47a3cd3b9b5f5d150852048db5b"
       }
     }
   }

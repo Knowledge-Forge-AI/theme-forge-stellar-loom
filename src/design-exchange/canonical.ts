@@ -131,6 +131,7 @@ export function assertNoDuplicateKeys(jsonText: string): void {
           // It's a key!
           if (stack.length > 0) {
             const currentScope = stack[stack.length - 1];
+            if (!currentScope) throw new ThemeExchangeValidationError("Missing object scope while scanning duplicate keys", "DUPLICATE_KEY");
             if (currentScope.has(currentString)) {
               throw new ThemeExchangeValidationError(
                 `Duplicate key '${currentString}' found in JSON object`,

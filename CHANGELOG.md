@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- Assign version 0.5.0 for the coordinated Theme Forge release.
+
 ## 0.4.0 — Unreleased source candidate
 
 - Assign the TFSB71 source-build and distribution changes to a new release version.
