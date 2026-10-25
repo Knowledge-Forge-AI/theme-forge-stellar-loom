@@ -10,7 +10,7 @@ vi.mock("../src/generator/legal.js", async (original) =>
   )
 );
 import { describe, expect, it, vi } from "vitest";
-import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { closeSync, existsSync, fstatSync, openSync, readFileSync, readdirSync } from "node:fs";
 import { mkdtemp, rm, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -56,15 +56,24 @@ function sha256(content: string | Buffer): string {
 function snapshotDirectoryHashes(rootDir: string): Record<string, { bytes: number; sha256: string }> {
   const out: Record<string, { bytes: number; sha256: string }> = {};
   function walk(currentDir: string, prefix: string): void {
-    for (const entry of readdirSync(currentDir).sort()) {
-      const fullPath = join(currentDir, entry);
-      const relPath = prefix ? `${prefix}/${entry}` : entry;
-      const st = statSync(fullPath);
-      if (st.isDirectory()) {
+    const entries = readdirSync(currentDir, { withFileTypes: true }).sort((left, right) =>
+      left.name < right.name ? -1 : left.name > right.name ? 1 : 0
+    );
+    for (const entry of entries) {
+      const fullPath = join(currentDir, entry.name);
+      const relPath = prefix ? `${prefix}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
         walk(fullPath, relPath);
-      } else if (st.isFile()) {
-        const buf = readFileSync(fullPath);
-        out[relPath] = { bytes: buf.byteLength, sha256: sha256(buf) };
+      } else if (entry.isFile()) {
+        const fd = openSync(fullPath, "r");
+        try {
+          const st = fstatSync(fd);
+          if (!st.isFile()) continue;
+          const buf = readFileSync(fd);
+          out[relPath] = { bytes: buf.byteLength, sha256: sha256(buf) };
+        } finally {
+          closeSync(fd);
+        }
       }
     }
   }
