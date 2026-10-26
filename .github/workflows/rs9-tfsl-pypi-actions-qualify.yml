@@ -1,5 +1,5 @@
 # rs9-loom-actions-qualification-v1
-# Tooling repository: Knowledge-Forge-AI/release-starport-9; commit: aa51e710429d9cba372e7d5b7301e4de858f3f2d
+# Tooling repository: Knowledge-Forge-AI/release-starport-9; commit: 9457e97e68f3757566c74ef57d4b2b0e07ad83b4
 # Execution/token repository: Knowledge-Forge-AI/theme-forge-stellar-loom; publication: false
 name: RS9 Loom 0.5.0 Actions Artifact Qualification
 run-name: 'Loom 0.5.0 qualification / ${{ inputs.dispatch_id }}'
@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
           repository: Knowledge-Forge-AI/release-starport-9
-          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          ref: '9457e97e68f3757566c74ef57d4b2b0e07ad83b4'
           persist-credentials: false
       - name: Set up Python 3.13
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
           repository: Knowledge-Forge-AI/release-starport-9
-          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          ref: '9457e97e68f3757566c74ef57d4b2b0e07ad83b4'
           persist-credentials: false
       - name: Set up Python 3.13
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
@@ -95,7 +95,7 @@ jobs:
         env:
           PYTHONPATH: src
           PYTHONDONTWRITEBYTECODE: '1'
-          QUALIFY_COMMIT: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          QUALIFY_COMMIT: '9457e97e68f3757566c74ef57d4b2b0e07ad83b4'
           QUALIFY_RUN_ID: '${{ github.run_id }}'
           QUALIFY_RUN_ATTEMPT: '${{ github.run_attempt }}'
         shell: bash
@@ -133,7 +133,7 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
           repository: Knowledge-Forge-AI/release-starport-9
-          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          ref: '9457e97e68f3757566c74ef57d4b2b0e07ad83b4'
           persist-credentials: false
       - name: Set up Python 3.13
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
@@ -153,7 +153,7 @@ jobs:
         env:
           PYTHONPATH: src
           PYTHONDONTWRITEBYTECODE: '1'
-          QUALIFY_COMMIT: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          QUALIFY_COMMIT: '9457e97e68f3757566c74ef57d4b2b0e07ad83b4'
           QUALIFY_RUN_ID: '${{ github.run_id }}'
           QUALIFY_RUN_ATTEMPT: '${{ github.run_attempt }}'
         shell: bash
@@ -190,7 +190,7 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
           repository: Knowledge-Forge-AI/release-starport-9
-          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          ref: '9457e97e68f3757566c74ef57d4b2b0e07ad83b4'
           persist-credentials: false
       - name: Set up Python 3.13
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
@@ -210,7 +210,7 @@ jobs:
         env:
           PYTHONPATH: src
           PYTHONDONTWRITEBYTECODE: '1'
-          QUALIFY_COMMIT: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          QUALIFY_COMMIT: '9457e97e68f3757566c74ef57d4b2b0e07ad83b4'
           QUALIFY_RUN_ID: '${{ github.run_id }}'
           QUALIFY_RUN_ATTEMPT: '${{ github.run_attempt }}'
         shell: bash
@@ -248,7 +248,7 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
           repository: Knowledge-Forge-AI/release-starport-9
-          ref: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          ref: '9457e97e68f3757566c74ef57d4b2b0e07ad83b4'
           persist-credentials: false
       - name: Download staged artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -273,7 +273,7 @@ jobs:
       - name: Admit three-host native matrix receipts
         env:
           PYTHONPATH: src
-          QUALIFY_COMMIT: 'aa51e710429d9cba372e7d5b7301e4de858f3f2d'
+          QUALIFY_COMMIT: '9457e97e68f3757566c74ef57d4b2b0e07ad83b4'
           QUALIFY_RUN_ID: '${{ github.run_id }}'
           QUALIFY_RUN_ATTEMPT: '${{ github.run_attempt }}'
         run: python3 -B -m rs9.tf_pypi_hosted admit --project theme-forge-stellar-loom --pin operators/tf-pypi/theme-forge-stellar-loom-0.5.0.json --dist dist --receipts receipts --expected-commit "$QUALIFY_COMMIT" --run-id "$QUALIFY_RUN_ID" --run-attempt "$QUALIFY_RUN_ATTEMPT" > matrix-result.json
