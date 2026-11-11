@@ -142,7 +142,46 @@ jobs:
           node tools/ci/exact-head.mjs --output .test-reports/consumer-fixture/receipt.json --expected-branch staging --expected-base main --checkout-role merge-candidate
       - run: npm ci
       - name: Install Playwright browsers with OS dependencies
-        run: npx playwright install --with-deps chromium
+        run: |
+          set -euo pipefail
+          apt_sources="/etc/apt/sources.list.d/tfsl-playwright.sources"
+          apt_config="/etc/apt/apt.conf.d/99-tfsl-playwright-official-sources"
+          if [ -e "$apt_sources" ] || [ -L "$apt_sources" ] || [ -e "$apt_config" ] || [ -L "$apt_config" ]; then
+            echo "::error::fixed Playwright APT paths must be absent before this job writes them"
+            exit 1
+          fi
+          sources_owned=0
+          config_owned=0
+          cleanup() {
+            status=$?
+            if [ "$config_owned" -eq 1 ]; then sudo rm -f -- "$apt_config"; fi
+            if [ "$sources_owned" -eq 1 ]; then sudo rm -f -- "$apt_sources"; fi
+            exit "$status"
+          }
+          trap cleanup EXIT
+          sources_owned=1
+          sudo tee "$apt_sources" >/dev/null <<'EOF'
+          Types: deb
+          URIs: https://mirrors.edge.kernel.org/ubuntu
+          Suites: noble noble-updates noble-backports
+          Components: main restricted universe multiverse
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+          Types: deb
+          URIs: https://mirrors.edge.kernel.org/ubuntu
+          Suites: noble-security
+          Components: main restricted universe multiverse
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF
+          config_owned=1
+          sudo tee "$apt_config" >/dev/null <<'EOF'
+          Dir::Etc::sourcelist "/etc/apt/sources.list.d/tfsl-playwright.sources";
+          Dir::Etc::sourceparts "-";
+          APT::Get::AllowUnauthenticated "false";
+          Acquire::AllowInsecureRepositories "false";
+          Acquire::AllowDowngradeToInsecureRepositories "false";
+          EOF
+          npx playwright install --with-deps chromium
       - run: node tools/build-catalog-evidence.mjs
       - name: Run consumer fixture smoke suite
         run: |
